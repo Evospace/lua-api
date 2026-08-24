@@ -1,0 +1,15 @@
+{
+    "name": "Evospace",
+    "words": [
+        "db%s*:",
+        "StaticBlock%s*%.",
+        "BlockLogic%s*%.",
+        "StaticItem%s*%."
+    ],
+    "settings": {
+        "Lua.runtime.version": "LuaJIT",
+        "Lua.diagnostics.disable": [
+            "inject-field"
+        ]
+    }
+}
