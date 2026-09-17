@@ -38,6 +38,13 @@
 					"internal": false
 				},
 				{
+					"name": "bonus_delivered",
+					"type": "boolean",
+					"summary": "",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
 					"name": "switch_on",
 					"type": "boolean",
 					"summary": "",
@@ -69,13 +76,6 @@
 					"name": "speed",
 					"type": "integer",
 					"summary": "",
-					"boilerplate": false,
-					"internal": false
-				},
-				{
-					"name": "boost",
-					"type": "integer",
-					"summary": "percent pushed by boosters this tick (50 = +50%)",
 					"boilerplate": false,
 					"internal": false
 				},
@@ -1434,107 +1434,6 @@
 			]
 		},
 		{
-			"name": "BoosterBlockLogic",
-			"kind": "class",
-			"parent": "BlockLogic",
-			"internal": false,
-			"summary": "Block speeding up the machine its far side faces",
-			"fields": [
-				{
-					"name": "boost",
-					"type": "integer",
-					"summary": "percent added to the target machine speed (50 = +50%)",
-					"boilerplate": false,
-					"internal": false
-				},
-				{
-					"name": "cost_ratio",
-					"type": "integer",
-					"summary": "percent of the boosted share of the target consumption billed on top of the own draw",
-					"boilerplate": false,
-					"internal": false
-				},
-				{
-					"name": "energy_input_inventory",
-					"type": "ResourceInventory",
-					"summary": "",
-					"boilerplate": false,
-					"internal": false
-				}
-			],
-			"functions": [
-				{
-					"name": "cast",
-					"kind": "static",
-					"summary": "Trying to cast Object into BoosterBlockLogic",
-					"boilerplate": true,
-					"internal": false,
-					"returns":
-					{
-						"type": "BoosterBlockLogic",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "object",
-							"type": "Object",
-							"desc": "Value to cast"
-						}
-					]
-				},
-				{
-					"name": "get_class",
-					"kind": "static",
-					"summary": "Return BoosterBlockLogic class object",
-					"boilerplate": true,
-					"internal": false,
-					"returns":
-					{
-						"type": "Class",
-						"desc": ""
-					},
-					"params": []
-				},
-				{
-					"name": "new",
-					"kind": "static",
-					"summary": "Creates a new BoosterBlockLogic instance",
-					"boilerplate": true,
-					"internal": false,
-					"returns":
-					{
-						"type": "BoosterBlockLogic",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "parent",
-							"type": "Object",
-							"desc": "Object of parent"
-						},
-						{
-							"name": "name",
-							"type": "string",
-							"desc": "The name of the instance"
-						}
-					]
-				},
-				{
-					"name": "new_simple",
-					"kind": "static",
-					"summary": "Creates a new BoosterBlockLogic instance",
-					"boilerplate": true,
-					"internal": false,
-					"returns":
-					{
-						"type": "BoosterBlockLogic",
-						"desc": ""
-					},
-					"params": []
-				}
-			]
-		},
-		{
 			"name": "ChestBlockLogic",
 			"kind": "class",
 			"parent": "StorageBlockLogic",
@@ -2252,6 +2151,93 @@
 			]
 		},
 		{
+			"name": "ConveyorBlockLogic",
+			"kind": "class",
+			"parent": "BlockLogic",
+			"internal": false,
+			"summary": "Belt carrying one item per half cell",
+			"fields": [
+				{
+					"name": "ticks_per_item",
+					"type": "integer",
+					"summary": "Exact time to carry one item across half a cell, in ticks",
+					"boilerplate": false,
+					"internal": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into ConveyorBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "ConveyorBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return ConveyorBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new ConveyorBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "ConveyorBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new ConveyorBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "ConveyorBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "DB",
 			"kind": "class",
 			"parent": "Instance",
@@ -2601,15 +2587,15 @@
 			"fields": [],
 			"functions": [
 				{
-					"name": "spawn_block",
+					"name": "place",
 					"kind": "method",
-					"summary": "Spawn a block at the given position",
+					"summary": "Build a block the way a tool in hand builds one: the edit goes on the undo stack and out to the other peers. The cell has to be streamed in, so move the player there first. The block itself lands at the host's stamped tick, so read it back with get_block a tick later",
 					"boilerplate": false,
 					"internal": false,
 					"returns":
 					{
-						"type": "BlockLogic",
-						"desc": "The spawned block logic instance"
+						"type": "boolean",
+						"desc": "True when the edit was taken"
 					},
 					"params": [
 						{
@@ -2618,57 +2604,33 @@
 							"desc": "Block position"
 						},
 						{
-							"name": "quat",
-							"type": "FQuat",
-							"desc": "Rotation"
+							"name": "block",
+							"type": "StaticBlock",
+							"desc": "Block type to build"
 						},
 						{
-							"name": "static_block",
-							"type": "StaticBlock",
-							"desc": "Block type to spawn"
+							"name": "rotation",
+							"type": "FQuat?",
+							"desc": "Rotation, nil for identity"
 						}
 					]
 				},
 				{
-					"name": "spawn_block_identity",
+					"name": "dig",
 					"kind": "method",
-					"summary": "Spawn a block with identity rotation at the given position",
+					"summary": "Break the block standing at the position the way a tool in hand breaks it: the edit goes on the undo stack and out to the other peers. The cell has to be streamed in, so move the player there first",
 					"boilerplate": false,
 					"internal": false,
 					"returns":
 					{
-						"type": "BlockLogic",
-						"desc": "The spawned block logic instance"
+						"type": "boolean",
+						"desc": "True when the edit was taken"
 					},
 					"params": [
 						{
 							"name": "bpos",
 							"type": "Vec3i",
 							"desc": "Block position"
-						},
-						{
-							"name": "static_block",
-							"type": "StaticBlock",
-							"desc": "Block type to spawn"
-						}
-					]
-				},
-				{
-					"name": "set_cell",
-					"kind": "method",
-					"summary": "Set a block cell at the given position",
-					"boilerplate": false,
-					"internal": false,
-					"params": [
-						{
-							"name": "bpos",
-							"type": "Vec3i",
-							"desc": "Block position"
-						},
-						{
-							"name": "cl",
-							"type": "StaticBlock",
-							"desc": "Block type to set"
 						}
 					]
 				},
@@ -2702,20 +2664,6 @@
 						"type": "BlockLogic",
 						"desc": "Block logic in the cell"
 					},
-					"params": [
-						{
-							"name": "bpos",
-							"type": "Vec3i",
-							"desc": "Block position"
-						}
-					]
-				},
-				{
-					"name": "clear_props",
-					"kind": "method",
-					"summary": "Clear all props at the given position",
-					"boilerplate": false,
-					"internal": false,
 					"params": [
 						{
 							"name": "bpos",
@@ -2834,15 +2782,15 @@
 					]
 				},
 				{
-					"name": "spawn_ghost",
+					"name": "place_ghost",
 					"kind": "method",
-					"summary": "Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out",
+					"summary": "Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out. The ghost lands at the host's stamped tick, so read it back with get_block a tick later",
 					"boilerplate": false,
 					"internal": false,
 					"returns":
 					{
-						"type": "BlockLogic",
-						"desc": "The ghost, nil when the cell is not loaded or not free"
+						"type": "boolean",
+						"desc": "True when the edit was taken"
 					},
 					"params": [
 						{
@@ -2851,14 +2799,14 @@
 							"desc": "Block position"
 						},
 						{
-							"name": "quat",
-							"type": "FQuat",
-							"desc": "Rotation"
-						},
-						{
 							"name": "target",
 							"type": "StaticBlock",
 							"desc": "Block the ghost stands for"
+						},
+						{
+							"name": "rotation",
+							"type": "FQuat?",
+							"desc": "Rotation, nil for identity"
 						}
 					]
 				},
@@ -3550,6 +3498,13 @@
 				{
 					"name": "sector_lod_count",
 					"type": "integer",
+					"summary": "",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
+					"name": "mute_on_focus_loss",
+					"type": "boolean",
 					"summary": "",
 					"boilerplate": false,
 					"internal": false
@@ -4378,6 +4333,85 @@
 						"desc": ""
 					},
 					"params": []
+				}
+			]
+		},
+		{
+			"name": "GenContext",
+			"kind": "class",
+			"internal": false,
+			"summary": "Column being generated, handed to StaticStructure.generate",
+			"fields": [
+				{
+					"name": "pos",
+					"type": "Vec2i",
+					"summary": "Column position in sectors",
+					"boilerplate": false,
+					"internal": false
+				}
+			],
+			"functions": [
+				{
+					"name": "set_cell",
+					"kind": "method",
+					"summary": "Write a block straight into a cell of the column being generated",
+					"boilerplate": false,
+					"internal": false,
+					"params": [
+						{
+							"name": "bpos",
+							"type": "Vec3i",
+							"desc": "Block position"
+						},
+						{
+							"name": "block",
+							"type": "StaticBlock",
+							"desc": "Block type, nil to clear the cell"
+						}
+					]
+				},
+				{
+					"name": "spawn_block",
+					"kind": "method",
+					"summary": "Spawn a block with its logic into the column being generated",
+					"boilerplate": false,
+					"internal": false,
+					"returns":
+					{
+						"type": "BlockLogic",
+						"desc": "The spawned block logic"
+					},
+					"params": [
+						{
+							"name": "bpos",
+							"type": "Vec3i",
+							"desc": "Block position"
+						},
+						{
+							"name": "block",
+							"type": "StaticBlock",
+							"desc": "Block type to spawn"
+						},
+						{
+							"name": "rotation",
+							"type": "FQuat?",
+							"desc": "Rotation, nil for identity"
+						}
+					]
+				},
+				{
+					"name": "clear_props",
+					"kind": "method",
+					"summary": "Clear all props at the given position",
+					"boilerplate": false,
+					"internal": false,
+					"params": [
+						{
+							"name": "bpos",
+							"type": "Vec3i",
+							"desc": "Block position"
+						}
+					]
 				}
 			]
 		},
@@ -5979,6 +6013,35 @@
 							"name": "table",
 							"type": "string",
 							"desc": "Localization table name"
+						}
+					]
+				},
+				{
+					"name": "text",
+					"kind": "static",
+					"summary": "Create new Loc object substituting a ready text into the line",
+					"boilerplate": false,
+					"internal": false,
+					"returns":
+					{
+						"type": "Loc",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": "Localization key"
+						},
+						{
+							"name": "table",
+							"type": "string",
+							"desc": "Localization table name"
+						},
+						{
+							"name": "value",
+							"type": "string",
+							"desc": "Text put in place of {0}"
 						}
 					]
 				},
@@ -9202,6 +9265,93 @@
 			]
 		},
 		{
+			"name": "SplitterBlockLogic",
+			"kind": "class",
+			"parent": "BlockLogic",
+			"internal": false,
+			"summary": "Belt junction feeding several sides",
+			"fields": [
+				{
+					"name": "ticks_per_item",
+					"type": "integer",
+					"summary": "Exact time to carry one item across half a cell, in ticks",
+					"boilerplate": false,
+					"internal": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into SplitterBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "SplitterBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return SplitterBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new SplitterBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "SplitterBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new SplitterBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"returns":
+					{
+						"type": "SplitterBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "SpotlightBlockLogic",
 			"kind": "class",
 			"parent": "BlockLogic",
@@ -9486,6 +9636,13 @@
 					"internal": false
 				},
 				{
+					"name": "rotation_locks",
+					"type": "Vec3i",
+					"summary": "Block local axes that keep their world direction; a turn moving a locked axis is refused",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
 					"name": "replace_tag",
 					"type": "string",
 					"summary": "Blocks sharing a tag replace each other on build",
@@ -9509,14 +9666,28 @@
 				{
 					"name": "energy_consumption_per_tick",
 					"type": "integer",
-					"summary": "Electricity drawn per simulation tick",
+					"summary": "Energy drawn per simulation tick",
 					"boilerplate": false,
 					"internal": false
 				},
 				{
 					"name": "energy_production_per_tick",
 					"type": "integer",
-					"summary": "Electricity produced per simulation tick",
+					"summary": "Energy produced per simulation tick",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
+					"name": "energy_consumption_item",
+					"type": "StaticItem",
+					"summary": "Resource item drawn by this block",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
+					"name": "energy_production_item",
+					"type": "StaticItem",
+					"summary": "Resource item produced by this block",
 					"boilerplate": false,
 					"internal": false
 				},
@@ -10294,6 +10465,87 @@
 					"boilerplate": false,
 					"internal": false,
 					"params": []
+				},
+				{
+					"name": "set_number",
+					"kind": "method",
+					"summary": "Write a number the panel widget reads by key",
+					"boilerplate": false,
+					"internal": false,
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": ""
+						},
+						{
+							"name": "value",
+							"type": "number",
+							"desc": ""
+						}
+					]
+				},
+				{
+					"name": "get_number",
+					"kind": "method",
+					"summary": "Number written under the key, or the fallback",
+					"boilerplate": false,
+					"internal": false,
+					"returns":
+					{
+						"type": "number",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": ""
+						},
+						{
+							"name": "fallback",
+							"type": "number",
+							"desc": ""
+						}
+					]
+				},
+				{
+					"name": "set_string",
+					"kind": "method",
+					"summary": "Write a string the panel widget reads by key",
+					"boilerplate": false,
+					"internal": false,
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": ""
+						},
+						{
+							"name": "value",
+							"type": "string",
+							"desc": ""
+						}
+					]
+				},
+				{
+					"name": "get_string",
+					"kind": "method",
+					"summary": "String written under the key, empty when there is none",
+					"boilerplate": false,
+					"internal": false,
+					"returns":
+					{
+						"type": "string",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": ""
+						}
+					]
 				},
 				{
 					"name": "cast",
@@ -11201,13 +11453,6 @@
 					"internal": false
 				},
 				{
-					"name": "auto_unlock",
-					"type": "boolean",
-					"summary": "Unlock automatically once requirements are met",
-					"boilerplate": false,
-					"internal": false
-				},
-				{
 					"name": "any_objective",
 					"type": "boolean",
 					"summary": "Complete on any one objective instead of all of them",
@@ -11592,6 +11837,13 @@
 					"name": "level",
 					"type": "integer",
 					"summary": "Level reached by an upgrade research, 0 for a node completed once",
+					"boilerplate": false,
+					"internal": false
+				},
+				{
+					"name": "tier",
+					"type": "integer",
+					"summary": "Progression tier the research belongs to",
 					"boilerplate": false,
 					"internal": false
 				},
@@ -14132,7 +14384,7 @@
 						{
 							"name": "spec",
 							"type": "table",
-							"desc": "{ id = \"...\", label = \"...\"?, glyph = \"X\"?, on_click = function() end, is_on = function() return bool end? }"
+							"desc": "{ id = \"...\", label = \"...\"?, icon = \"/Game/Textures/EqualsIco.EqualsIco\"?, on_click = function() end, is_on = function() return bool end? }"
 						}
 					]
 				}

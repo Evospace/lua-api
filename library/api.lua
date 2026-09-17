@@ -27,12 +27,12 @@ dim = {}
 --- @field load_independent boolean
 --- @field stable_supply boolean
 --- @field input_gathered boolean
+--- @field bonus_delivered boolean
 --- @field switch_on boolean
 --- @field ticks_passed integer
 --- @field real_ticks_passed integer
 --- @field total_production integer
 --- @field speed integer
---- @field boost integer percent pushed by boosters this tick (50 = +50%)
 --- @field productivity integer percent (e.g. 15 = +15%)
 --- @field energy_input_inventory ResourceInventory
 --- @field energy_output_inventory ResourceInventory
@@ -412,33 +412,6 @@ function BlockLogic.new(parent, name) end
 --- @return BlockLogic
 function BlockLogic.new_simple() end
 
---- Block speeding up the machine its far side faces
---- 
---- @class BoosterBlockLogic : BlockLogic
---- @field boost integer percent added to the target machine speed (50 = +50%)
---- @field cost_ratio integer percent of the boosted share of the target consumption billed on top of the own draw
---- @field energy_input_inventory ResourceInventory
-BoosterBlockLogic = {}
-
---- Trying to cast Object into BoosterBlockLogic
---- @param object Object Value to cast
---- @return BoosterBlockLogic
-function BoosterBlockLogic.cast(object) end
-
---- Return BoosterBlockLogic class object
---- @return Class
-function BoosterBlockLogic.get_class() end
-
---- Creates a new BoosterBlockLogic instance
---- @param parent Object Object of parent
---- @param name string The name of the instance
---- @return BoosterBlockLogic
-function BoosterBlockLogic.new(parent, name) end
-
---- Creates a new BoosterBlockLogic instance
---- @return BoosterBlockLogic
-function BoosterBlockLogic.new_simple() end
-
 --- Chest storage block
 --- 
 --- @class ChestBlockLogic : StorageBlockLogic
@@ -622,6 +595,31 @@ function Console.new(parent, name) end
 --- @return Console
 function Console.new_simple() end
 
+--- Belt carrying one item per half cell
+--- 
+--- @class ConveyorBlockLogic : BlockLogic
+--- @field ticks_per_item integer Exact time to carry one item across half a cell, in ticks
+ConveyorBlockLogic = {}
+
+--- Trying to cast Object into ConveyorBlockLogic
+--- @param object Object Value to cast
+--- @return ConveyorBlockLogic
+function ConveyorBlockLogic.cast(object) end
+
+--- Return ConveyorBlockLogic class object
+--- @return Class
+function ConveyorBlockLogic.get_class() end
+
+--- Creates a new ConveyorBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return ConveyorBlockLogic
+function ConveyorBlockLogic.new(parent, name) end
+
+--- Creates a new ConveyorBlockLogic instance
+--- @return ConveyorBlockLogic
+function ConveyorBlockLogic.new_simple() end
+
 --- Prototype database filled by mods
 --- 
 --- @class DB : Instance
@@ -724,23 +722,17 @@ function DesignableFenceBlockLogic.new_simple() end
 --- @class Dimension : Actor
 Dimension = {}
 
---- Spawn a block at the given position
+--- Build a block the way a tool in hand builds one: the edit goes on the undo stack and out to the other peers. The cell has to be streamed in, so move the player there first. The block itself lands at the host's stamped tick, so read it back with get_block a tick later
 --- @param bpos Vec3i Block position
---- @param quat FQuat Rotation
---- @param static_block StaticBlock Block type to spawn
---- @return BlockLogic The spawned block logic instance
-function Dimension:spawn_block(bpos, quat, static_block) end
+--- @param block StaticBlock Block type to build
+--- @param rotation FQuat? Rotation, nil for identity
+--- @return boolean True when the edit was taken
+function Dimension:place(bpos, block, rotation) end
 
---- Spawn a block with identity rotation at the given position
+--- Break the block standing at the position the way a tool in hand breaks it: the edit goes on the undo stack and out to the other peers. The cell has to be streamed in, so move the player there first
 --- @param bpos Vec3i Block position
---- @param static_block StaticBlock Block type to spawn
---- @return BlockLogic The spawned block logic instance
-function Dimension:spawn_block_identity(bpos, static_block) end
-
---- Set a block cell at the given position
---- @param bpos Vec3i Block position
---- @param cl StaticBlock Block type to set
-function Dimension:set_cell(bpos, cl) end
+--- @return boolean True when the edit was taken
+function Dimension:dig(bpos) end
 
 --- Block standing in the cell at the given position, nil when the cell is empty or its column is not loaded
 --- @param bpos Vec3i Block position
@@ -751,10 +743,6 @@ function Dimension:get_cell(bpos) end
 --- @param bpos Vec3i Block position
 --- @return BlockLogic Block logic in the cell
 function Dimension:get_block(bpos) end
-
---- Clear all props at the given position
---- @param bpos Vec3i Block position
-function Dimension:clear_props(bpos) end
 
 --- Sample the terrain surface the generator builds at XY, in world cell coordinates. Surface rock detail can still raise the built ground a few cells above this
 --- @param x number X coordinate in world cells
@@ -787,12 +775,12 @@ function Dimension:streaming_ready() end
 --- @return number Units produced all time
 function Dimension:get_produced(item) end
 
---- Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out
+--- Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out. The ghost lands at the host's stamped tick, so read it back with get_block a tick later
 --- @param bpos Vec3i Block position
---- @param quat FQuat Rotation
 --- @param target StaticBlock Block the ghost stands for
---- @return BlockLogic The ghost, nil when the cell is not loaded or not free
-function Dimension:spawn_ghost(bpos, quat, target) end
+--- @param rotation FQuat? Rotation, nil for identity
+--- @return boolean True when the edit was taken
+function Dimension:place_ghost(bpos, target, rotation) end
 
 --- Block position the player spawns at
 --- @return Vec3i Spawn position in block cells
@@ -949,6 +937,7 @@ function ElectricityContainerBlockLogic.new_simple() end
 --- @field wind_animation number
 --- @field cloud_preset integer
 --- @field sector_lod_count integer
+--- @field mute_on_focus_loss boolean
 Engine = {}
 
 --- Apply the current settings to the engine
@@ -1172,6 +1161,28 @@ function GameSessionData.new(parent, name) end
 --- Creates a new GameSessionData instance
 --- @return GameSessionData
 function GameSessionData.new_simple() end
+
+--- Column being generated, handed to StaticStructure.generate
+--- 
+--- @class GenContext
+--- @field pos Vec2i Column position in sectors
+GenContext = {}
+
+--- Write a block straight into a cell of the column being generated
+--- @param bpos Vec3i Block position
+--- @param block StaticBlock Block type, nil to clear the cell
+function GenContext:set_cell(bpos, block) end
+
+--- Spawn a block with its logic into the column being generated
+--- @param bpos Vec3i Block position
+--- @param block StaticBlock Block type to spawn
+--- @param rotation FQuat? Rotation, nil for identity
+--- @return BlockLogic The spawned block logic
+function GenContext:spawn_block(bpos, block, rotation) end
+
+--- Clear all props at the given position
+--- @param bpos Vec3i Block position
+function GenContext:clear_props(bpos) end
 
 --- Placeholder waiting to be materialized into a real block
 --- 
@@ -1647,6 +1658,13 @@ Loc = {}
 --- @param table string Localization table name
 --- @return Loc
 function Loc.new(key, table) end
+
+--- Create new Loc object substituting a ready text into the line
+--- @param key string Localization key
+--- @param table string Localization table name
+--- @param value string Text put in place of {0}
+--- @return Loc
+function Loc.text(key, table, value) end
 
 --- Resolve key value to localized string
 --- @param key string Localization key
@@ -2524,6 +2542,31 @@ function SourceData.new(parent, name) end
 --- @return SourceData
 function SourceData.new_simple() end
 
+--- Belt junction feeding several sides
+--- 
+--- @class SplitterBlockLogic : BlockLogic
+--- @field ticks_per_item integer Exact time to carry one item across half a cell, in ticks
+SplitterBlockLogic = {}
+
+--- Trying to cast Object into SplitterBlockLogic
+--- @param object Object Value to cast
+--- @return SplitterBlockLogic
+function SplitterBlockLogic.cast(object) end
+
+--- Return SplitterBlockLogic class object
+--- @return Class
+function SplitterBlockLogic.get_class() end
+
+--- Creates a new SplitterBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return SplitterBlockLogic
+function SplitterBlockLogic.new(parent, name) end
+
+--- Creates a new SplitterBlockLogic instance
+--- @return SplitterBlockLogic
+function SplitterBlockLogic.new_simple() end
+
 --- Aimable colored spotlight
 --- 
 --- @class SpotlightBlockLogic : BlockLogic
@@ -2594,11 +2637,14 @@ function StaticAchievement.reg(name) end
 --- @field selector Class Selector widget class
 --- @field tesselator Tesselator Mesh tesselator used to render the block
 --- @field sub_blocks Vec3i[] Occupied cells relative to the block origin
+--- @field rotation_locks Vec3i Block local axes that keep their world direction; a turn moving a locked axis is refused
 --- @field replace_tag string Blocks sharing a tag replace each other on build
 --- @field tier integer Block tier used for recipe speed scaling
 --- @field level integer Block level within its tier
---- @field energy_consumption_per_tick integer Electricity drawn per simulation tick
---- @field energy_production_per_tick integer Electricity produced per simulation tick
+--- @field energy_consumption_per_tick integer Energy drawn per simulation tick
+--- @field energy_production_per_tick integer Energy produced per simulation tick
+--- @field energy_consumption_item StaticItem Resource item drawn by this block
+--- @field energy_production_item StaticItem Resource item produced by this block
 --- @field break_effect Class Effect actor class spawned when the block is destroyed
 --- @field lua table? Lua prototype table with logic_init and actor_init hooks
 --- @field half_cover StaticCover Cover mesh for the half-height variant
@@ -2788,6 +2834,27 @@ function StaticItemPanel:add_context(item) end
 
 --- Remove every item from the context inventory
 function StaticItemPanel:clear_context() end
+
+--- Write a number the panel widget reads by key
+--- @param key string
+--- @param value number
+function StaticItemPanel:set_number(key, value) end
+
+--- Number written under the key, or the fallback
+--- @param key string
+--- @param fallback number
+--- @return number
+function StaticItemPanel:get_number(key, fallback) end
+
+--- Write a string the panel widget reads by key
+--- @param key string
+--- @param value string
+function StaticItemPanel:set_string(key, value) end
+
+--- String written under the key, empty when there is none
+--- @param key string
+--- @return string
+function StaticItemPanel:get_string(key) end
 
 --- Trying to cast Object into StaticItemPanel
 --- @param object Object Value to cast
@@ -3016,7 +3083,6 @@ function StaticPropList.reg(name) end
 --- @field context AutosizeInventory Inventory of items shown next to the description
 --- @field chapter StaticChapter Chapter this quest belongs to
 --- @field required_quests StaticQuest[] Quests that must be completed first
---- @field auto_unlock boolean Unlock automatically once requirements are met
 --- @field any_objective boolean Complete on any one objective instead of all of them
 --- @field state integer Current state: locked, active or completed
 --- @field events table? Table of event handlers keyed by event id
@@ -3116,6 +3182,7 @@ function StaticQuest.reg(name) end
 --- @field description_parts Loc[] Localized description paragraphs
 --- @field complexity integer Science the research costs to complete
 --- @field level integer Level reached by an upgrade research, 0 for a node completed once
+--- @field tier integer Progression tier the research belongs to
 --- @field required_research StaticResearch[] Researches that must be complete before this one opens
 --- @field completed boolean Whether the research is already complete
 StaticResearch = {}
@@ -3807,7 +3874,7 @@ defines.quest_state = {}
 hud = {}
 
 --- Put a toggle of this mod's own into the player's control bar, where it can be reordered and hidden like the built-in ones
---- @param spec table { id = "...", label = "..."?, glyph = "X"?, on_click = function() end, is_on = function() return bool end? }
+--- @param spec table { id = "...", label = "..."?, icon = "/Game/Textures/EqualsIco.EqualsIco"?, on_click = function() end, is_on = function() return bool end? }
 --- @return boolean False when the table is missing an id or an on_click
 function hud.add_toggle(spec) end
 
