@@ -69,7 +69,7 @@ function AbstractCrafter.new_simple() end
 --- @class Accessor : Instance
 --- @field side Vec3i Side direction of the owning block
 --- @field pos Vec3i Block local position
---- @field owner BlockLogic Block this accessor belongs to
+--- @field owner BlockLogic [readonly] Block this accessor belongs to
 --- @field cover StaticCover Cover prototype placed on this side
 Accessor = {}
 
@@ -112,7 +112,7 @@ function Actor:set_field_object(field_name, object) end
 --- Engine actor component
 --- 
 --- @class ActorComponent
---- @field name string Object name
+--- @field name string [readonly] Object name
 ActorComponent = {}
 
 --- Creative generator producing unlimited power
@@ -142,7 +142,7 @@ function AdminElectricGeneratorBlockLogic.new_simple() end
 --- Engine skeletal animation sequence
 --- 
 --- @class AnimSequence : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 AnimSequence = {}
 
 --- Load an animation sequence asset
@@ -288,7 +288,7 @@ function Biome.find(name) end
 --- @return Biome
 function Biome.get(name) end
 
---- Register a new Biome static object
+--- [load] Register a new Biome static object
 --- @param name string The name of the object
 --- @return Biome
 function Biome.reg(name) end
@@ -324,7 +324,7 @@ function BiomeFamily.find(name) end
 --- @return BiomeFamily
 function BiomeFamily.get(name) end
 
---- Register a new BiomeFamily static object
+--- [load] Register a new BiomeFamily static object
 --- @param name string The name of the object
 --- @return BiomeFamily
 function BiomeFamily.reg(name) end
@@ -354,7 +354,7 @@ function BiomeWorldGenerator.find(name) end
 --- @return BiomeWorldGenerator
 function BiomeWorldGenerator.get(name) end
 
---- Register a new BiomeWorldGenerator static object
+--- [load] Register a new BiomeWorldGenerator static object
 --- @param name string The name of the object
 --- @return BiomeWorldGenerator
 function BiomeWorldGenerator.reg(name) end
@@ -362,7 +362,7 @@ function BiomeWorldGenerator.reg(name) end
 --- World actor representing a placed block
 --- 
 --- @class BlockActor : Actor
---- @field logic BlockLogic Block logic this actor represents
+--- @field logic BlockLogic [readonly] Block logic this actor represents
 --- @field hull_material Material Material applied to the block hull
 BlockActor = {}
 
@@ -376,8 +376,8 @@ function BlockActor.cast(object) end
 --- @class BlockLogic : Instance
 --- @field map_register boolean Whether this block shows up on the map
 --- @field static_block StaticBlock Prototype this block was spawned from
---- @field pos Vec3i Cell this block stands in
---- @field quat FQuat Rotation turning the block's local sides into world sides
+--- @field pos Vec3i [readonly] Cell this block stands in
+--- @field quat FQuat [readonly] Rotation turning the block's local sides into world sides
 BlockLogic = {}
 
 --- Register Accessor
@@ -440,7 +440,7 @@ function ChestBlockLogic.new_simple() end
 --- Engine class object
 --- 
 --- @class Class : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 Class = {}
 
 --- Find a loaded class by name
@@ -470,18 +470,18 @@ function Class:is_child_of(other) end
 --- @field g integer Green channel 0-255
 --- @field b integer Blue channel 0-255
 --- @field a integer Alpha channel 0-255
---- @field red Color (255, 0, 0, 255)
---- @field green Color (0, 255, 0, 255)
---- @field blue Color (0, 0, 255, 255)
---- @field yellow Color (255, 255, 0, 255)
---- @field cyan Color (0, 255, 255, 255)
---- @field magenta Color (255, 0, 255, 255)
---- @field white Color (255, 255, 255, 255)
---- @field black Color (0, 0, 0, 255)
---- @field gray Color (128, 128, 128, 255)
---- @field orange Color (243, 156, 18, 255)
---- @field purple Color (169, 7, 228, 255)
---- @field transparent Color (0, 0, 0, 0)
+--- @field red Color [readonly] (255, 0, 0, 255)
+--- @field green Color [readonly] (0, 255, 0, 255)
+--- @field blue Color [readonly] (0, 0, 255, 255)
+--- @field yellow Color [readonly] (255, 255, 0, 255)
+--- @field cyan Color [readonly] (0, 255, 255, 255)
+--- @field magenta Color [readonly] (255, 0, 255, 255)
+--- @field white Color [readonly] (255, 255, 255, 255)
+--- @field black Color [readonly] (0, 0, 0, 255)
+--- @field gray Color [readonly] (128, 128, 128, 255)
+--- @field orange Color [readonly] (243, 156, 18, 255)
+--- @field purple Color [readonly] (169, 7, 228, 255)
+--- @field transparent Color [readonly] (0, 0, 0, 0)
 Color = {}
 
 --- Create a color from channel values 0-255
@@ -625,20 +625,20 @@ function ConveyorBlockLogic.new_simple() end
 --- @class DB : Instance
 DB = {}
 
---- Register Prototype in DB
+--- [load] Register Prototype in DB
 --- @param proto Prototype Prototype to register
 function DB:reg(proto) end
 
---- Remove Prototype from DB
+--- [load] Remove Prototype from DB
 --- @param proto Prototype Prototype to remove
 --- @return boolean was Prototype removed
 function DB:remove(proto) end
 
---- Register object with class "class" and name "name" from table, filling all other properties from that table too
+--- [load] Register object with class "class" and name "name" from table, filling all other properties from that table too
 --- @param table table Object table
 function DB:from_table(table) end
 
---- Register mod table
+--- [load] Register mod table
 --- @param table table Mod table
 function DB:mod(table) end
 
@@ -949,7 +949,7 @@ function Engine:show_confirmation() end
 --- Crafter powered by solar or wind environment
 --- 
 --- @class EnvironmentCrafter : SelectCrafter
---- @field environment_factor01 number
+--- @field environment_factor01 number [readonly] 
 --- @field wind_powered boolean
 --- @field cut_in_wind_speed number Wind speed at which the rotor starts turning; below it output is zero
 --- @field rated_wind_speed number Wind speed at which output reaches the block rated production
@@ -1037,7 +1037,7 @@ function ExtractionData.new() end
 --- Rotation quaternion
 --- 
 --- @class FQuat
---- @field identity FQuat Zero rotation
+--- @field identity FQuat [readonly] Zero rotation
 --- @field x number
 --- @field y number
 --- @field z number
@@ -1116,7 +1116,7 @@ function FluidContainerBlockLogic.new_simple() end
 --- 
 --- @class Game : Object
 --- @field localization string Active localization culture code
---- @field build_string string Build identification string
+--- @field build_string string [readonly] Build identification string
 --- @field tick_rate integer Simulation ticks per second
 Game = {}
 
@@ -1134,7 +1134,7 @@ function Game.get_supported_resolutions() end
 --- @field total_game_time number Played time in seconds
 --- @field total_game_ticks integer Simulated ticks since world creation
 --- @field seed string World generation seed
---- @field version string Game version the save was written with
+--- @field version string [readonly] Game version the save was written with
 --- @field generator string World generator identifier
 --- @field save_name string Save folder name
 --- @field cloud boolean Save is synchronized with the cloud
@@ -1165,7 +1165,7 @@ function GameSessionData.new_simple() end
 --- Column being generated, handed to StaticStructure.generate
 --- 
 --- @class GenContext
---- @field pos Vec2i Column position in sectors
+--- @field pos Vec2i [readonly] Column position in sectors
 GenContext = {}
 
 --- Write a block straight into a cell of the column being generated
@@ -1233,7 +1233,7 @@ function GhostStaticBlock.find(name) end
 --- @return GhostStaticBlock
 function GhostStaticBlock.get(name) end
 
---- Register a new GhostStaticBlock static object
+--- [load] Register a new GhostStaticBlock static object
 --- @param name string The name of the object
 --- @return GhostStaticBlock
 function GhostStaticBlock.reg(name) end
@@ -1262,7 +1262,7 @@ function GlobalBiomeFamily.find(name) end
 --- @return GlobalBiomeFamily
 function GlobalBiomeFamily.get(name) end
 
---- Register a new GlobalBiomeFamily static object
+--- [load] Register a new GlobalBiomeFamily static object
 --- @param name string The name of the object
 --- @return GlobalBiomeFamily
 function GlobalBiomeFamily.reg(name) end
@@ -1347,7 +1347,7 @@ function HeightGenerator.find(name) end
 --- @return HeightGenerator
 function HeightGenerator.get(name) end
 
---- Register a new HeightGenerator static object
+--- [load] Register a new HeightGenerator static object
 --- @param name string The name of the object
 --- @return HeightGenerator
 function HeightGenerator.reg(name) end
@@ -1517,7 +1517,7 @@ function InventoryInventoryFilter.new_simple() end
 --- Read only inventory interface
 --- 
 --- @class InventoryReader : Instance
---- @field size integer Number of slots in this InventoryReader
+--- @field size integer [readonly] Number of slots in this InventoryReader
 InventoryReader = {}
 
 --- Get ItemData with index from InventoryReader
@@ -1744,7 +1744,7 @@ function LogicExportOption.find(name) end
 --- @return LogicExportOption
 function LogicExportOption.get(name) end
 
---- Register a new LogicExportOption static object
+--- [load] Register a new LogicExportOption static object
 --- @param name string The name of the object
 --- @return LogicExportOption
 function LogicExportOption.reg(name) end
@@ -1778,7 +1778,7 @@ function LogicImportOption.find(name) end
 --- @return LogicImportOption
 function LogicImportOption.get(name) end
 
---- Register a new LogicImportOption static object
+--- [load] Register a new LogicImportOption static object
 --- @param name string The name of the object
 --- @return LogicImportOption
 function LogicImportOption.reg(name) end
@@ -1833,7 +1833,7 @@ function LuaWorldGenerator.find(name) end
 --- @return LuaWorldGenerator
 function LuaWorldGenerator.get(name) end
 
---- Register a new LuaWorldGenerator static object
+--- [load] Register a new LuaWorldGenerator static object
 --- @param name string The name of the object
 --- @return LuaWorldGenerator
 function LuaWorldGenerator.reg(name) end
@@ -1852,7 +1852,7 @@ function MapStructure.new() end
 --- Engine material
 --- 
 --- @class Material : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 Material = {}
 
 --- Load a material asset
@@ -1863,8 +1863,8 @@ function Material.load(path) end
 --- Background music playback control
 --- 
 --- @class Music : Object
---- @field playlist string Key of the active playlist
---- @field track_count integer Number of tracks in the active playlist
+--- @field playlist string [readonly] Key of the active playlist
+--- @field track_count integer [readonly] Number of tracks in the active playlist
 Music = {}
 
 --- Fade out both channels and stop automatic track advance
@@ -1952,7 +1952,7 @@ function NoiseGenerator.find(name) end
 --- @return NoiseGenerator
 function NoiseGenerator.get(name) end
 
---- Register a new NoiseGenerator static object
+--- [load] Register a new NoiseGenerator static object
 --- @param name string The name of the object
 --- @return NoiseGenerator
 function NoiseGenerator.reg(name) end
@@ -1960,7 +1960,7 @@ function NoiseGenerator.reg(name) end
 --- Engine object
 --- 
 --- @class Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 Object = {}
 
 --- Find an already loaded object by name
@@ -2007,7 +2007,7 @@ function PropListData.new() end
 --- Database record
 --- 
 --- @class Prototype : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 Prototype = {}
 
 --- Returns false once the underlying engine object has been destroyed
@@ -2124,14 +2124,15 @@ function QuestSubsystem:get_all_chapters() end
 --- Crafting-recipe prototype used by machines and crafting UIs
 --- 
 --- @class Recipe : Prototype
---- @field ticks integer *Craft time* in engine ticks
---- @field default_locked boolean If **true**, the recipe starts hidden until research unlocks it.
+--- @field ticks integer [load] *Craft time* in engine ticks
+--- @field default_locked boolean [readonly] **True** when a research gates this recipe. Derived from the research graph, not authored: writing to it is overwritten when the research tree initializes.
 --- @field locked boolean Currently locked if **true**
---- @field productivity integer Percentage bonus (e.g. `20` = +20 %)
---- @field input RecipeInventory Read-only container of required items
---- @field output RecipeInventory Read-only container of produced items
---- @field tier integer Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
---- @field start_tier integer The dictionary's `start_tier`, copied to every recipe in it when the mods finish loading.
+--- @field productivity integer [load] Percentage bonus (e.g. `20` = +20 %)
+--- @field input RecipeInventory [readonly] Read-only container of required items
+--- @field output RecipeInventory [readonly] Read-only container of produced items
+--- @field tier integer [load] Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
+--- @field start_tier integer [load] The dictionary's `start_tier`, copied to every recipe in it when the mods finish loading.
+--- @field dictionary RecipeDictionary [readonly] The dictionary holding this recipe
 Recipe = {}
 
 --- Trying to cast Object into Recipe
@@ -2153,7 +2154,7 @@ function Recipe.find(name) end
 --- @return Recipe
 function Recipe.get(name) end
 
---- Register a new Recipe static object
+--- [load] Register a new Recipe static object
 --- @param name string The name of the object
 --- @return Recipe
 function Recipe.reg(name) end
@@ -2161,18 +2162,32 @@ function Recipe.reg(name) end
 --- Named group of recipes shared by machines of one family
 --- 
 --- @class RecipeDictionary : Prototype
---- @field start_tier integer Machine-unlock tier shared by every recipe in the dictionary
+--- @field start_tier integer [load] Machine-unlock tier shared by every recipe in the dictionary
 RecipeDictionary = {}
 
---- Put a recipe into this dictionary
+--- [load] Put a recipe into this dictionary
 --- @param recipe Recipe
 --- @return boolean False when the recipe is null or its name is already taken
 function RecipeDictionary:add(recipe) end
 
---- Name a machine item that crafts from this dictionary; the first one is the face the recipe index files its recipes under
+--- [load] Name a machine item that crafts from this dictionary; the first one is the face the recipe index files its recipes under
 --- @param item StaticItem
 --- @return boolean False when the item is null
 function RecipeDictionary:used_in(item) end
+
+--- Every recipe of this dictionary, in the order the crafting UI lists them
+--- @return Recipe[] Recipes of this dictionary
+function RecipeDictionary:recipes() end
+
+--- Look a recipe of this dictionary up by name; recipe names repeat across dictionaries, so this is the only way to address one
+--- @param name string The name of the recipe
+--- @return Recipe Nil when this dictionary has no such recipe
+function RecipeDictionary:recipe(name) end
+
+--- [load] Take a recipe out of this dictionary and out of every research unlocking it. Crafters that had it selected in a save fall back to no recipe
+--- @param recipe Recipe
+--- @return boolean False when the recipe is null or belongs to another dictionary
+function RecipeDictionary:remove(recipe) end
 
 --- Trying to cast Object into RecipeDictionary
 --- @param object Object Value to cast
@@ -2193,7 +2208,7 @@ function RecipeDictionary.find(name) end
 --- @return RecipeDictionary
 function RecipeDictionary.get(name) end
 
---- Register a new RecipeDictionary static object
+--- [load] Register a new RecipeDictionary static object
 --- @param name string The name of the object
 --- @return RecipeDictionary
 function RecipeDictionary.reg(name) end
@@ -2204,10 +2219,28 @@ function RecipeDictionary.reg(name) end
 --- @field recipe Recipe
 RecipeInventory = {}
 
---- Append a recipe slot holding item with count
+--- [load] Append a recipe slot holding item with count
 --- @param item StaticItem
 --- @param count integer
-function RecipeInventory:add(item, count) end
+--- @param data RecipeItemData Slot metadata, nil for a plain slot
+function RecipeInventory:add(item, count, data) end
+
+--- [load] Drop every slot of this recipe side
+function RecipeInventory:clear() end
+
+--- How many slots this recipe side has
+--- @return integer Slot count
+function RecipeInventory:count() end
+
+--- Item and count of a slot, counted from 1
+--- @param index integer Slot number
+--- @return ItemData An empty stack when there is no such slot
+function RecipeInventory:slot(index) end
+
+--- Bonus flag, chance and capacity of a slot, counted from 1
+--- @param index integer Slot number
+--- @return RecipeItemData Default metadata when there is no such slot
+function RecipeInventory:slot_data(index) end
 
 --- Trying to cast Object into RecipeInventory
 --- @param object Object Value to cast
@@ -2227,6 +2260,18 @@ function RecipeInventory.new(parent, name) end
 --- Creates a new RecipeInventory instance
 --- @return RecipeInventory
 function RecipeInventory.new_simple() end
+
+--- Per slot recipe metadata carried next to the item and its count
+--- 
+--- @class RecipeItemData
+--- @field capacity integer Slot size override for the crafter, `0` keeps the machine's own size
+--- @field probability integer Percent chance the slot takes part in a craft; `0` on an input marks a catalyst that is not consumed
+--- @field bonus boolean **True** when the slot is produced by the productivity bonus instead of the craft itself
+RecipeItemData = {}
+
+--- Create default slot metadata: consumed or produced every craft, machine slot size
+--- @return RecipeItemData
+function RecipeItemData.new() end
 
 --- Square of the world map holding sources and structures
 --- 
@@ -2375,7 +2420,7 @@ function ResourceInventory.new_simple() end
 --- Euler rotation in degrees
 --- 
 --- @class Rotator
---- @field zero Rotator (0, 0, 0)
+--- @field zero Rotator [readonly] (0, 0, 0)
 --- @field pitch number
 --- @field yaw number
 --- @field roll number
@@ -2456,7 +2501,7 @@ function Setting.find(name) end
 --- @return Setting
 function Setting.get(name) end
 
---- Register a new Setting static object
+--- [load] Register a new Setting static object
 --- @param name string The name of the object
 --- @return Setting
 function Setting.reg(name) end
@@ -2493,7 +2538,7 @@ function SingleSlotInventory.new_simple() end
 --- Engine sound class
 --- 
 --- @class SoundClass : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 --- @field volume number Playback volume multiplier
 SoundClass = {}
 
@@ -2624,7 +2669,7 @@ function StaticAchievement.find(name) end
 --- @return StaticAchievement
 function StaticAchievement.get(name) end
 
---- Register a new StaticAchievement static object
+--- [load] Register a new StaticAchievement static object
 --- @param name string The name of the object
 --- @return StaticAchievement
 function StaticAchievement.reg(name) end
@@ -2673,7 +2718,7 @@ function StaticBlock.find(name) end
 --- @return StaticBlock
 function StaticBlock.get(name) end
 
---- Register a new StaticBlock static object
+--- [load] Register a new StaticBlock static object
 --- @param name string The name of the object
 --- @return StaticBlock
 function StaticBlock.reg(name) end
@@ -2708,7 +2753,7 @@ function StaticChapter.find(name) end
 --- @return StaticChapter
 function StaticChapter.get(name) end
 
---- Register a new StaticChapter static object
+--- [load] Register a new StaticChapter static object
 --- @param name string The name of the object
 --- @return StaticChapter
 function StaticChapter.reg(name) end
@@ -2737,7 +2782,7 @@ function StaticCover.find(name) end
 --- @return StaticCover
 function StaticCover.get(name) end
 
---- Register a new StaticCover static object
+--- [load] Register a new StaticCover static object
 --- @param name string The name of the object
 --- @return StaticCover
 function StaticCover.reg(name) end
@@ -2767,7 +2812,7 @@ function StaticCoverSet.find(name) end
 --- @return StaticCoverSet
 function StaticCoverSet.get(name) end
 
---- Register a new StaticCoverSet static object
+--- [load] Register a new StaticCoverSet static object
 --- @param name string The name of the object
 --- @return StaticCoverSet
 function StaticCoverSet.reg(name) end
@@ -2811,7 +2856,7 @@ function StaticItem.find(name) end
 --- @return StaticItem
 function StaticItem.get(name) end
 
---- Register a new StaticItem static object
+--- [load] Register a new StaticItem static object
 --- @param name string The name of the object
 --- @return StaticItem
 function StaticItem.reg(name) end
@@ -2875,7 +2920,7 @@ function StaticItemPanel.find(name) end
 --- @return StaticItemPanel
 function StaticItemPanel.get(name) end
 
---- Register a new StaticItemPanel static object
+--- [load] Register a new StaticItemPanel static object
 --- @param name string The name of the object
 --- @return StaticItemPanel
 function StaticItemPanel.reg(name) end
@@ -2883,7 +2928,7 @@ function StaticItemPanel.reg(name) end
 --- Engine static mesh
 --- 
 --- @class StaticMesh : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 StaticMesh = {}
 
 --- Load a static mesh asset
@@ -2915,7 +2960,7 @@ function StaticModifier.find(name) end
 --- @return StaticModifier
 function StaticModifier.get(name) end
 
---- Register a new StaticModifier static object
+--- [load] Register a new StaticModifier static object
 --- @param name string The name of the object
 --- @return StaticModifier
 function StaticModifier.reg(name) end
@@ -2993,7 +3038,7 @@ function StaticPlanet.find(name) end
 --- @return StaticPlanet
 function StaticPlanet.get(name) end
 
---- Register a new StaticPlanet static object
+--- [load] Register a new StaticPlanet static object
 --- @param name string The name of the object
 --- @return StaticPlanet
 function StaticPlanet.reg(name) end
@@ -3040,7 +3085,7 @@ function StaticProp.find(name) end
 --- @return StaticProp
 function StaticProp.get(name) end
 
---- Register a new StaticProp static object
+--- [load] Register a new StaticProp static object
 --- @param name string The name of the object
 --- @return StaticProp
 function StaticProp.reg(name) end
@@ -3070,7 +3115,7 @@ function StaticPropList.find(name) end
 --- @return StaticPropList
 function StaticPropList.get(name) end
 
---- Register a new StaticPropList static object
+--- [load] Register a new StaticPropList static object
 --- @param name string The name of the object
 --- @return StaticPropList
 function StaticPropList.reg(name) end
@@ -3170,7 +3215,7 @@ function StaticQuest.find(name) end
 --- @return StaticQuest
 function StaticQuest.get(name) end
 
---- Register a new StaticQuest static object
+--- [load] Register a new StaticQuest static object
 --- @param name string The name of the object
 --- @return StaticQuest
 function StaticQuest.reg(name) end
@@ -3184,7 +3229,7 @@ function StaticQuest.reg(name) end
 --- @field level integer Level reached by an upgrade research, 0 for a node completed once
 --- @field tier integer Progression tier the research belongs to
 --- @field required_research StaticResearch[] Researches that must be complete before this one opens
---- @field completed boolean Whether the research is already complete
+--- @field completed boolean [readonly] Whether the research is already complete
 StaticResearch = {}
 
 --- Trying to cast Object into StaticResearch
@@ -3230,7 +3275,7 @@ function StaticResearchBonusInventory.find(name) end
 --- @return StaticResearchBonusInventory
 function StaticResearchBonusInventory.get(name) end
 
---- Register a new StaticResearchBonusInventory static object
+--- [load] Register a new StaticResearchBonusInventory static object
 --- @param name string The name of the object
 --- @return StaticResearchBonusInventory
 function StaticResearchBonusInventory.reg(name) end
@@ -3259,7 +3304,7 @@ function StaticResearchDecorationUnlock.find(name) end
 --- @return StaticResearchDecorationUnlock
 function StaticResearchDecorationUnlock.get(name) end
 
---- Register a new StaticResearchDecorationUnlock static object
+--- [load] Register a new StaticResearchDecorationUnlock static object
 --- @param name string The name of the object
 --- @return StaticResearchDecorationUnlock
 function StaticResearchDecorationUnlock.reg(name) end
@@ -3288,7 +3333,7 @@ function StaticResearchEfficiency.find(name) end
 --- @return StaticResearchEfficiency
 function StaticResearchEfficiency.get(name) end
 
---- Register a new StaticResearchEfficiency static object
+--- [load] Register a new StaticResearchEfficiency static object
 --- @param name string The name of the object
 --- @return StaticResearchEfficiency
 function StaticResearchEfficiency.reg(name) end
@@ -3319,7 +3364,7 @@ function StaticResearchModifier.find(name) end
 --- @return StaticResearchModifier
 function StaticResearchModifier.get(name) end
 
---- Register a new StaticResearchModifier static object
+--- [load] Register a new StaticResearchModifier static object
 --- @param name string The name of the object
 --- @return StaticResearchModifier
 function StaticResearchModifier.reg(name) end
@@ -3327,10 +3372,10 @@ function StaticResearchModifier.reg(name) end
 --- Research unlocking a set of recipes
 --- 
 --- @class StaticResearchRecipe : StaticResearch
---- @field recipe_unlocks Recipe[] Recipes this research unlocks
+--- @field recipe_unlocks Recipe[] [readonly] Recipes this research unlocks
 StaticResearchRecipe = {}
 
---- Make this research unlock a recipe; a recipe of `HandRecipeDictionary` also puts its output item into hand crafting
+--- [load] Make this research unlock a recipe; a recipe of `HandRecipeDictionary` also puts its output item into hand crafting
 --- @param recipe Recipe
 --- @return boolean False when the recipe is null
 function StaticResearchRecipe:unlocks(recipe) end
@@ -3354,7 +3399,7 @@ function StaticResearchRecipe.find(name) end
 --- @return StaticResearchRecipe
 function StaticResearchRecipe.get(name) end
 
---- Register a new StaticResearchRecipe static object
+--- [load] Register a new StaticResearchRecipe static object
 --- @param name string The name of the object
 --- @return StaticResearchRecipe
 function StaticResearchRecipe.reg(name) end
@@ -3383,7 +3428,7 @@ function StaticResearchToolUnlock.find(name) end
 --- @return StaticResearchToolUnlock
 function StaticResearchToolUnlock.get(name) end
 
---- Register a new StaticResearchToolUnlock static object
+--- [load] Register a new StaticResearchToolUnlock static object
 --- @param name string The name of the object
 --- @return StaticResearchToolUnlock
 function StaticResearchToolUnlock.reg(name) end
@@ -3414,7 +3459,7 @@ function StaticStructure.find(name) end
 --- @return StaticStructure
 function StaticStructure.get(name) end
 
---- Register a new StaticStructure static object
+--- [load] Register a new StaticStructure static object
 --- @param name string The name of the object
 --- @return StaticStructure
 function StaticStructure.reg(name) end
@@ -3454,7 +3499,7 @@ function StaticTip.find(name) end
 --- @return StaticTip
 function StaticTip.get(name) end
 
---- Register a new StaticTip static object
+--- [load] Register a new StaticTip static object
 --- @param name string The name of the object
 --- @return StaticTip
 function StaticTip.reg(name) end
@@ -3486,7 +3531,7 @@ function StaticWeather.find(name) end
 --- @return StaticWeather
 function StaticWeather.get(name) end
 
---- Register a new StaticWeather static object
+--- [load] Register a new StaticWeather static object
 --- @param name string The name of the object
 --- @return StaticWeather
 function StaticWeather.reg(name) end
@@ -3545,8 +3590,8 @@ function SurfaceDefinition.new_simple() end
 --- Column of generated block cells
 --- 
 --- @class TallSectorData
---- @field zero_height integer Cell height the column starts at
---- @field height integer Number of cells in the column
+--- @field zero_height integer [readonly] Cell height the column starts at
+--- @field height integer [readonly] Number of cells in the column
 TallSectorData = {}
 
 --- Block at the given position
@@ -3583,7 +3628,7 @@ function Tesselator.find(name) end
 --- @return Tesselator
 function Tesselator.get(name) end
 
---- Register a new Tesselator static object
+--- [load] Register a new Tesselator static object
 --- @param name string The name of the object
 --- @return Tesselator
 function Tesselator.reg(name) end
@@ -3612,7 +3657,7 @@ function TesselatorCube.find(name) end
 --- @return TesselatorCube
 function TesselatorCube.get(name) end
 
---- Register a new TesselatorCube static object
+--- [load] Register a new TesselatorCube static object
 --- @param name string The name of the object
 --- @return TesselatorCube
 function TesselatorCube.reg(name) end
@@ -3641,7 +3686,7 @@ function TesselatorMarching.find(name) end
 --- @return TesselatorMarching
 function TesselatorMarching.get(name) end
 
---- Register a new TesselatorMarching static object
+--- [load] Register a new TesselatorMarching static object
 --- @param name string The name of the object
 --- @return TesselatorMarching
 function TesselatorMarching.reg(name) end
@@ -3649,7 +3694,7 @@ function TesselatorMarching.reg(name) end
 --- Engine 2D texture
 --- 
 --- @class Texture : Object
---- @field name string Object name
+--- @field name string [readonly] Object name
 Texture = {}
 
 --- Find a loaded texture by name
@@ -3717,8 +3762,8 @@ function Transform:get_scale() end
 --- Integer vector 2
 --- 
 --- @class Vec2i
---- @field zero Vec2i (0, 0)
---- @field one Vec2i (1, 1)
+--- @field zero Vec2i [readonly] (0, 0)
+--- @field one Vec2i [readonly] (1, 1)
 --- @field x integer
 --- @field y integer
 Vec2i = {}
@@ -3732,14 +3777,14 @@ function Vec2i.new(x, y) end
 --- Float vector 3
 --- 
 --- @class Vec3
---- @field one Vec3 (1, 1, 1)
---- @field zero Vec3 (0, 0, 0)
---- @field up Vec3 (0, 0, 1)
---- @field down Vec3 (0, 0, -1)
---- @field left Vec3 (0, 1, 0)
---- @field right Vec3 (0, -1, 0)
---- @field back Vec3 (-1, 0, 0)
---- @field front Vec3 (1, 0, 0)
+--- @field one Vec3 [readonly] (1, 1, 1)
+--- @field zero Vec3 [readonly] (0, 0, 0)
+--- @field up Vec3 [readonly] (0, 0, 1)
+--- @field down Vec3 [readonly] (0, 0, -1)
+--- @field left Vec3 [readonly] (0, 1, 0)
+--- @field right Vec3 [readonly] (0, -1, 0)
+--- @field back Vec3 [readonly] (-1, 0, 0)
+--- @field front Vec3 [readonly] (1, 0, 0)
 --- @field x number
 --- @field y number
 --- @field z number
@@ -3764,14 +3809,14 @@ function Vec3:normalize() end
 --- Integer vector 3
 --- 
 --- @class Vec3i
---- @field one Vec3i (1, 1, 1)
---- @field zero Vec3i (0, 0, 0)
---- @field up Vec3i (0, 0, 1)
---- @field down Vec3i (0, 0, -1)
---- @field left Vec3i (0, 1, 0)
---- @field right Vec3i (0, -1, 0)
---- @field back Vec3i (-1, 0, 0)
---- @field front Vec3i (1, 0, 0)
+--- @field one Vec3i [readonly] (1, 1, 1)
+--- @field zero Vec3i [readonly] (0, 0, 0)
+--- @field up Vec3i [readonly] (0, 0, 1)
+--- @field down Vec3i [readonly] (0, 0, -1)
+--- @field left Vec3i [readonly] (0, 1, 0)
+--- @field right Vec3i [readonly] (0, -1, 0)
+--- @field back Vec3i [readonly] (-1, 0, 0)
+--- @field front Vec3i [readonly] (1, 0, 0)
 --- @field x integer
 --- @field y integer
 --- @field z integer
