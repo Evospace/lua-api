@@ -1,6 +1,6 @@
 {
-	"version": "0.22.0",
-	"prelude": "--- @type boolean|nil\nLuaLogFlag = false\n\n--- Prints info to log\n--- @param message string\nfunction print_info(message) end\n\n--- Prints error to log but do not breaks execution\n--- @param message string\nfunction print_err(message) end\n\n--- Prints warning to log\n--- @param message string\nfunction print_warn(message) end\n\n--- Dimension of the running session\n--- @type Dimension\ndim = {}\n",
+	"version": "0.22.1",
+	"prelude": "--- @type boolean|nil\nLuaLogFlag = false\n\n--- Prints info to log\n--- @param message string\nfunction print_info(message) end\n\n--- Prints error to log but do not breaks execution\n--- @param message string\nfunction print_err(message) end\n\n--- Prints warning to log\n--- @param message string\nfunction print_warn(message) end\n\n--- Dimension of the running session\n--- @type Dimension\ndim = {}\n\n--- This mod's table of the local player, kept in the save under the player's profile: booleans, numbers, strings, Vec3i and tables of them. nil outside a game session\n--- @type table|nil\nstorage = {}\n",
 	"classes": [
 		{
 			"name": "AbstractCrafter",
@@ -1438,6 +1438,15 @@
 					"internal": false,
 					"writable": false,
 					"load_only": false
+				},
+				{
+					"name": "state",
+					"type": "integer",
+					"summary": "State shown under the crosshair, one of defines.block_state",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
 				}
 			],
 			"functions": [
@@ -2075,6 +2084,51 @@
 					"load_only": false
 				},
 				{
+					"name": "straight_cover",
+					"type": "StaticCover",
+					"summary": "Cover mesh for a run straight through the block, built along X with a flange on one end",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "straight_plain_cover",
+					"type": "StaticCover",
+					"summary": "Cover mesh for a run straight through the block with no flange, built along X",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "elbow_cover",
+					"type": "StaticCover",
+					"summary": "Cover mesh for a right angle turn, built along +X and -Y",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "dead_end_cover",
+					"type": "StaticCover",
+					"summary": "Cover mesh for a single connection, built along +X",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "isolated_cover",
+					"type": "StaticCover",
+					"summary": "Cover mesh for a block with no connections",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
 					"name": "channel",
 					"type": "string",
 					"summary": "Network channel name",
@@ -2616,6 +2670,99 @@
 			]
 		},
 		{
+			"name": "DeepStorageBlockLogic",
+			"kind": "class",
+			"parent": "ItemRackBlockLogic",
+			"internal": false,
+			"summary": "Powered storage block holding one item type",
+			"fields": [
+				{
+					"name": "energy",
+					"type": "ResourceInventory",
+					"summary": "Electricity buffer the block draws from",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into DeepStorageBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "DeepStorageBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return DeepStorageBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new DeepStorageBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "DeepStorageBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new DeepStorageBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "DeepStorageBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "DesignableCoverBlockLogic",
 			"kind": "class",
 			"parent": "BlockLogic",
@@ -2958,65 +3105,9 @@
 					]
 				},
 				{
-					"name": "teleport_pending",
-					"kind": "method",
-					"summary": "Whether a teleport is still waiting for the target columns to finish compiling",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": "True while the player is still in transit"
-					},
-					"params": []
-				},
-				{
-					"name": "columns_loading",
-					"kind": "method",
-					"summary": "How many columns the streaming area around the player is still generating or reading from disk",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "number",
-						"desc": "Columns waiting on the load worker"
-					},
-					"params": []
-				},
-				{
-					"name": "sectors_compiling",
-					"kind": "method",
-					"summary": "How many sectors of streamed-in columns have no mesh built for their current contents",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "number",
-						"desc": "Sectors waiting on the mesh compiler"
-					},
-					"params": []
-				},
-				{
-					"name": "streaming_ready",
-					"kind": "method",
-					"summary": "Whether the world around the player has finished streaming: nothing left to load, nothing left to mesh",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": "True when both counts are zero"
-					},
-					"params": []
-				},
-				{
 					"name": "get_produced",
 					"kind": "method",
-					"summary": "How much of an item machines and hand crafts have produced on this surface over the whole save, zero for an item nothing has made yet",
+					"summary": "How much of an item machines have produced on this surface over the whole save, zero for an item no machine has made yet",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -3034,32 +3125,22 @@
 					]
 				},
 				{
-					"name": "place_ghost",
+					"name": "get_consumed",
 					"kind": "method",
-					"summary": "Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out. The ghost lands at the host's stamped tick, so read it back with get_block a tick later",
+					"summary": "How much of an item machines have used up on this surface over the whole save, zero for an item no machine has used yet",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
 					"returns":
 					{
-						"type": "boolean",
-						"desc": "True when the edit was taken"
+						"type": "number",
+						"desc": "Units consumed all time"
 					},
 					"params": [
 						{
-							"name": "bpos",
-							"type": "Vec3i",
-							"desc": "Block position"
-						},
-						{
-							"name": "target",
-							"type": "StaticBlock",
-							"desc": "Block the ghost stands for"
-						},
-						{
-							"name": "rotation",
-							"type": "FQuat?",
-							"desc": "Rotation, nil for identity"
+							"name": "item",
+							"type": "StaticItem",
+							"desc": "Item to count"
 						}
 					]
 				},
@@ -3435,7 +3516,7 @@
 		{
 			"name": "ElectricityContainerBlockLogic",
 			"kind": "class",
-			"parent": "ConductorBlockLogic",
+			"parent": "StackedContainerBlockLogic",
 			"internal": false,
 			"summary": "Electricity storage node of a conductor network",
 			"fields": [],
@@ -3766,6 +3847,15 @@
 					"load_only": false
 				},
 				{
+					"name": "tool_hints",
+					"type": "boolean",
+					"summary": "",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
 					"name": "ctrl_hotbar",
 					"type": "boolean",
 					"summary": "",
@@ -3821,6 +3911,15 @@
 				},
 				{
 					"name": "autosave_period",
+					"type": "integer",
+					"summary": "",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "undo_confirm_minutes",
 					"type": "integer",
 					"summary": "",
 					"boilerplate": false,
@@ -3942,6 +4041,15 @@
 					"name": "rated_wind_speed",
 					"type": "number",
 					"summary": "Wind speed at which output reaches the block rated production",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "follows_sun",
+					"type": "boolean",
+					"summary": "Solar output follows the sun altitude; false keeps the sun at its zenith day and night, and only clouds cut the output",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -4455,7 +4563,7 @@
 		{
 			"name": "FluidContainerBlockLogic",
 			"kind": "class",
-			"parent": "ConductorBlockLogic",
+			"parent": "StackedContainerBlockLogic",
 			"internal": false,
 			"summary": "Fluid storage node of a conductor network",
 			"fields": [],
@@ -5608,7 +5716,7 @@
 				{
 					"name": "zero_slots",
 					"type": "boolean",
-					"summary": "",
+					"summary": "Keeps a slot whose count drops to zero",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -6332,6 +6440,233 @@
 			]
 		},
 		{
+			"name": "ItemGroup",
+			"kind": "class",
+			"parent": "StaticItem",
+			"internal": false,
+			"summary": "Recipe ingredient that any one of its member items satisfies, one for one",
+			"fields": [
+				{
+					"name": "members",
+					"type": "StaticItem[]",
+					"summary": "Items that satisfy the group, in the order a craft takes them",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "matches",
+					"kind": "method",
+					"summary": "**True** when item is a member of the group",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "item",
+							"type": "StaticItem",
+							"desc": ""
+						}
+					]
+				},
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into ItemGroup",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemGroup",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return ItemGroup class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "find",
+					"kind": "static",
+					"summary": "Looks ItemGroup up in db, nil when there is none",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemGroup",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "get",
+					"kind": "static",
+					"summary": "Takes ItemGroup from db, reports a miss to the log",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemGroup",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "reg",
+					"kind": "static",
+					"summary": "Register a new ItemGroup static object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "ItemGroup",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ItemRackBlockLogic",
+			"kind": "class",
+			"parent": "StorageBlockLogic",
+			"internal": false,
+			"summary": "Storage block holding one item type",
+			"fields": [
+				{
+					"name": "capacity",
+					"type": "integer",
+					"summary": "Item count the storage holds",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into ItemRackBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemRackBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return ItemRackBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new ItemRackBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemRackBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new ItemRackBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "ItemRackBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "Kto",
 			"kind": "class",
 			"internal": false,
@@ -6633,6 +6968,36 @@
 					]
 				},
 				{
+					"name": "format",
+					"kind": "static",
+					"summary": "Localized line with {0}, {1}... filled in order and its tokens left for ui.RichText",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "string",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "key",
+							"type": "string",
+							"desc": "Localization key"
+						},
+						{
+							"name": "table",
+							"type": "string",
+							"desc": "Localization table name"
+						},
+						{
+							"name": "args",
+							"type": "any[]",
+							"desc": "Values put in place of {0}, {1}..."
+						}
+					]
+				},
+				{
 					"name": "gui_number",
 					"kind": "static",
 					"summary": "Get number as string for GUI (3000 -> 3.0k)",
@@ -6656,6 +7021,20 @@
 					"name": "get",
 					"kind": "method",
 					"summary": "Resolve Loc object to localized string",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "string",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "raw",
+					"kind": "method",
+					"summary": "Localized string with its tokens such as {item:Name} left in, for ui.RichText to turn into links",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -7837,7 +8216,42 @@
 			"internal": false,
 			"summary": "Local player controller",
 			"fields": [],
-			"functions": []
+			"functions": [
+				{
+					"name": "get",
+					"kind": "static",
+					"summary": "The local player, nil outside a game session",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Player",
+						"desc": "Local player"
+					},
+					"params": []
+				},
+				{
+					"name": "hotbar_has",
+					"kind": "method",
+					"summary": "Whether an item stands in a hotbar slot of any modifier row",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when a slot holds the item"
+					},
+					"params": [
+						{
+							"name": "item",
+							"type": "StaticItem",
+							"desc": "Item to look for"
+						}
+					]
+				}
+			]
 		},
 		{
 			"name": "PlayerController",
@@ -9285,6 +9699,15 @@
 			]
 		},
 		{
+			"name": "RenderTexture",
+			"kind": "class",
+			"parent": "Texture",
+			"internal": false,
+			"summary": "Texture the game renders into, such as a block thumbnail",
+			"fields": [],
+			"functions": []
+		},
+		{
 			"name": "ResourceAccessor",
 			"kind": "class",
 			"parent": "Accessor",
@@ -10478,6 +10901,135 @@
 			]
 		},
 		{
+			"name": "StackedContainerBlockLogic",
+			"kind": "class",
+			"parent": "ConductorBlockLogic",
+			"internal": false,
+			"summary": "Storage node whose covers merge into a vertical column",
+			"fields": [
+				{
+					"name": "single_cover",
+					"type": "StaticCover",
+					"summary": "Body used when the block stands alone",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "bottom_cover",
+					"type": "StaticCover",
+					"summary": "Body used when another storage stands above",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "middle_cover",
+					"type": "StaticCover",
+					"summary": "Body used when another storage stands above and below",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "top_cover",
+					"type": "StaticCover",
+					"summary": "Body used when another storage stands below",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "connector_cover",
+					"type": "StaticCover",
+					"summary": "Connector placed on every face the column does not swallow",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into StackedContainerBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StackedContainerBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return StackedContainerBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new StackedContainerBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StackedContainerBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new StackedContainerBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StackedContainerBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "StaticAchievement",
 			"kind": "class",
 			"parent": "Prototype",
@@ -10531,7 +11083,7 @@
 				},
 				{
 					"name": "image",
-					"type": "Texture",
+					"type": "Texture2D",
 					"summary": "Achievement icon",
 					"boilerplate": false,
 					"internal": false,
@@ -11334,7 +11886,7 @@
 			"fields": [
 				{
 					"name": "image",
-					"type": "Texture",
+					"type": "Texture2D",
 					"summary": "Item image in UI",
 					"boilerplate": false,
 					"internal": false,
@@ -11366,6 +11918,15 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "type",
+					"type": "string",
+					"summary": "What the item is: \"solid\", \"fluid\" or \"abstract\"",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
 					"load_only": false
 				},
 				{
@@ -11602,7 +12163,16 @@
 				{
 					"name": "widget",
 					"type": "string",
-					"summary": "Panel widget class path; empty means the built-in text panel",
+					"summary": "Panel widget class path; empty means build draws the panel",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "build",
+					"type": "function?",
+					"summary": "Called with the item and the panel each time the panel is shown; returns the ui.Widget it draws, nil hides the panel",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -11885,9 +12455,20 @@
 		{
 			"name": "StaticModifier",
 			"kind": "class",
+			"parent": "Prototype",
 			"internal": false,
-			"summary": "",
-			"fields": [],
+			"summary": "Bonus a research adds to a machine stat",
+			"fields": [
+				{
+					"name": "value",
+					"type": "integer",
+					"summary": "Bonus reached so far, in percent",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				}
+			],
 			"functions": [
 				{
 					"name": "cast",
@@ -11999,6 +12580,24 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "mined_item",
+					"type": "StaticItem",
+					"summary": "Item mining returns and a decor build pays; nil when the object is not minable",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "mined_count",
+					"type": "integer",
+					"summary": "How many of mined_item mining returns and a decor build pays; zero when the object is not minable",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
 					"load_only": false
 				}
 			],
@@ -12148,6 +12747,24 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false
+				},
+				{
+					"name": "weather_severity_min",
+					"type": "number",
+					"summary": "Calmest point the weather cycle reaches, from 0 clear sky to 1 full storm",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "weather_severity_max",
+					"type": "number",
+					"summary": "Stormiest point the weather cycle reaches, from 0 clear sky to 1 full storm",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
 				}
 			],
 			"functions": [
@@ -12472,6 +13089,15 @@
 					"name": "damage_effect",
 					"type": "Class",
 					"summary": "Effect actor class spawned on a non-fatal hit",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "vehicle_break_speed",
+					"type": "number",
+					"summary": "Closing speed in cm/s at which a vehicle breaks through the prop; 0 makes the prop a solid obstacle",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -13390,8 +14016,18 @@
 			"kind": "class",
 			"parent": "StaticResearch",
 			"internal": false,
-			"summary": "Research unlocking a decoration item",
-			"fields": [],
+			"summary": "Research unlocking decorations built from building material",
+			"fields": [
+				{
+					"name": "decorations",
+					"type": "StaticItem[]",
+					"summary": "Decorations this research unlocks",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				}
+			],
 			"functions": [
 				{
 					"name": "cast",
@@ -13856,7 +14492,17 @@
 			"parent": "StaticResearch",
 			"internal": false,
 			"summary": "Research unlocking a player tool",
-			"fields": [],
+			"fields": [
+				{
+					"name": "tool",
+					"type": "StaticItem",
+					"summary": "Tool this research puts in the tool belt",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				}
+			],
 			"functions": [
 				{
 					"name": "cast",
@@ -14952,7 +15598,7 @@
 			"kind": "class",
 			"parent": "Object",
 			"internal": false,
-			"summary": "Engine 2D texture",
+			"summary": "Engine texture, anything a picture can be drawn from",
 			"fields": [
 				{
 					"name": "name",
@@ -14974,7 +15620,7 @@
 					"load_only": false,
 					"returns":
 					{
-						"type": "Texture",
+						"type": "Texture2D",
 						"desc": ""
 					},
 					"params": [
@@ -14986,6 +15632,15 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Texture2D",
+			"kind": "class",
+			"parent": "Texture",
+			"internal": false,
+			"summary": "Texture loaded from an image, such as an item icon",
+			"fields": [],
+			"functions": []
 		},
 		{
 			"name": "TrainScheduleStop",
@@ -15761,6 +16416,87 @@
 			]
 		},
 		{
+			"name": "defines.block_state",
+			"kind": "namespace",
+			"internal": false,
+			"summary": "Values BlockLogic.state takes",
+			"fields": [
+				{
+					"name": "input_shortage",
+					"type": "integer",
+					"summary": "An input item is missing",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "working",
+					"type": "integer",
+					"summary": "Working",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "no_room_in_output",
+					"type": "integer",
+					"summary": "The output has no room for the result",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "resource_saturated",
+					"type": "integer",
+					"summary": "Nothing takes the energy it gives",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "resource_required",
+					"type": "integer",
+					"summary": "Not enough energy comes in",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "not_initialized",
+					"type": "integer",
+					"summary": "Has not run yet",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "switch_off",
+					"type": "integer",
+					"summary": "Switched off",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "idle",
+					"type": "integer",
+					"summary": "Nothing to do",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": []
+		},
+		{
 			"name": "defines.events",
 			"kind": "namespace",
 			"internal": false,
@@ -15877,7 +16613,7 @@
 				{
 					"name": "on_gui_opened",
 					"type": "integer",
-					"summary": "A window was opened. Context: { gui }, \"inventory\", \"research\", \"map\", \"questbook\", \"recipes\", \"pause\", \"spawn\" or \"saves\"",
+					"summary": "A window was opened. Context: { gui }, \"inventory\", \"research\", \"map\", \"questbook\", \"pause\", \"spawn\", \"saves\", \"tips\", \"blueprints\", \"trains\", \"production\" or \"decor\"",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -15887,6 +16623,24 @@
 					"name": "on_gui_closed",
 					"type": "integer",
 					"summary": "A window was closed. Context: { gui, any_open }, gui named as in on_gui_opened; any_open is false when the window that closed was the last one",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "on_item_searched",
+					"type": "integer",
+					"summary": "Player typed into the item database search. Context: { text, items }, items lists what the search found",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "on_recipes_shown",
+					"type": "integer",
+					"summary": "Recipe window showed an item. Context: { item }",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -15955,231 +16709,6 @@
 							"name": "spec",
 							"type": "table",
 							"desc": "{ id = \"...\", label = \"...\"?, icon = \"/Game/Textures/EqualsIco.EqualsIco\"?, on_click = function() end, is_on = function() return bool end? }"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "shot",
-			"kind": "namespace",
-			"internal": false,
-			"summary": "Scripted screenshot capture",
-			"fields": [],
-			"functions": [
-				{
-					"name": "capture",
-					"kind": "static",
-					"summary": "Capture a screenshot",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "params",
-							"type": "table",
-							"desc": "Table with path, width, height, supersample, location, rotation and fov"
-						}
-					]
-				},
-				{
-					"name": "widget",
-					"kind": "static",
-					"summary": "Capture one widget: the pixels it holds on screen, or an offscreen render of a fresh instance",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "params",
-							"type": "table",
-							"desc": "Table with name, path, w, h, scale, fresh and bg"
-						}
-					]
-				},
-				{
-					"name": "widgets",
-					"kind": "static",
-					"summary": "Log every widget instance with the geometry it was last arranged at",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"params": []
-				},
-				{
-					"name": "screen",
-					"kind": "static",
-					"summary": "Open a hud screen and answer with the widget class it opened, empty when it did not open",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "string",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "name",
-							"type": "string",
-							"desc": "Screen name: Inventory, Recipes, Map, Pause, Research, QuestBook, Spawn, SavesManager, Tips"
-						}
-					]
-				},
-				{
-					"name": "boot",
-					"kind": "static",
-					"summary": "Restart the unit boot sequence from its first frame",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "mode",
-							"type": "string",
-							"desc": "full or resume"
-						}
-					]
-				},
-				{
-					"name": "cvar",
-					"kind": "static",
-					"summary": "Set a console variable",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "name",
-							"type": "string",
-							"desc": "Console variable name"
-						},
-						{
-							"name": "value",
-							"type": "any",
-							"desc": "Boolean, number or string value"
-						}
-					]
-				},
-				{
-					"name": "fps",
-					"kind": "static",
-					"summary": "Pin the engine to a fixed time step, zero turns it off",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"params": [
-						{
-							"name": "fps",
-							"type": "number",
-							"desc": "Frames per second of the fixed time step"
-						}
-					]
-				},
-				{
-					"name": "on_render_frame",
-					"kind": "static",
-					"summary": "Call a handler once per rendered frame",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"params": [
-						{
-							"name": "handler",
-							"type": "function",
-							"desc": "Function called with the frame index"
-						}
-					]
-				},
-				{
-					"name": "finish",
-					"kind": "static",
-					"summary": "Stop the running script and report success",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"params": []
-				},
-				{
-					"name": "fail",
-					"kind": "static",
-					"summary": "Stop the running script and report failure",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"params": [
-						{
-							"name": "message",
-							"type": "string",
-							"desc": "Reason written to the log"
-						}
-					]
-				},
-				{
-					"name": "props_underwater",
-					"kind": "static",
-					"summary": "Prop instances standing below the water plane, counted by prop",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": []
-				},
-				{
-					"name": "player_camera",
-					"kind": "static",
-					"summary": "Transform of the local player camera",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "Transform",
-						"desc": ""
-					},
-					"params": []
-				},
-				{
-					"name": "time_of_day",
-					"kind": "static",
-					"summary": "Freeze the sky at a solar hour",
-					"boilerplate": false,
-					"internal": false,
-					"load_only": false,
-					"returns":
-					{
-						"type": "boolean",
-						"desc": ""
-					},
-					"params": [
-						{
-							"name": "hours",
-							"type": "number",
-							"desc": "Solar hour, 0..24"
 						}
 					]
 				}
@@ -16304,6 +16833,35 @@
 			]
 		},
 		{
+			"name": "ui",
+			"kind": "namespace",
+			"internal": false,
+			"summary": "",
+			"fields": [],
+			"functions": [
+				{
+					"name": "thumbnail",
+					"kind": "static",
+					"summary": "Rendered picture of a block for ui.Image, made once and kept; nil where nothing can be rendered",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "RenderTexture?",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "block",
+							"type": "StaticBlock",
+							"desc": "Block to picture"
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "ui.Border",
 			"kind": "class",
 			"parent": "ui.Widget",
@@ -16322,7 +16880,7 @@
 				{
 					"name": "padding",
 					"type": "number",
-					"summary": "Uniform padding in slate units (all sides)",
+					"summary": "Padding on all sides in slate units; the table constructor also takes { horizontal, vertical }",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -16331,7 +16889,16 @@
 				{
 					"name": "style",
 					"type": "string",
-					"summary": "Plate the game draws behind the child: \"panel\", \"window\", \"frame\", \"field\" or \"none\"",
+					"summary": "Plate the game draws behind the child: \"panel\", \"window\", \"frame\", \"field\", \"plate\" or \"none\"",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "color",
+					"type": "string",
+					"summary": "Tint of the plate, same forms as ui.Text color; on \"plate\" it is the fill itself, a faint light one when empty",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -16457,6 +17024,135 @@
 			]
 		},
 		{
+			"name": "ui.Image",
+			"kind": "class",
+			"parent": "ui.Widget",
+			"internal": false,
+			"summary": "Square picture of a texture, such as an item image",
+			"fields": [
+				{
+					"name": "image",
+					"type": "Texture",
+					"summary": "Texture drawn, an item image or a ui.thumbnail; nil draws nothing and keeps the space",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "size",
+					"type": "number",
+					"summary": "Side of the square in slate units",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "color",
+					"type": "string",
+					"summary": "Tint multiplied into the texture, same forms as ui.Text color",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": []
+		},
+		{
+			"name": "ui.Inventory",
+			"kind": "class",
+			"parent": "ui.Widget",
+			"internal": false,
+			"summary": "Grid of item slots showing an inventory with the game's own slot widget",
+			"fields": [
+				{
+					"name": "inventory",
+					"type": "InventoryAccess",
+					"summary": "Inventory shown; nil or an empty one hides the grid",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "numbers",
+					"type": "boolean",
+					"summary": "True draws the item counts in the slots",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "columns",
+					"type": "integer",
+					"summary": "Slots per row, at least one",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": []
+		},
+		{
+			"name": "ui.RichText",
+			"kind": "class",
+			"parent": "ui.Widget",
+			"internal": false,
+			"summary": "Wrapping body text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run",
+			"fields": [
+				{
+					"name": "text",
+					"type": "string",
+					"summary": "Source UTF-8 text, tokens and tags unexpanded",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "font_size",
+					"type": "number",
+					"summary": "Font size in slate units",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "align",
+					"type": "string",
+					"summary": "Where the lines sit: \"left\", \"center\" or \"right\"",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "color",
+					"type": "string",
+					"summary": "Color of the text outside tinted runs, same forms as ui.Text color",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "wrap",
+					"type": "boolean",
+					"summary": "True, the default, breaks long lines at the width the text is given; false keeps one line",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": []
+		},
+		{
 			"name": "ui.Scroll",
 			"kind": "class",
 			"parent": "ui.Widget",
@@ -16547,6 +17243,15 @@
 					"name": "wrap",
 					"type": "boolean",
 					"summary": "True breaks a long line instead of letting it run out of the window",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "color",
+					"type": "string",
+					"summary": "Text color: \"#rrggbb\", \"#rrggbbaa\" or a game color, \"primary\", \"dim\", \"accent\", \"accent_light\", \"warning\", \"white\"",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -16648,6 +17353,24 @@
 					"name": "visible",
 					"type": "boolean",
 					"summary": "Hidden widgets keep their place in the tree and take no input",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "fill",
+					"type": "number",
+					"summary": "Share of the free space this widget takes along an HBox or VBox; zero keeps it at the size of its content",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "valign",
+					"type": "string",
+					"summary": "Where the widget sits in the height of an HBox row: \"fill\", \"top\", \"center\" or \"bottom\"",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,

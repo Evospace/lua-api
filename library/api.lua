@@ -17,6 +17,10 @@ function print_warn(message) end
 --- @type Dimension
 dim = {}
 
+--- This mod's table of the local player, kept in the save under the player's profile: booleans, numbers, strings, Vec3i and tables of them. nil outside a game session
+--- @type table|nil
+storage = {}
+
 
 -- end of common --
 
@@ -378,6 +382,7 @@ function BlockActor.cast(object) end
 --- @field static_block StaticBlock Prototype this block was spawned from
 --- @field pos Vec3i [readonly] Cell this block stands in
 --- @field quat FQuat [readonly] Rotation turning the block's local sides into world sides
+--- @field state integer [readonly] State shown under the crosshair, one of defines.block_state
 BlockLogic = {}
 
 --- Register Accessor
@@ -523,6 +528,11 @@ function ComputerBlockLogic.new_simple() end
 --- @class ConductorBlockLogic : BlockLogic
 --- @field side_cover StaticCover Cover mesh used for wire ends
 --- @field center_cover StaticCover Cover mesh used for the block center
+--- @field straight_cover StaticCover Cover mesh for a run straight through the block, built along X with a flange on one end
+--- @field straight_plain_cover StaticCover Cover mesh for a run straight through the block with no flange, built along X
+--- @field elbow_cover StaticCover Cover mesh for a right angle turn, built along +X and -Y
+--- @field dead_end_cover StaticCover Cover mesh for a single connection, built along +X
+--- @field isolated_cover StaticCover Cover mesh for a block with no connections
 --- @field channel string Network channel name
 --- @field conductor_channel integer Numeric network channel
 --- @field capacity integer Storage added to the network
@@ -665,6 +675,31 @@ function DB.new(parent, name) end
 --- @return DB
 function DB.new_simple() end
 
+--- Powered storage block holding one item type
+--- 
+--- @class DeepStorageBlockLogic : ItemRackBlockLogic
+--- @field energy ResourceInventory Electricity buffer the block draws from
+DeepStorageBlockLogic = {}
+
+--- Trying to cast Object into DeepStorageBlockLogic
+--- @param object Object Value to cast
+--- @return DeepStorageBlockLogic
+function DeepStorageBlockLogic.cast(object) end
+
+--- Return DeepStorageBlockLogic class object
+--- @return Class
+function DeepStorageBlockLogic.get_class() end
+
+--- Creates a new DeepStorageBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return DeepStorageBlockLogic
+function DeepStorageBlockLogic.new(parent, name) end
+
+--- Creates a new DeepStorageBlockLogic instance
+--- @return DeepStorageBlockLogic
+function DeepStorageBlockLogic.new_simple() end
+
 --- Block whose center cover can be redesigned in game
 --- 
 --- @class DesignableCoverBlockLogic : BlockLogic
@@ -754,33 +789,15 @@ function Dimension:sample_height(x, y) end
 --- @param bpos Vec3i Block position
 function Dimension:teleport(bpos) end
 
---- Whether a teleport is still waiting for the target columns to finish compiling
---- @return boolean True while the player is still in transit
-function Dimension:teleport_pending() end
-
---- How many columns the streaming area around the player is still generating or reading from disk
---- @return number Columns waiting on the load worker
-function Dimension:columns_loading() end
-
---- How many sectors of streamed-in columns have no mesh built for their current contents
---- @return number Sectors waiting on the mesh compiler
-function Dimension:sectors_compiling() end
-
---- Whether the world around the player has finished streaming: nothing left to load, nothing left to mesh
---- @return boolean True when both counts are zero
-function Dimension:streaming_ready() end
-
---- How much of an item machines and hand crafts have produced on this surface over the whole save, zero for an item nothing has made yet
+--- How much of an item machines have produced on this surface over the whole save, zero for an item no machine has made yet
 --- @param item StaticItem Item to count
 --- @return number Units produced all time
 function Dimension:get_produced(item) end
 
---- Place a build ghost standing for a block, the way the build tool places one when the item in hand runs out. The ghost lands at the host's stamped tick, so read it back with get_block a tick later
---- @param bpos Vec3i Block position
---- @param target StaticBlock Block the ghost stands for
---- @param rotation FQuat? Rotation, nil for identity
---- @return boolean True when the edit was taken
-function Dimension:place_ghost(bpos, target, rotation) end
+--- How much of an item machines have used up on this surface over the whole save, zero for an item no machine has used yet
+--- @param item StaticItem Item to count
+--- @return number Units consumed all time
+function Dimension:get_consumed(item) end
 
 --- Block position the player spawns at
 --- @return Vec3i Spawn position in block cells
@@ -873,7 +890,7 @@ function DrillingRig.new_simple() end
 
 --- Electricity storage node of a conductor network
 --- 
---- @class ElectricityContainerBlockLogic : ConductorBlockLogic
+--- @class ElectricityContainerBlockLogic : StackedContainerBlockLogic
 ElectricityContainerBlockLogic = {}
 
 --- Trying to cast Object into ElectricityContainerBlockLogic
@@ -925,6 +942,7 @@ function ElectricityContainerBlockLogic.new_simple() end
 --- @field compass_show_nearest_ore boolean
 --- @field compass_show_spawn_point boolean
 --- @field quest_tracker boolean
+--- @field tool_hints boolean
 --- @field ctrl_hotbar boolean
 --- @field alt_hotbar boolean
 --- @field shift_hotbar boolean
@@ -932,6 +950,7 @@ function ElectricityContainerBlockLogic.new_simple() end
 --- @field fog number
 --- @field window_mode integer
 --- @field autosave_period integer
+--- @field undo_confirm_minutes integer
 --- @field memory_stats boolean
 --- @field weather_particles integer
 --- @field wind_animation number
@@ -953,6 +972,7 @@ function Engine:show_confirmation() end
 --- @field wind_powered boolean
 --- @field cut_in_wind_speed number Wind speed at which the rotor starts turning; below it output is zero
 --- @field rated_wind_speed number Wind speed at which output reaches the block rated production
+--- @field follows_sun boolean Solar output follows the sun altitude; false keeps the sun at its zenith day and night, and only clouds cut the output
 EnvironmentCrafter = {}
 
 --- Trying to cast Object into EnvironmentCrafter
@@ -1090,7 +1110,7 @@ function FenceBlockLogic.new_simple() end
 
 --- Fluid storage node of a conductor network
 --- 
---- @class FluidContainerBlockLogic : ConductorBlockLogic
+--- @class FluidContainerBlockLogic : StackedContainerBlockLogic
 FluidContainerBlockLogic = {}
 
 --- Trying to cast Object into FluidContainerBlockLogic
@@ -1391,7 +1411,7 @@ function Inventory.new_simple() end
 --- Inventory interface with add and remove operations
 --- 
 --- @class InventoryAccess : InventoryReader
---- @field zero_slots boolean
+--- @field zero_slots boolean Keeps a slot whose count drops to zero
 --- @field draggable boolean Whether inventory can be dragged in UI (default: true)
 InventoryAccess = {}
 
@@ -1585,6 +1605,66 @@ function ItemData.new(item, count) end
 --- @return ItemData
 function ItemData.new_zero(item) end
 
+--- Recipe ingredient that any one of its member items satisfies, one for one
+--- 
+--- @class ItemGroup : StaticItem
+--- @field members StaticItem[] Items that satisfy the group, in the order a craft takes them
+ItemGroup = {}
+
+--- **True** when item is a member of the group
+--- @param item StaticItem
+--- @return boolean
+function ItemGroup:matches(item) end
+
+--- Trying to cast Object into ItemGroup
+--- @param object Object Value to cast
+--- @return ItemGroup
+function ItemGroup.cast(object) end
+
+--- Return ItemGroup class object
+--- @return Class
+function ItemGroup.get_class() end
+
+--- Looks ItemGroup up in db, nil when there is none
+--- @param name string The name of the object
+--- @return ItemGroup
+function ItemGroup.find(name) end
+
+--- Takes ItemGroup from db, reports a miss to the log
+--- @param name string The name of the object
+--- @return ItemGroup
+function ItemGroup.get(name) end
+
+--- [load] Register a new ItemGroup static object
+--- @param name string The name of the object
+--- @return ItemGroup
+function ItemGroup.reg(name) end
+
+--- Storage block holding one item type
+--- 
+--- @class ItemRackBlockLogic : StorageBlockLogic
+--- @field capacity integer Item count the storage holds
+ItemRackBlockLogic = {}
+
+--- Trying to cast Object into ItemRackBlockLogic
+--- @param object Object Value to cast
+--- @return ItemRackBlockLogic
+function ItemRackBlockLogic.cast(object) end
+
+--- Return ItemRackBlockLogic class object
+--- @return Class
+function ItemRackBlockLogic.get_class() end
+
+--- Creates a new ItemRackBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return ItemRackBlockLogic
+function ItemRackBlockLogic.new(parent, name) end
+
+--- Creates a new ItemRackBlockLogic instance
+--- @return ItemRackBlockLogic
+function ItemRackBlockLogic.new_simple() end
+
 --- Localization key table object
 --- 
 --- @class Kto
@@ -1672,6 +1752,13 @@ function Loc.text(key, table, value) end
 --- @return string
 function Loc.get(key, table) end
 
+--- Localized line with {0}, {1}... filled in order and its tokens left for ui.RichText
+--- @param key string Localization key
+--- @param table string Localization table name
+--- @param args any[] Values put in place of {0}, {1}...
+--- @return string
+function Loc.format(key, table, args) end
+
 --- Get number as string for GUI (3000 -> 3.0k)
 --- @param value number Number to format
 --- @return string
@@ -1680,6 +1767,10 @@ function Loc.gui_number(value) end
 --- Resolve Loc object to localized string
 --- @return string
 function Loc:get() end
+
+--- Localized string with its tokens such as {item:Name} left in, for ui.RichText to turn into links
+--- @return string
+function Loc:raw() end
 
 --- Non localized data entry
 --- 
@@ -1985,6 +2076,15 @@ function Object.get_class() end
 --- 
 --- @class Player : Actor
 Player = {}
+
+--- The local player, nil outside a game session
+--- @return Player Local player
+function Player.get() end
+
+--- Whether an item stands in a hotbar slot of any modifier row
+--- @param item StaticItem Item to look for
+--- @return boolean True when a slot holds the item
+function Player:hotbar_has(item) end
 
 --- Player input and view owner
 --- 
@@ -2353,6 +2453,11 @@ function RegionMap.new(parent, name) end
 --- @return RegionMap
 function RegionMap.new_simple() end
 
+--- Texture the game renders into, such as a block thumbnail
+--- 
+--- @class RenderTexture : Texture
+RenderTexture = {}
+
 --- Accessor that transfers a resource through a block side
 --- 
 --- @class ResourceAccessor : Accessor
@@ -2636,6 +2741,35 @@ function SpotlightBlockLogic.new(parent, name) end
 --- @return SpotlightBlockLogic
 function SpotlightBlockLogic.new_simple() end
 
+--- Storage node whose covers merge into a vertical column
+--- 
+--- @class StackedContainerBlockLogic : ConductorBlockLogic
+--- @field single_cover StaticCover Body used when the block stands alone
+--- @field bottom_cover StaticCover Body used when another storage stands above
+--- @field middle_cover StaticCover Body used when another storage stands above and below
+--- @field top_cover StaticCover Body used when another storage stands below
+--- @field connector_cover StaticCover Connector placed on every face the column does not swallow
+StackedContainerBlockLogic = {}
+
+--- Trying to cast Object into StackedContainerBlockLogic
+--- @param object Object Value to cast
+--- @return StackedContainerBlockLogic
+function StackedContainerBlockLogic.cast(object) end
+
+--- Return StackedContainerBlockLogic class object
+--- @return Class
+function StackedContainerBlockLogic.get_class() end
+
+--- Creates a new StackedContainerBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return StackedContainerBlockLogic
+function StackedContainerBlockLogic.new(parent, name) end
+
+--- Creates a new StackedContainerBlockLogic instance
+--- @return StackedContainerBlockLogic
+function StackedContainerBlockLogic.new_simple() end
+
 --- Achievement progress record
 --- 
 --- @class StaticAchievement : Prototype
@@ -2644,7 +2778,7 @@ function SpotlightBlockLogic.new_simple() end
 --- @field threshold integer Progress required to unlock
 --- @field unlocked boolean Whether the achievement is unlocked
 --- @field unlocked_time number Game time of the unlock
---- @field image Texture Achievement icon
+--- @field image Texture2D Achievement icon
 --- @field steam_key string Steam achievement id
 --- @field label Loc Localized name
 --- @field description Loc Localized description
@@ -2820,10 +2954,11 @@ function StaticCoverSet.reg(name) end
 --- Item prototype
 --- 
 --- @class StaticItem : Prototype
---- @field image Texture Item image in UI
+--- @field image Texture2D Item image in UI
 --- @field image_path string Icon path relative to the owning mod folder
 --- @field stack_size integer Size of item stack
 --- @field tier integer Item unlock tier
+--- @field type string [readonly] What the item is: "solid", "fluid" or "abstract"
 --- @field unit_mul number multiplier for UI
 --- @field mesh StaticMesh Mesh for item rendering in world
 --- @field block StaticBlock Buildable object pointer for this item
@@ -2867,7 +3002,8 @@ function StaticItem.reg(name) end
 --- @field items StaticItem[] Items this panel is shown for
 --- @field category string Item category this panel is shown for
 --- @field order integer Sort order among the panels of one item
---- @field widget string Panel widget class path; empty means the built-in text panel
+--- @field widget string Panel widget class path; empty means build draws the panel
+--- @field build function? Called with the item and the panel each time the panel is shown; returns the ui.Widget it draws, nil hides the panel
 --- @field label Loc Localized panel title
 --- @field description_parts Loc[] Localized body paragraphs
 --- @field context AutosizeInventory Inventory of items shown under the text
@@ -2936,9 +3072,10 @@ StaticMesh = {}
 --- @return StaticMesh
 function StaticMesh.load(path) end
 
+--- Bonus a research adds to a machine stat
 --- 
---- 
---- @class StaticModifier
+--- @class StaticModifier : Prototype
+--- @field value integer [readonly] Bonus reached so far, in percent
 StaticModifier = {}
 
 --- Trying to cast Object into StaticModifier
@@ -2969,6 +3106,8 @@ function StaticModifier.reg(name) end
 --- 
 --- @class StaticObject : Prototype
 --- @field item StaticItem Item this object is built from and mined into
+--- @field mined_item StaticItem [readonly] Item mining returns and a decor build pays; nil when the object is not minable
+--- @field mined_count integer [readonly] How many of mined_item mining returns and a decor build pays; zero when the object is not minable
 StaticObject = {}
 
 --- Trying to cast Object into StaticObject
@@ -3000,6 +3139,8 @@ function StaticObject.get(name) end
 --- @field sunset_phase_ticks integer Day phase of the sunset anchor
 --- @field latitude_deg number Observer latitude used by the solar model
 --- @field day_of_year integer Day of the tropical year fixing solar declination
+--- @field weather_severity_min number [load] Calmest point the weather cycle reaches, from 0 clear sky to 1 full storm
+--- @field weather_severity_max number [load] Stormiest point the weather cycle reaches, from 0 clear sky to 1 full storm
 StaticPlanet = {}
 
 --- Cosmetic hours [0, 24) for a tick in local day-phase space
@@ -3063,6 +3204,7 @@ function StaticPlanet.reg(name) end
 --- @field hits_to_break integer Number of hits to break
 --- @field break_effect Class Effect actor class spawned when the prop breaks
 --- @field damage_effect Class Effect actor class spawned on a non-fatal hit
+--- @field vehicle_break_speed number Closing speed in cm/s at which a vehicle breaks through the prop; 0 makes the prop a solid obstacle
 --- @field actor_class Class Actor class spawned instead of an instanced mesh
 StaticProp = {}
 
@@ -3280,9 +3422,10 @@ function StaticResearchBonusInventory.get(name) end
 --- @return StaticResearchBonusInventory
 function StaticResearchBonusInventory.reg(name) end
 
---- Research unlocking a decoration item
+--- Research unlocking decorations built from building material
 --- 
 --- @class StaticResearchDecorationUnlock : StaticResearch
+--- @field decorations StaticItem[] [readonly] Decorations this research unlocks
 StaticResearchDecorationUnlock = {}
 
 --- Trying to cast Object into StaticResearchDecorationUnlock
@@ -3407,6 +3550,7 @@ function StaticResearchRecipe.reg(name) end
 --- Research unlocking a player tool
 --- 
 --- @class StaticResearchToolUnlock : StaticResearch
+--- @field tool StaticItem [readonly] Tool this research puts in the tool belt
 StaticResearchToolUnlock = {}
 
 --- Trying to cast Object into StaticResearchToolUnlock
@@ -3691,7 +3835,7 @@ function TesselatorMarching.get(name) end
 --- @return TesselatorMarching
 function TesselatorMarching.reg(name) end
 
---- Engine 2D texture
+--- Engine texture, anything a picture can be drawn from
 --- 
 --- @class Texture : Object
 --- @field name string [readonly] Object name
@@ -3699,8 +3843,13 @@ Texture = {}
 
 --- Find a loaded texture by name
 --- @param name string Texture name
---- @return Texture
+--- @return Texture2D
 function Texture.find(name) end
+
+--- Texture loaded from an image, such as an item icon
+--- 
+--- @class Texture2D : Texture
+Texture2D = {}
 
 --- One entry of a train schedule
 --- 
@@ -3886,6 +4035,19 @@ function cs.w2sp(world) end
 --- @class defines
 defines = defines or {}
 
+--- Values BlockLogic.state takes
+--- 
+--- @class defines.block_state
+--- @field input_shortage integer An input item is missing
+--- @field working integer Working
+--- @field no_room_in_output integer The output has no room for the result
+--- @field resource_saturated integer Nothing takes the energy it gives
+--- @field resource_required integer Not enough energy comes in
+--- @field not_initialized integer Has not run yet
+--- @field switch_off integer Switched off
+--- @field idle integer Nothing to do
+defines.block_state = {}
+
 --- Identifiers of the gameplay events the event bus can emit
 --- 
 --- @class defines.events
@@ -3901,8 +4063,10 @@ defines = defines or {}
 --- @field on_research_finished integer Research completed. Context: { research }
 --- @field on_quest_activated integer Quest became active. Context: { quest }
 --- @field on_player_crafted integer Player finished a hand craft. Context: { item, count }, one per output
---- @field on_gui_opened integer A window was opened. Context: { gui }, "inventory", "research", "map", "questbook", "recipes", "pause", "spawn" or "saves"
+--- @field on_gui_opened integer A window was opened. Context: { gui }, "inventory", "research", "map", "questbook", "pause", "spawn", "saves", "tips", "blueprints", "trains", "production" or "decor"
 --- @field on_gui_closed integer A window was closed. Context: { gui, any_open }, gui named as in on_gui_opened; any_open is false when the window that closed was the last one
+--- @field on_item_searched integer Player typed into the item database search. Context: { text, items }, items lists what the search found
+--- @field on_recipes_shown integer Recipe window showed an item. Context: { item }
 defines.events = {}
 
 --- Values StaticQuest.state takes
@@ -3922,68 +4086,6 @@ hud = {}
 --- @param spec table { id = "...", label = "..."?, icon = "/Game/Textures/EqualsIco.EqualsIco"?, on_click = function() end, is_on = function() return bool end? }
 --- @return boolean False when the table is missing an id or an on_click
 function hud.add_toggle(spec) end
-
---- Scripted screenshot capture
---- 
---- @class shot
-shot = {}
-
---- Capture a screenshot
---- @param params table Table with path, width, height, supersample, location, rotation and fov
---- @return boolean
-function shot.capture(params) end
-
---- Capture one widget: the pixels it holds on screen, or an offscreen render of a fresh instance
---- @param params table Table with name, path, w, h, scale, fresh and bg
---- @return boolean
-function shot.widget(params) end
-
---- Log every widget instance with the geometry it was last arranged at
-function shot.widgets() end
-
---- Open a hud screen and answer with the widget class it opened, empty when it did not open
---- @param name string Screen name: Inventory, Recipes, Map, Pause, Research, QuestBook, Spawn, SavesManager, Tips
---- @return string
-function shot.screen(name) end
-
---- Restart the unit boot sequence from its first frame
---- @param mode string full or resume
---- @return boolean
-function shot.boot(mode) end
-
---- Set a console variable
---- @param name string Console variable name
---- @param value any Boolean, number or string value
---- @return boolean
-function shot.cvar(name, value) end
-
---- Pin the engine to a fixed time step, zero turns it off
---- @param fps number Frames per second of the fixed time step
-function shot.fps(fps) end
-
---- Call a handler once per rendered frame
---- @param handler function Function called with the frame index
-function shot.on_render_frame(handler) end
-
---- Stop the running script and report success
-function shot.finish() end
-
---- Stop the running script and report failure
---- @param message string Reason written to the log
-function shot.fail(message) end
-
---- Prop instances standing below the water plane, counted by prop
---- @return boolean
-function shot.props_underwater() end
-
---- Transform of the local player camera
---- @return Transform
-function shot.player_camera() end
-
---- Freeze the sky at a solar hour
---- @param hours number Solar hour, 0..24
---- @return boolean
-function shot.time_of_day(hours) end
 
 --- Simulation tick scheduler
 --- 
@@ -4017,15 +4119,23 @@ function sim.every(interval_ticks, handler) end
 --- @return boolean
 function sim.cancel(handle) end
 
+--- 
+--- 
 --- @class ui
-ui = ui or {}
+ui = {}
+
+--- Rendered picture of a block for ui.Image, made once and kept; nil where nothing can be rendered
+--- @param block StaticBlock Block to picture
+--- @return RenderTexture?
+function ui.thumbnail(block) end
 
 --- Single-slot border with uniform padding
 --- 
 --- @class ui.Border : ui.Widget
 --- @field content ui.Widget child widget
---- @field padding number Uniform padding in slate units (all sides)
---- @field style string Plate the game draws behind the child: "panel", "window", "frame", "field" or "none"
+--- @field padding number Padding on all sides in slate units; the table constructor also takes { horizontal, vertical }
+--- @field style string Plate the game draws behind the child: "panel", "window", "frame", "field", "plate" or "none"
+--- @field color string Tint of the plate, same forms as ui.Text color; on "plate" it is the fill itself, a faint light one when empty
 ui.Border = {}
 
 --- 
@@ -4061,6 +4171,32 @@ function ui.HBox:add(child) end
 --- Drop every child, leaving the box empty
 function ui.HBox:clear() end
 
+--- Square picture of a texture, such as an item image
+--- 
+--- @class ui.Image : ui.Widget
+--- @field image Texture Texture drawn, an item image or a ui.thumbnail; nil draws nothing and keeps the space
+--- @field size number Side of the square in slate units
+--- @field color string Tint multiplied into the texture, same forms as ui.Text color
+ui.Image = {}
+
+--- Grid of item slots showing an inventory with the game's own slot widget
+--- 
+--- @class ui.Inventory : ui.Widget
+--- @field inventory InventoryAccess Inventory shown; nil or an empty one hides the grid
+--- @field numbers boolean True draws the item counts in the slots
+--- @field columns integer Slots per row, at least one
+ui.Inventory = {}
+
+--- Wrapping body text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run
+--- 
+--- @class ui.RichText : ui.Widget
+--- @field text string Source UTF-8 text, tokens and tags unexpanded
+--- @field font_size number Font size in slate units
+--- @field align string Where the lines sit: "left", "center" or "right"
+--- @field color string Color of the text outside tinted runs, same forms as ui.Text color
+--- @field wrap boolean True, the default, breaks long lines at the width the text is given; false keeps one line
+ui.RichText = {}
+
 --- Vertical list that scrolls instead of overflowing
 --- 
 --- @class ui.Scroll : ui.Widget
@@ -4084,6 +4220,7 @@ function ui.Scroll:to_start() end
 --- @field font_size number Font size in slate units
 --- @field align string Where the text sits in its slot: "left", "center" or "right"
 --- @field wrap boolean True breaks a long line instead of letting it run out of the window
+--- @field color string Text color: "#rrggbb", "#rrggbbaa" or a game color, "primary", "dim", "accent", "accent_light", "warning", "white"
 ui.Text = {}
 
 --- Single line the player types into
@@ -4113,6 +4250,8 @@ function ui.VBox:clear() end
 --- 
 --- @class ui.Widget : Object
 --- @field visible boolean Hidden widgets keep their place in the tree and take no input
+--- @field fill number Share of the free space this widget takes along an HBox or VBox; zero keeps it at the size of its content
+--- @field valign string Where the widget sits in the height of an HBox row: "fill", "top", "center" or "bottom"
 ui.Widget = {}
 
 --- Top level window with a title bar the player can drag it by
