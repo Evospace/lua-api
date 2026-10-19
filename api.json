@@ -1046,7 +1046,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new Biome static object",
+					"summary": "Register a new Biome static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -1060,6 +1060,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "Biome.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -1214,7 +1219,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new BiomeFamily static object",
+					"summary": "Register a new BiomeFamily static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -1228,6 +1233,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "BiomeFamily.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -1328,7 +1338,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new BiomeWorldGenerator static object",
+					"summary": "Register a new BiomeWorldGenerator static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -1342,6 +1352,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "BiomeWorldGenerator.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -1447,6 +1462,15 @@
 					"internal": false,
 					"writable": false,
 					"load_only": false
+				},
+				{
+					"name": "settings",
+					"type": "table",
+					"summary": "Settings of the block as its window and the save hold them, a fresh copy on every read",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
 				}
 			],
 			"functions": [
@@ -1498,6 +1522,21 @@
 						"desc": "Registered accessors"
 					},
 					"params": []
+				},
+				{
+					"name": "edit_settings",
+					"kind": "method",
+					"summary": "Change settings the way the block's window does: only the fields given change, a prototype stands for its name. The edit goes out to the other peers and lands at the host's stamped tick, so read settings back a tick later",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"params": [
+						{
+							"name": "fields",
+							"type": "table",
+							"desc": "Fields to change, in the shape settings reads; a table keyed 1..n goes as a list, so key a map by strings"
+						}
+					]
 				},
 				{
 					"name": "cast",
@@ -2557,6 +2596,7 @@
 					"boilerplate": false,
 					"internal": false,
 					"load_only": true,
+					"legacy": "<Class>.reg(name, { ... })",
 					"params": [
 						{
 							"name": "table",
@@ -3155,6 +3195,20 @@
 					{
 						"type": "Vec3i",
 						"desc": "Spawn position in block cells"
+					},
+					"params": []
+				},
+				{
+					"name": "get_railway",
+					"kind": "method",
+					"summary": "Tracks, signals, stations and trains of this surface",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Railway",
+						"desc": ""
 					},
 					"params": []
 				}
@@ -4006,7 +4060,7 @@
 		{
 			"name": "EnvironmentCrafter",
 			"kind": "class",
-			"parent": "SelectCrafter",
+			"parent": "SingleRecipeCrafter",
 			"internal": false,
 			"summary": "Crafter powered by solar or wind environment",
 			"fields": [
@@ -4050,6 +4104,15 @@
 					"name": "follows_sun",
 					"type": "boolean",
 					"summary": "Solar output follows the sun altitude; false keeps the sun at its zenith day and night, and only clouds cut the output",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "exclusion_radius",
+					"type": "integer",
+					"summary": "Cells another block of the same source must keep away from this one; closer placement is refused, 0 lets them stand side by side",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -4692,6 +4755,34 @@
 						"desc": ""
 					},
 					"params": []
+				},
+				{
+					"name": "get_desktop_resolution",
+					"kind": "static",
+					"summary": "Resolution of the primary display as WxH",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "string",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "is_steam_deck",
+					"kind": "static",
+					"summary": "The game runs on a Steam Deck",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": ""
+					},
+					"params": []
 				}
 			]
 		},
@@ -5167,7 +5258,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new GhostStaticBlock static object",
+					"summary": "Register a new GhostStaticBlock static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -5181,6 +5272,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "GhostStaticBlock.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -5271,7 +5367,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new GlobalBiomeFamily static object",
+					"summary": "Register a new GlobalBiomeFamily static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -5285,6 +5381,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "GlobalBiomeFamily.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -5571,7 +5672,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new HeightGenerator static object",
+					"summary": "Register a new HeightGenerator static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -5585,6 +5686,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "HeightGenerator.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -6554,7 +6660,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new ItemGroup static object",
+					"summary": "Register a new ItemGroup static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -6568,6 +6674,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "ItemGroup.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -6881,6 +6992,99 @@
 			]
 		},
 		{
+			"name": "LoaderBaseBlockLogic",
+			"kind": "class",
+			"parent": "BlockLogic",
+			"internal": false,
+			"summary": "Loader or robot arm taking items on its left side",
+			"fields": [
+				{
+					"name": "output_side",
+					"type": "Vec3i",
+					"summary": "Side items leave through: Vec3i.right straight across, Vec3i.front or Vec3i.back for a turn",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into LoaderBaseBlockLogic",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "LoaderBaseBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return LoaderBaseBlockLogic class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new LoaderBaseBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "LoaderBaseBlockLogic",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new LoaderBaseBlockLogic instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "LoaderBaseBlockLogic",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "Loc",
 			"kind": "class",
 			"internal": false,
@@ -6970,7 +7174,7 @@
 				{
 					"name": "format",
 					"kind": "static",
-					"summary": "Localized line with {0}, {1}... filled in order and its tokens left for ui.RichText",
+					"summary": "Localized line with {0}, {1}... filled in order and its tokens left for ui.Text",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -7034,7 +7238,7 @@
 				{
 					"name": "raw",
 					"kind": "method",
-					"summary": "Localized string with its tokens such as {item:Name} left in, for ui.RichText to turn into links",
+					"summary": "Localized string with its tokens such as {item:Name} left in, for ui.Text to turn into links",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -7290,7 +7494,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new LogicExportOption static object",
+					"summary": "Register a new LogicExportOption static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -7304,6 +7508,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "LogicExportOption.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -7440,7 +7649,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new LogicImportOption static object",
+					"summary": "Register a new LogicImportOption static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -7454,6 +7663,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "LogicImportOption.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -7646,7 +7860,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new LuaWorldGenerator static object",
+					"summary": "Register a new LuaWorldGenerator static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -7660,6 +7874,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "LuaWorldGenerator.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -8103,7 +8322,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new NoiseGenerator static object",
+					"summary": "Register a new NoiseGenerator static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -8117,6 +8336,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "NoiseGenerator.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -8250,6 +8474,20 @@
 							"desc": "Item to look for"
 						}
 					]
+				},
+				{
+					"name": "cell",
+					"kind": "method",
+					"summary": "Block cell the player is in",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Vec3i",
+						"desc": "Player position in block cells"
+					},
+					"params": []
 				}
 			]
 		},
@@ -8778,6 +9016,260 @@
 			]
 		},
 		{
+			"name": "Railway",
+			"kind": "class",
+			"parent": "Object",
+			"internal": false,
+			"summary": "Tracks, signals, stations and trains of a surface. Edits go out to the other peers the way the rail tools send them and land at the host's stamped tick",
+			"fields": [],
+			"functions": [
+				{
+					"name": "link",
+					"kind": "method",
+					"summary": "Lay a track between the rail nodes standing in two cells the way the rail tool does, bending the tracks already at the nodes to meet it",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken or the nodes are linked already; false when a cell holds no node or the track does not fit"
+					},
+					"params": [
+						{
+							"name": "a",
+							"type": "Vec3i",
+							"desc": "Cell of the first node"
+						},
+						{
+							"name": "b",
+							"type": "Vec3i",
+							"desc": "Cell of the second node"
+						}
+					]
+				},
+				{
+					"name": "unlink",
+					"kind": "method",
+					"summary": "Take away the track between the rail nodes standing in two cells the way the rail tool does",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when no track runs there, it is a platform or a train stands on it"
+					},
+					"params": [
+						{
+							"name": "a",
+							"type": "Vec3i",
+							"desc": "Cell of the first node"
+						},
+						{
+							"name": "b",
+							"type": "Vec3i",
+							"desc": "Cell of the second node"
+						}
+					]
+				},
+				{
+					"name": "is_linked",
+					"kind": "method",
+					"summary": "Whether a track runs between the rail nodes standing in two cells",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "a",
+							"type": "Vec3i",
+							"desc": "Cell of the first node"
+						},
+						{
+							"name": "b",
+							"type": "Vec3i",
+							"desc": "Cell of the second node"
+						}
+					]
+				},
+				{
+					"name": "set_signal",
+					"kind": "method",
+					"summary": "Put a signal on the rail node in a cell, change its kind or take it away, the way the signal tool does",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken or the signal is that way already; false when no track runs through the node along that direction"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of the node"
+						},
+						{
+							"name": "yaw",
+							"type": "number",
+							"desc": "Direction of travel the signal faces, degrees, 0 along +X"
+						},
+						{
+							"name": "kind",
+							"type": "string?",
+							"desc": "block, chain, or nil to take the signal away"
+						}
+					]
+				},
+				{
+					"name": "get_signal",
+					"kind": "method",
+					"summary": "Signal on the rail node in a cell facing a direction of travel",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "string?",
+						"desc": "block or chain, nil when there is none"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of the node"
+						},
+						{
+							"name": "yaw",
+							"type": "number",
+							"desc": "Direction of travel, degrees, 0 along +X"
+						}
+					]
+				},
+				{
+					"name": "get_station_name",
+					"kind": "method",
+					"summary": "Name of the station standing in a cell",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "string?",
+						"desc": "Station name, nil when the cell holds no station"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of a platform"
+						}
+					]
+				},
+				{
+					"name": "rename_station",
+					"kind": "method",
+					"summary": "Rename the station standing in a cell the way its window does",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the cell holds no station or the name is empty or its own"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of a platform"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "New name"
+						}
+					]
+				},
+				{
+					"name": "place_train",
+					"kind": "method",
+					"summary": "Put cars on a station the way a car item in hand does: a train standing there takes them at its end, otherwise they make a new train whose only stop is this station. Find the train with get_train_at a tick later",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the cell holds no station or the item is not a car"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of a platform"
+						},
+						{
+							"name": "item",
+							"type": "StaticItem",
+							"desc": "Car item: Locomotive, CargoWagon or TankWagon"
+						},
+						{
+							"name": "cars",
+							"type": "integer?",
+							"desc": "How many cars, 1 when nil"
+						},
+						{
+							"name": "reversed",
+							"type": "boolean?",
+							"desc": "Cars face the other way"
+						}
+					]
+				},
+				{
+					"name": "get_trains",
+					"kind": "method",
+					"summary": "Every train of the surface",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Train[]",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "get_train_at",
+					"kind": "method",
+					"summary": "Train standing at the station in a cell",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Train?",
+						"desc": "Train at the station, nil when none stands there"
+					},
+					"params": [
+						{
+							"name": "cell",
+							"type": "Vec3i",
+							"desc": "Cell of a platform"
+						}
+					]
+				}
+			]
+		},
+		{
 			"name": "Recipe",
 			"kind": "class",
 			"parent": "Prototype",
@@ -8944,7 +9436,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new Recipe static object",
+					"summary": "Register a new Recipe static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -8958,6 +9450,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "Recipe.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -8978,6 +9475,15 @@
 					"internal": false,
 					"writable": true,
 					"load_only": true
+				},
+				{
+					"name": "machines",
+					"type": "StaticItem[]",
+					"summary": "Machine items that craft from this dictionary; the first one is the face the recipe index files its recipes under",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
 				}
 			],
 			"functions": [
@@ -9152,7 +9658,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new RecipeDictionary static object",
+					"summary": "Register a new RecipeDictionary static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -9166,6 +9672,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "RecipeDictionary.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -10191,13 +10702,59 @@
 					"load_only": false
 				},
 				{
+					"name": "value",
+					"type": "boolean|integer|string|nil",
+					"summary": "Current value: a boolean for Bool, an integer for Slider and Int, a string for String and Buttons",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "default",
+					"type": "boolean|integer|string|nil",
+					"summary": "Default value, of the same kind as value",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "options",
+					"type": "string[]",
+					"summary": "Values a String or Buttons setting offers",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "min",
+					"type": "integer",
+					"summary": "Lower bound of a Slider or Int value",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "max",
+					"type": "integer",
+					"summary": "Upper bound of a Slider or Int value",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
 					"name": "bool_value",
 					"type": "boolean",
 					"summary": "Current boolean value",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "value"
 				},
 				{
 					"name": "bool_default_value",
@@ -10206,7 +10763,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "default"
 				},
 				{
 					"name": "string_value",
@@ -10215,7 +10773,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "value"
 				},
 				{
 					"name": "default_string_value",
@@ -10224,7 +10783,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "default"
 				},
 				{
 					"name": "string_options",
@@ -10233,7 +10793,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "options"
 				},
 				{
 					"name": "int_value",
@@ -10242,7 +10803,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "value"
 				},
 				{
 					"name": "int_default_value",
@@ -10251,7 +10813,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "default"
 				},
 				{
 					"name": "max_value",
@@ -10260,7 +10823,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "max"
 				},
 				{
 					"name": "min_value",
@@ -10269,7 +10833,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "min"
 				},
 				{
 					"name": "key_binding",
@@ -10386,7 +10951,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new Setting static object",
+					"summary": "Register a new Setting static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -10400,8 +10965,96 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "Setting.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "SingleRecipeCrafter",
+			"kind": "class",
+			"parent": "SelectCrafter",
+			"internal": false,
+			"summary": "Crafter bound to the only recipe of its dictionary from the moment it is spawned; the recipe cannot be picked, found or reset",
+			"fields": [],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into SingleRecipeCrafter",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "SingleRecipeCrafter",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return SingleRecipeCrafter class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new SingleRecipeCrafter instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "SingleRecipeCrafter",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new SingleRecipeCrafter instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "SingleRecipeCrafter",
+						"desc": ""
+					},
+					"params": []
 				}
 			]
 		},
@@ -11196,7 +11849,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticAchievement static object",
+					"summary": "Register a new StaticAchievement static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -11210,6 +11863,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticAchievement.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -11351,11 +12009,39 @@
 				{
 					"name": "lua",
 					"type": "table?",
-					"summary": "Lua prototype table with logic_init and actor_init hooks",
+					"summary": "Lua prototype table holding logic_init, actor_init and tooltip",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "StaticBlock.logic_init, actor_init and tooltip"
+				},
+				{
+					"name": "logic_init",
+					"type": "function?",
+					"summary": "Called with the block logic of every new block of this type; makes its inventories and accessors",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "actor_init",
+					"type": "function?",
+					"summary": "Called with the block actor when it spawns",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "tooltip",
+					"type": "function|string|nil",
+					"summary": "Tooltip of the block: a string, or a function of the block logic returning one",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
 				},
 				{
 					"name": "half_cover",
@@ -11404,6 +12090,31 @@
 				}
 			],
 			"functions": [
+				{
+					"name": "copy",
+					"kind": "method",
+					"summary": "Register a copy of this block under a new name; its item stays the item of the original until block.item is set",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "StaticBlock",
+						"desc": "The copy, nil when the name is taken"
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Name of the new prototype"
+						},
+						{
+							"name": "spec",
+							"type": "StaticBlock.spec?",
+							"desc": "Fields set on the copy, as in reg"
+						}
+					]
+				},
 				{
 					"name": "cast",
 					"kind": "static",
@@ -11481,7 +12192,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticBlock static object",
+					"summary": "Register a new StaticBlock static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -11495,6 +12206,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticBlock.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -11640,7 +12356,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticChapter static object",
+					"summary": "Register a new StaticChapter static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -11654,6 +12370,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticChapter.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -11744,7 +12465,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticCover static object",
+					"summary": "Register a new StaticCover static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -11758,6 +12479,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticCover.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -11858,7 +12584,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticCoverSet static object",
+					"summary": "Register a new StaticCoverSet static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -11872,6 +12598,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticCoverSet.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -11926,8 +12657,8 @@
 					"summary": "What the item is: \"solid\", \"fluid\" or \"abstract\"",
 					"boilerplate": false,
 					"internal": false,
-					"writable": false,
-					"load_only": false
+					"writable": true,
+					"load_only": true
 				},
 				{
 					"name": "unit_mul",
@@ -11981,7 +12712,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"legacy": "fields of the item itself"
 				},
 				{
 					"name": "tags",
@@ -12030,6 +12762,31 @@
 				}
 			],
 			"functions": [
+				{
+					"name": "copy",
+					"kind": "method",
+					"summary": "Register a copy of this item under a new name; its block stays the block of the original until item.block is set",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "StaticItem",
+						"desc": "The copy, nil when the name is taken"
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Name of the new prototype"
+						},
+						{
+							"name": "spec",
+							"type": "StaticItem.spec?",
+							"desc": "Fields set on the copy, as in reg"
+						}
+					]
+				},
 				{
 					"name": "cast",
 					"kind": "static",
@@ -12107,7 +12864,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticItem static object",
+					"summary": "Register a new StaticItem static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -12121,6 +12878,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticItem.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -12393,7 +13155,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticItemPanel static object",
+					"summary": "Register a new StaticItemPanel static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -12407,6 +13169,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticItemPanel.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -12547,7 +13314,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticModifier static object",
+					"summary": "Register a new StaticModifier static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -12561,6 +13328,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticModifier.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -12585,19 +13357,19 @@
 				{
 					"name": "mined_item",
 					"type": "StaticItem",
-					"summary": "Item mining returns and a decor build pays; nil when the object is not minable",
+					"summary": "Item a build pays and mining returns; nil when the object is not minable",
 					"boilerplate": false,
 					"internal": false,
-					"writable": false,
+					"writable": true,
 					"load_only": false
 				},
 				{
 					"name": "mined_count",
 					"type": "integer",
-					"summary": "How many of mined_item mining returns and a decor build pays; zero when the object is not minable",
+					"summary": "How many of mined_item a build pays and mining returns; zero when the object is not minable",
 					"boilerplate": false,
 					"internal": false,
-					"writable": false,
+					"writable": true,
 					"load_only": false
 				}
 			],
@@ -12765,6 +13537,42 @@
 					"internal": false,
 					"writable": true,
 					"load_only": true
+				},
+				{
+					"name": "radius_meters",
+					"type": "number",
+					"summary": "Radius of the body seen from space, 0 for a body never seen from orbit",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "orbit_altitude_meters",
+					"type": "number",
+					"summary": "Height of a platform orbit above the surface",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "generator_name",
+					"type": "string",
+					"summary": "World generator of the surface, empty for the generator chosen for the save",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
+				},
+				{
+					"name": "music_playlist",
+					"type": "string",
+					"summary": "Music playlist key played while the surface is shown",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true
 				}
 			],
 			"functions": [
@@ -12915,7 +13723,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticPlanet static object",
+					"summary": "Register a new StaticPlanet static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -12929,6 +13737,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticPlanet.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -13191,7 +14004,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticProp static object",
+					"summary": "Register a new StaticProp static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -13205,6 +14018,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticProp.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -13305,7 +14123,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticPropList static object",
+					"summary": "Register a new StaticPropList static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -13319,6 +14137,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticPropList.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -13740,7 +14563,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticQuest static object",
+					"summary": "Register a new StaticQuest static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -13754,6 +14577,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticQuest.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -13992,7 +14820,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchBonusInventory static object",
+					"summary": "Register a new StaticResearchBonusInventory static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14006,6 +14834,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchBonusInventory.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14106,7 +14939,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchDecorationUnlock static object",
+					"summary": "Register a new StaticResearchDecorationUnlock static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14120,6 +14953,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchDecorationUnlock.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14210,7 +15048,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchEfficiency static object",
+					"summary": "Register a new StaticResearchEfficiency static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14224,6 +15062,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchEfficiency.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14333,7 +15176,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchModifier static object",
+					"summary": "Register a new StaticResearchModifier static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14347,6 +15190,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchModifier.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14467,7 +15315,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchRecipe static object",
+					"summary": "Register a new StaticResearchRecipe static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14481,6 +15329,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchRecipe.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14581,7 +15434,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticResearchToolUnlock static object",
+					"summary": "Register a new StaticResearchToolUnlock static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14595,6 +15448,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticResearchToolUnlock.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14704,7 +15562,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticStructure static object",
+					"summary": "Register a new StaticStructure static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14718,6 +15576,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticStructure.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -14869,7 +15732,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticTip static object",
+					"summary": "Register a new StaticTip static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -14883,6 +15746,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticTip.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -15001,7 +15869,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new StaticWeather static object",
+					"summary": "Register a new StaticWeather static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -15015,6 +15883,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticWeather.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -15368,7 +16241,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new Tesselator static object",
+					"summary": "Register a new Tesselator static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -15382,6 +16255,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "Tesselator.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -15471,7 +16349,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new TesselatorCube static object",
+					"summary": "Register a new TesselatorCube static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -15485,6 +16363,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "TesselatorCube.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -15574,7 +16457,7 @@
 				{
 					"name": "reg",
 					"kind": "static",
-					"summary": "Register a new TesselatorMarching static object",
+					"summary": "Register a new TesselatorMarching static object, or take the registered one of that name",
 					"boilerplate": true,
 					"internal": false,
 					"load_only": true,
@@ -15588,6 +16471,11 @@
 							"name": "name",
 							"type": "string",
 							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "TesselatorMarching.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -15630,6 +16518,26 @@
 							"desc": "Texture name"
 						}
 					]
+				},
+				{
+					"name": "load",
+					"kind": "static",
+					"summary": "Load a texture asset",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Texture2D",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "path",
+							"type": "string",
+							"desc": "Path to the object"
+						}
+					]
 				}
 			]
 		},
@@ -15643,12 +16551,372 @@
 			"functions": []
 		},
 		{
+			"name": "Train",
+			"kind": "class",
+			"parent": "Instance",
+			"internal": false,
+			"summary": "Train on the railway of a surface. Schedule edits go out to the other peers the way the train window sends them and land at the host's stamped tick",
+			"fields": [
+				{
+					"name": "id",
+					"type": "integer",
+					"summary": "Number of the train, the same on every peer and across saves",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "name",
+					"type": "string?",
+					"summary": "Name the player gave the train, nil while it has none",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "cars",
+					"type": "StaticItem[]",
+					"summary": "Car items from the front of the train to its back",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "stops",
+					"type": "TrainScheduleStop[]",
+					"summary": "Stops of the schedule in order",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "current_stop",
+					"type": "TrainScheduleStop?",
+					"summary": "Stop the train goes to or stands at, nil while the schedule is empty",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "loop",
+					"type": "boolean",
+					"summary": "Whether the schedule starts over after its last stop",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				}
+			],
+			"functions": [
+				{
+					"name": "set_name",
+					"kind": "method",
+					"summary": "Name the train the way its window does",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the train has that name already"
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "New name, empty to take the name away"
+						}
+					]
+				},
+				{
+					"name": "add_stop",
+					"kind": "method",
+					"summary": "Add a stop to the schedule",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken"
+					},
+					"params": [
+						{
+							"name": "station",
+							"type": "string",
+							"desc": "Station name"
+						},
+						{
+							"name": "before",
+							"type": "TrainScheduleStop?",
+							"desc": "Stop the new one goes before, nil to add it at the end"
+						}
+					]
+				},
+				{
+					"name": "remove_stop",
+					"kind": "method",
+					"summary": "Take a stop out of the schedule",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken"
+					},
+					"params": [
+						{
+							"name": "stop",
+							"type": "TrainScheduleStop",
+							"desc": "Stop of this train"
+						}
+					]
+				},
+				{
+					"name": "move_stop",
+					"kind": "method",
+					"summary": "Move a stop within the schedule",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the stop is there already"
+					},
+					"params": [
+						{
+							"name": "stop",
+							"type": "TrainScheduleStop",
+							"desc": "Stop of this train"
+						},
+						{
+							"name": "before",
+							"type": "TrainScheduleStop?",
+							"desc": "Stop it goes before, nil to move it to the end"
+						}
+					]
+				},
+				{
+					"name": "set_stop_station",
+					"kind": "method",
+					"summary": "Send a stop to another station",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the stop goes there already"
+					},
+					"params": [
+						{
+							"name": "stop",
+							"type": "TrainScheduleStop",
+							"desc": "Stop of this train"
+						},
+						{
+							"name": "station",
+							"type": "string",
+							"desc": "Station name"
+						}
+					]
+				},
+				{
+					"name": "set_condition",
+					"kind": "method",
+					"summary": "Replace when the train leaves a stop",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken"
+					},
+					"params": [
+						{
+							"name": "stop",
+							"type": "TrainScheduleStop",
+							"desc": "Stop of this train"
+						},
+						{
+							"name": "condition",
+							"type": "table",
+							"desc": "Whole condition, in the shape TrainScheduleStop.condition reads"
+						}
+					]
+				},
+				{
+					"name": "set_loop",
+					"kind": "method",
+					"summary": "Make the schedule start over after its last stop or end there",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the schedule is that way already"
+					},
+					"params": [
+						{
+							"name": "loop",
+							"type": "boolean",
+							"desc": "Start over"
+						}
+					]
+				},
+				{
+					"name": "set_current_stop",
+					"kind": "method",
+					"summary": "Send the train to a stop of its schedule",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when it goes there already"
+					},
+					"params": [
+						{
+							"name": "stop",
+							"type": "TrainScheduleStop",
+							"desc": "Stop of this train"
+						}
+					]
+				},
+				{
+					"name": "depart",
+					"kind": "method",
+					"summary": "Make the train waiting at its stop leave without its condition",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "boolean",
+						"desc": "True when the edit was taken; false when the train is not waiting at a stop or has nowhere to go"
+					},
+					"params": []
+				},
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into Train",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Train",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return Train class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Creates a new Train instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Train",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "parent",
+							"type": "Object",
+							"desc": "Object of parent"
+						},
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the instance"
+						}
+					]
+				},
+				{
+					"name": "new_simple",
+					"kind": "static",
+					"summary": "Creates a new Train instance",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Train",
+						"desc": ""
+					},
+					"params": []
+				}
+			]
+		},
+		{
 			"name": "TrainScheduleStop",
 			"kind": "class",
 			"parent": "Instance",
 			"internal": false,
 			"summary": "One entry of a train schedule",
-			"fields": [],
+			"fields": [
+				{
+					"name": "id",
+					"type": "integer",
+					"summary": "Number of the stop, the same on every peer and across saves",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "station",
+					"type": "string",
+					"summary": "Name of the station the train goes to",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				},
+				{
+					"name": "condition",
+					"type": "table?",
+					"summary": "When the train leaves the station, in the shape Train.set_condition takes",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false
+				}
+			],
 			"functions": [
 				{
 					"name": "cast",
@@ -16866,21 +18134,12 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Single-slot border with uniform padding",
+			"summary": "Plate drawn behind one child; padding is kept inside the plate",
 			"fields": [
 				{
 					"name": "content",
-					"type": "ui.Widget",
-					"summary": "child widget",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "padding",
-					"type": "number",
-					"summary": "Padding on all sides in slate units; the table constructor also takes { horizontal, vertical }",
+					"type": "ui.Widget?",
+					"summary": "The child, also given as the first list item",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -16912,12 +18171,21 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "",
+			"summary": "Button around one child; padding is kept inside the button",
 			"fields": [
 				{
 					"name": "content",
-					"type": "ui.Widget",
-					"summary": "child widget",
+					"type": "ui.Widget?",
+					"summary": "The child, also given as the first list item",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "on_click",
+					"type": "function?",
+					"summary": "Called with no arguments when the player clicks the button",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -16956,7 +18224,7 @@
 				{
 					"name": "add",
 					"kind": "method",
-					"summary": "Put a widget in the next free cell",
+					"summary": "Put a widget that has no parent yet in the next free cell",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -16984,7 +18252,7 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Horizontal container",
+			"summary": "Row of children laid out left to right",
 			"fields": [
 				{
 					"name": "gap",
@@ -17000,7 +18268,7 @@
 				{
 					"name": "add",
 					"kind": "method",
-					"summary": "Append a child widget (must not already be parented)",
+					"summary": "Append a child widget that has no parent yet",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -17028,7 +18296,7 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Square picture of a texture, such as an item image",
+			"summary": "Picture of a texture, 64 by 64 unless its width and height say otherwise",
 			"fields": [
 				{
 					"name": "image",
@@ -17042,7 +18310,16 @@
 				{
 					"name": "size",
 					"type": "number",
-					"summary": "Side of the square in slate units",
+					"summary": "Width and height at once, for a square picture; reads the width",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "angle",
+					"type": "number",
+					"summary": "Clockwise turn of the picture about its centre in degrees; the space it takes stays in place",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17098,61 +18375,6 @@
 			"functions": []
 		},
 		{
-			"name": "ui.RichText",
-			"kind": "class",
-			"parent": "ui.Widget",
-			"internal": false,
-			"summary": "Wrapping body text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run",
-			"fields": [
-				{
-					"name": "text",
-					"type": "string",
-					"summary": "Source UTF-8 text, tokens and tags unexpanded",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "font_size",
-					"type": "number",
-					"summary": "Font size in slate units",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "align",
-					"type": "string",
-					"summary": "Where the lines sit: \"left\", \"center\" or \"right\"",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "color",
-					"type": "string",
-					"summary": "Color of the text outside tinted runs, same forms as ui.Text color",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "wrap",
-					"type": "boolean",
-					"summary": "True, the default, breaks long lines at the width the text is given; false keeps one line",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				}
-			],
-			"functions": []
-		},
-		{
 			"name": "ui.Scroll",
 			"kind": "class",
 			"parent": "ui.Widget",
@@ -17173,7 +18395,7 @@
 				{
 					"name": "add",
 					"kind": "method",
-					"summary": "Append a child widget (must not already be parented)",
+					"summary": "Append a child widget that has no parent yet",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -17206,16 +18428,25 @@
 			]
 		},
 		{
+			"name": "ui.Spacer",
+			"kind": "class",
+			"parent": "ui.Widget",
+			"internal": false,
+			"summary": "Empty space as wide and tall as its width and height",
+			"fields": [],
+			"functions": []
+		},
+		{
 			"name": "ui.Text",
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Text label",
+			"summary": "Text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run",
 			"fields": [
 				{
 					"name": "text",
 					"type": "string",
-					"summary": "Displayed UTF-8 text",
+					"summary": "Source UTF-8 text, tokens and tags unexpanded",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17233,16 +18464,7 @@
 				{
 					"name": "align",
 					"type": "string",
-					"summary": "Where the text sits in its slot: \"left\", \"center\" or \"right\"",
-					"boilerplate": false,
-					"internal": false,
-					"writable": true,
-					"load_only": false
-				},
-				{
-					"name": "wrap",
-					"type": "boolean",
-					"summary": "True breaks a long line instead of letting it run out of the window",
+					"summary": "Where the lines sit: \"left\", \"center\" or \"right\"",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17251,7 +18473,16 @@
 				{
 					"name": "color",
 					"type": "string",
-					"summary": "Text color: \"#rrggbb\", \"#rrggbbaa\" or a game color, \"primary\", \"dim\", \"accent\", \"accent_light\", \"warning\", \"white\"",
+					"summary": "Color of the text outside tinted runs: \"#rrggbb\", \"#rrggbbaa\" or a game color, \"primary\", \"dim\", \"accent\", \"accent_light\", \"warning\", \"white\"",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "wrap",
+					"type": "boolean",
+					"summary": "True, the default, breaks long lines at the width the text is given; false keeps one line",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17284,6 +18515,24 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false
+				},
+				{
+					"name": "on_changed",
+					"type": "function?",
+					"summary": "Called with the text after every edit the player makes",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "on_commit",
+					"type": "function?",
+					"summary": "Called with the text when the player presses Enter",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
 				}
 			],
 			"functions": [
@@ -17303,7 +18552,7 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Vertical container",
+			"summary": "Column of children laid out top to bottom",
 			"fields": [
 				{
 					"name": "gap",
@@ -17319,7 +18568,7 @@
 				{
 					"name": "add",
 					"kind": "method",
-					"summary": "Append a child widget (must not already be parented)",
+					"summary": "Append a child widget that has no parent yet",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -17347,7 +18596,7 @@
 			"kind": "class",
 			"parent": "Object",
 			"internal": false,
-			"summary": "",
+			"summary": "Base of every widget. A widget is built by calling its class with a table: named fields set its properties, the list part holds its children; ui.Text, ui.Window and ui.Button also take their main field alone, as ui.Text \"...\", ui.Window \"...\" and ui.Button(fn)",
 			"fields": [
 				{
 					"name": "visible",
@@ -17368,9 +18617,45 @@
 					"load_only": false
 				},
 				{
+					"name": "width",
+					"type": "number",
+					"summary": "Fixed width in slate units; zero lets the content decide",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "height",
+					"type": "number",
+					"summary": "Fixed height in slate units; zero lets the content decide",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "padding",
+					"type": "number|number[]",
+					"summary": "Space between the edge of the widget and its content: one number for every side, { horizontal, vertical } or { left, top, right, bottom }; reads as the four sides",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "halign",
+					"type": "string",
+					"summary": "Where the widget sits across the width its parent gives it: \"fill\", \"left\", \"center\" or \"right\"; unset is \"fill\", or \"left\" when the width is fixed",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
 					"name": "valign",
 					"type": "string",
-					"summary": "Where the widget sits in the height of an HBox row: \"fill\", \"top\", \"center\" or \"bottom\"",
+					"summary": "Where the widget sits across the height its parent gives it: \"fill\", \"top\", \"center\" or \"bottom\"; unset is \"fill\", or \"top\" when the height is fixed",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17384,12 +18669,12 @@
 			"kind": "class",
 			"parent": "ui.Widget",
 			"internal": false,
-			"summary": "Top level window with a title bar the player can drag it by",
+			"summary": "Top level window with a title bar the player can drag it by; its width and height size the window, its padding is kept around the content",
 			"fields": [
 				{
 					"name": "content",
-					"type": "ui.Widget",
-					"summary": "Single child (replaces previous when set)",
+					"type": "ui.Widget?",
+					"summary": "The child, also given as the first list item",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17405,18 +18690,36 @@
 					"load_only": false
 				},
 				{
-					"name": "width",
-					"type": "number",
-					"summary": "Fixed width in slate units; zero lets the content decide and the window resizes with it",
+					"name": "anchor_x",
+					"type": "string",
+					"summary": "Screen edge the window keeps to across: \"left\", \"center\" or \"right\"",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
 					"load_only": false
 				},
 				{
-					"name": "height",
+					"name": "anchor_y",
+					"type": "string",
+					"summary": "Screen edge the window keeps to down: \"top\", \"center\" or \"bottom\"",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "offset_x",
 					"type": "number",
-					"summary": "Fixed height in slate units; zero lets the content decide and the window resizes with it",
+					"summary": "Distance from the anchor across in slate units; dragging the window changes it",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false
+				},
+				{
+					"name": "offset_y",
+					"type": "number",
+					"summary": "Distance from the anchor down in slate units; dragging the window changes it",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -17436,7 +18739,7 @@
 				{
 					"name": "show",
 					"kind": "method",
-					"summary": "Add to viewport at Z order 0",
+					"summary": "Put the window on the screen",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,
@@ -17445,7 +18748,7 @@
 				{
 					"name": "close",
 					"kind": "method",
-					"summary": "Remove from parent (hide)",
+					"summary": "Take the window off the screen",
 					"boilerplate": false,
 					"internal": false,
 					"load_only": false,

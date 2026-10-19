@@ -292,10 +292,13 @@ function Biome.find(name) end
 --- @return Biome
 function Biome.get(name) end
 
---- [load] Register a new Biome static object
+--- [load] Register a new Biome static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec Biome.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return Biome
-function Biome.reg(name) end
+function Biome.reg(name, spec) end
+
+--- @class Biome.spec : Prototype.spec
 
 --- Biome that picks one of its sub-biomes per position
 --- 
@@ -328,10 +331,20 @@ function BiomeFamily.find(name) end
 --- @return BiomeFamily
 function BiomeFamily.get(name) end
 
---- [load] Register a new BiomeFamily static object
+--- [load] Register a new BiomeFamily static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec BiomeFamily.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return BiomeFamily
-function BiomeFamily.reg(name) end
+function BiomeFamily.reg(name, spec) end
+
+--- @class BiomeFamily.spec : Biome.spec
+--- @field sub_biomes? Biome[] Sub-biomes this family selects from
+--- @field sub_frequency? number Frequency of the sub-biome selection noise
+--- @field perturb_amp? number Amplitude of the coarse domain warp
+--- @field perturb_frequency? number Frequency of the coarse domain warp
+--- @field perturb_octaves? integer Octave count of the coarse domain warp
+--- @field perturb_fine_amp? number Amplitude of the fine domain warp
+--- @field perturb_fine_frequency? number Frequency of the fine domain warp
 
 --- World generator driven by a global biome family
 --- 
@@ -358,10 +371,14 @@ function BiomeWorldGenerator.find(name) end
 --- @return BiomeWorldGenerator
 function BiomeWorldGenerator.get(name) end
 
---- [load] Register a new BiomeWorldGenerator static object
+--- [load] Register a new BiomeWorldGenerator static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec BiomeWorldGenerator.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return BiomeWorldGenerator
-function BiomeWorldGenerator.reg(name) end
+function BiomeWorldGenerator.reg(name, spec) end
+
+--- @class BiomeWorldGenerator.spec : WorldGenerator.spec
+--- @field global_biome? GlobalBiomeFamily Global biome family laying out the surface
 
 --- World actor representing a placed block
 --- 
@@ -383,6 +400,7 @@ function BlockActor.cast(object) end
 --- @field pos Vec3i [readonly] Cell this block stands in
 --- @field quat FQuat [readonly] Rotation turning the block's local sides into world sides
 --- @field state integer [readonly] State shown under the crosshair, one of defines.block_state
+--- @field settings table [readonly] Settings of the block as its window and the save hold them, a fresh copy on every read
 BlockLogic = {}
 
 --- Register Accessor
@@ -397,6 +415,10 @@ function BlockLogic:find_accessor(name) end
 --- Every accessor registered on this block
 --- @return Accessor[] Registered accessors
 function BlockLogic:accessors() end
+
+--- Change settings the way the block's window does: only the fields given change, a prototype stands for its name. The edit goes out to the other peers and lands at the host's stamped tick, so read settings back a tick later
+--- @param fields table Fields to change, in the shape settings reads; a table keyed 1..n goes as a list, so key a map by strings
+function BlockLogic:edit_settings(fields) end
 
 --- Trying to cast Object into BlockLogic
 --- @param object Object Value to cast
@@ -644,7 +666,8 @@ function DB:reg(proto) end
 --- @return boolean was Prototype removed
 function DB:remove(proto) end
 
---- [load] Register object with class "class" and name "name" from table, filling all other properties from that table too
+--- [load] Legacy, use <Class>.reg(name, { ... }). Register object with class "class" and name "name" from table, filling all other properties from that table too
+--- @deprecated
 --- @param table table Object table
 function DB:from_table(table) end
 
@@ -802,6 +825,10 @@ function Dimension:get_consumed(item) end
 --- Block position the player spawns at
 --- @return Vec3i Spawn position in block cells
 function Dimension:spawn_point() end
+
+--- Tracks, signals, stations and trains of this surface
+--- @return Railway
+function Dimension:get_railway() end
 
 --- Door the player can open and close
 --- 
@@ -967,12 +994,13 @@ function Engine:show_confirmation() end
 
 --- Crafter powered by solar or wind environment
 --- 
---- @class EnvironmentCrafter : SelectCrafter
+--- @class EnvironmentCrafter : SingleRecipeCrafter
 --- @field environment_factor01 number [readonly] 
 --- @field wind_powered boolean
 --- @field cut_in_wind_speed number Wind speed at which the rotor starts turning; below it output is zero
 --- @field rated_wind_speed number Wind speed at which output reaches the block rated production
 --- @field follows_sun boolean Solar output follows the sun altitude; false keeps the sun at its zenith day and night, and only clouds cut the output
+--- @field exclusion_radius integer Cells another block of the same source must keep away from this one; closer placement is refused, 0 lets them stand side by side
 EnvironmentCrafter = {}
 
 --- Trying to cast Object into EnvironmentCrafter
@@ -1144,6 +1172,14 @@ Game = {}
 --- @return string[]
 function Game.get_supported_resolutions() end
 
+--- Resolution of the primary display as WxH
+--- @return string
+function Game.get_desktop_resolution() end
+
+--- The game runs on a Steam Deck
+--- @return boolean
+function Game.is_steam_deck() end
+
 --- Settings and counters of the current save
 --- 
 --- @class GameSessionData : Instance
@@ -1253,10 +1289,13 @@ function GhostStaticBlock.find(name) end
 --- @return GhostStaticBlock
 function GhostStaticBlock.get(name) end
 
---- [load] Register a new GhostStaticBlock static object
+--- [load] Register a new GhostStaticBlock static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec GhostStaticBlock.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return GhostStaticBlock
-function GhostStaticBlock.reg(name) end
+function GhostStaticBlock.reg(name, spec) end
+
+--- @class GhostStaticBlock.spec : StaticBlock.spec
 
 --- Planet wide biome family that also drives the global height map
 --- 
@@ -1282,10 +1321,13 @@ function GlobalBiomeFamily.find(name) end
 --- @return GlobalBiomeFamily
 function GlobalBiomeFamily.get(name) end
 
---- [load] Register a new GlobalBiomeFamily static object
+--- [load] Register a new GlobalBiomeFamily static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec GlobalBiomeFamily.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return GlobalBiomeFamily
-function GlobalBiomeFamily.reg(name) end
+function GlobalBiomeFamily.reg(name, spec) end
+
+--- @class GlobalBiomeFamily.spec : BiomeFamily.spec
 
 --- Engine graphics quality settings
 --- 
@@ -1367,10 +1409,13 @@ function HeightGenerator.find(name) end
 --- @return HeightGenerator
 function HeightGenerator.get(name) end
 
---- [load] Register a new HeightGenerator static object
+--- [load] Register a new HeightGenerator static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec HeightGenerator.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return HeightGenerator
-function HeightGenerator.reg(name) end
+function HeightGenerator.reg(name, spec) end
+
+--- @class HeightGenerator.spec : Prototype.spec
 
 --- Instancable object
 --- 
@@ -1635,10 +1680,14 @@ function ItemGroup.find(name) end
 --- @return ItemGroup
 function ItemGroup.get(name) end
 
---- [load] Register a new ItemGroup static object
+--- [load] Register a new ItemGroup static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec ItemGroup.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return ItemGroup
-function ItemGroup.reg(name) end
+function ItemGroup.reg(name, spec) end
+
+--- @class ItemGroup.spec : StaticItem.spec
+--- @field members? StaticItem[] Items that satisfy the group, in the order a craft takes them
 
 --- Storage block holding one item type
 --- 
@@ -1728,6 +1777,31 @@ function LedBlockLogic.new(parent, name) end
 --- @return LedBlockLogic
 function LedBlockLogic.new_simple() end
 
+--- Loader or robot arm taking items on its left side
+--- 
+--- @class LoaderBaseBlockLogic : BlockLogic
+--- @field output_side Vec3i Side items leave through: Vec3i.right straight across, Vec3i.front or Vec3i.back for a turn
+LoaderBaseBlockLogic = {}
+
+--- Trying to cast Object into LoaderBaseBlockLogic
+--- @param object Object Value to cast
+--- @return LoaderBaseBlockLogic
+function LoaderBaseBlockLogic.cast(object) end
+
+--- Return LoaderBaseBlockLogic class object
+--- @return Class
+function LoaderBaseBlockLogic.get_class() end
+
+--- Creates a new LoaderBaseBlockLogic instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return LoaderBaseBlockLogic
+function LoaderBaseBlockLogic.new(parent, name) end
+
+--- Creates a new LoaderBaseBlockLogic instance
+--- @return LoaderBaseBlockLogic
+function LoaderBaseBlockLogic.new_simple() end
+
 --- Localization data entry
 --- 
 --- @class Loc
@@ -1752,7 +1826,7 @@ function Loc.text(key, table, value) end
 --- @return string
 function Loc.get(key, table) end
 
---- Localized line with {0}, {1}... filled in order and its tokens left for ui.RichText
+--- Localized line with {0}, {1}... filled in order and its tokens left for ui.Text
 --- @param key string Localization key
 --- @param table string Localization table name
 --- @param args any[] Values put in place of {0}, {1}...
@@ -1768,7 +1842,7 @@ function Loc.gui_number(value) end
 --- @return string
 function Loc:get() end
 
---- Localized string with its tokens such as {item:Name} left in, for ui.RichText to turn into links
+--- Localized string with its tokens such as {item:Name} left in, for ui.Text to turn into links
 --- @return string
 function Loc:raw() end
 
@@ -1835,10 +1909,18 @@ function LogicExportOption.find(name) end
 --- @return LogicExportOption
 function LogicExportOption.get(name) end
 
---- [load] Register a new LogicExportOption static object
+--- [load] Register a new LogicExportOption static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec LogicExportOption.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return LogicExportOption
-function LogicExportOption.reg(name) end
+function LogicExportOption.reg(name, spec) end
+
+--- @class LogicExportOption.spec : Prototype.spec
+--- @field signal? StaticItem Signal item this option exports
+--- @field use_signal? boolean Whether the GUI row shows a signal slot
+--- @field enabled? boolean Initial checkbox state in the GUI
+--- @field label? Loc Localized row name
+--- @field tooltip? Loc Localized row tooltip
 
 --- One importable signal option shown in the logic GUI
 --- 
@@ -1869,10 +1951,18 @@ function LogicImportOption.find(name) end
 --- @return LogicImportOption
 function LogicImportOption.get(name) end
 
---- [load] Register a new LogicImportOption static object
+--- [load] Register a new LogicImportOption static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec LogicImportOption.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return LogicImportOption
-function LogicImportOption.reg(name) end
+function LogicImportOption.reg(name, spec) end
+
+--- @class LogicImportOption.spec : Prototype.spec
+--- @field signal? StaticItem Signal item this option imports
+--- @field use_signal? boolean Whether the GUI row shows a signal slot
+--- @field enabled? boolean Initial checkbox state in the GUI
+--- @field label? Loc Localized row name
+--- @field tooltip? Loc Localized row tooltip
 
 --- Per-block choice of exported and imported logic signals
 --- 
@@ -1924,10 +2014,15 @@ function LuaWorldGenerator.find(name) end
 --- @return LuaWorldGenerator
 function LuaWorldGenerator.get(name) end
 
---- [load] Register a new LuaWorldGenerator static object
+--- [load] Register a new LuaWorldGenerator static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec LuaWorldGenerator.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return LuaWorldGenerator
-function LuaWorldGenerator.reg(name) end
+function LuaWorldGenerator.reg(name, spec) end
+
+--- @class LuaWorldGenerator.spec : WorldGenerator.spec
+--- @field biome_family? BiomeFamily Biome family selecting the surface biome
+--- @field height? HeightGenerator Height generator for the terrain surface
 
 --- Structure placed on the world map at an offset
 --- 
@@ -2043,10 +2138,15 @@ function NoiseGenerator.find(name) end
 --- @return NoiseGenerator
 function NoiseGenerator.get(name) end
 
---- [load] Register a new NoiseGenerator static object
+--- [load] Register a new NoiseGenerator static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec NoiseGenerator.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return NoiseGenerator
-function NoiseGenerator.reg(name) end
+function NoiseGenerator.reg(name, spec) end
+
+--- @class NoiseGenerator.spec : Prototype.spec
+--- @field min? number Lower bound of the remapped noise range
+--- @field max? number Upper bound of the remapped noise range
 
 --- Engine object
 --- 
@@ -2086,6 +2186,10 @@ function Player.get() end
 --- @return boolean True when a slot holds the item
 function Player:hotbar_has(item) end
 
+--- Block cell the player is in
+--- @return Vec3i Player position in block cells
+function Player:cell() end
+
 --- Player input and view owner
 --- 
 --- @class PlayerController
@@ -2113,6 +2217,8 @@ Prototype = {}
 --- Returns false once the underlying engine object has been destroyed
 --- @return boolean
 function Prototype:is_valid() end
+
+--- @class Prototype.spec
 
 --- Drilling machine that extracts oil from deposits
 --- 
@@ -2221,6 +2327,70 @@ function QuestSubsystem:get_active_quests() end
 --- @return StaticChapter[]
 function QuestSubsystem:get_all_chapters() end
 
+--- Tracks, signals, stations and trains of a surface. Edits go out to the other peers the way the rail tools send them and land at the host's stamped tick
+--- 
+--- @class Railway : Object
+Railway = {}
+
+--- Lay a track between the rail nodes standing in two cells the way the rail tool does, bending the tracks already at the nodes to meet it
+--- @param a Vec3i Cell of the first node
+--- @param b Vec3i Cell of the second node
+--- @return boolean True when the edit was taken or the nodes are linked already; false when a cell holds no node or the track does not fit
+function Railway:link(a, b) end
+
+--- Take away the track between the rail nodes standing in two cells the way the rail tool does
+--- @param a Vec3i Cell of the first node
+--- @param b Vec3i Cell of the second node
+--- @return boolean True when the edit was taken; false when no track runs there, it is a platform or a train stands on it
+function Railway:unlink(a, b) end
+
+--- Whether a track runs between the rail nodes standing in two cells
+--- @param a Vec3i Cell of the first node
+--- @param b Vec3i Cell of the second node
+--- @return boolean
+function Railway:is_linked(a, b) end
+
+--- Put a signal on the rail node in a cell, change its kind or take it away, the way the signal tool does
+--- @param cell Vec3i Cell of the node
+--- @param yaw number Direction of travel the signal faces, degrees, 0 along +X
+--- @param kind string? block, chain, or nil to take the signal away
+--- @return boolean True when the edit was taken or the signal is that way already; false when no track runs through the node along that direction
+function Railway:set_signal(cell, yaw, kind) end
+
+--- Signal on the rail node in a cell facing a direction of travel
+--- @param cell Vec3i Cell of the node
+--- @param yaw number Direction of travel, degrees, 0 along +X
+--- @return string? block or chain, nil when there is none
+function Railway:get_signal(cell, yaw) end
+
+--- Name of the station standing in a cell
+--- @param cell Vec3i Cell of a platform
+--- @return string? Station name, nil when the cell holds no station
+function Railway:get_station_name(cell) end
+
+--- Rename the station standing in a cell the way its window does
+--- @param cell Vec3i Cell of a platform
+--- @param name string New name
+--- @return boolean True when the edit was taken; false when the cell holds no station or the name is empty or its own
+function Railway:rename_station(cell, name) end
+
+--- Put cars on a station the way a car item in hand does: a train standing there takes them at its end, otherwise they make a new train whose only stop is this station. Find the train with get_train_at a tick later
+--- @param cell Vec3i Cell of a platform
+--- @param item StaticItem Car item: Locomotive, CargoWagon or TankWagon
+--- @param cars integer? How many cars, 1 when nil
+--- @param reversed boolean? Cars face the other way
+--- @return boolean True when the edit was taken; false when the cell holds no station or the item is not a car
+function Railway:place_train(cell, item, cars, reversed) end
+
+--- Every train of the surface
+--- @return Train[]
+function Railway:get_trains() end
+
+--- Train standing at the station in a cell
+--- @param cell Vec3i Cell of a platform
+--- @return Train? Train at the station, nil when none stands there
+function Railway:get_train_at(cell) end
+
 --- Crafting-recipe prototype used by machines and crafting UIs
 --- 
 --- @class Recipe : Prototype
@@ -2254,15 +2424,24 @@ function Recipe.find(name) end
 --- @return Recipe
 function Recipe.get(name) end
 
---- [load] Register a new Recipe static object
+--- [load] Register a new Recipe static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec Recipe.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return Recipe
-function Recipe.reg(name) end
+function Recipe.reg(name, spec) end
+
+--- @class Recipe.spec : Prototype.spec
+--- @field ticks? integer *Craft time* in engine ticks
+--- @field locked? boolean Currently locked if **true**
+--- @field productivity? integer Percentage bonus (e.g. `20` = +20 %)
+--- @field tier? integer Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
+--- @field start_tier? integer The dictionary's `start_tier`, copied to every recipe in it when the mods finish loading.
 
 --- Named group of recipes shared by machines of one family
 --- 
 --- @class RecipeDictionary : Prototype
 --- @field start_tier integer [load] Machine-unlock tier shared by every recipe in the dictionary
+--- @field machines StaticItem[] [readonly] Machine items that craft from this dictionary; the first one is the face the recipe index files its recipes under
 RecipeDictionary = {}
 
 --- [load] Put a recipe into this dictionary
@@ -2308,10 +2487,14 @@ function RecipeDictionary.find(name) end
 --- @return RecipeDictionary
 function RecipeDictionary.get(name) end
 
---- [load] Register a new RecipeDictionary static object
+--- [load] Register a new RecipeDictionary static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec RecipeDictionary.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return RecipeDictionary
-function RecipeDictionary.reg(name) end
+function RecipeDictionary.reg(name, spec) end
+
+--- @class RecipeDictionary.spec : Prototype.spec
+--- @field start_tier? integer Machine-unlock tier shared by every recipe in the dictionary
 
 --- Inventory that mirrors the slots of a recipe
 --- 
@@ -2570,19 +2753,60 @@ function SelectCrafter.new_simple() end
 --- @field label string Localization key of the displayed name
 --- @field type string Widget type used to edit the setting
 --- @field category string Settings category this entry belongs to
---- @field bool_value boolean Current boolean value
---- @field bool_default_value boolean Default boolean value
---- @field string_value string Current string value
---- @field default_string_value string Default string value
---- @field string_options string[] Allowed string values
---- @field int_value integer Current integer value
---- @field int_default_value integer Default integer value
---- @field max_value integer Upper bound of the integer value
---- @field min_value integer Lower bound of the integer value
+--- @field value boolean|integer|string|nil Current value: a boolean for Bool, an integer for Slider and Int, a string for String and Buttons
+--- @field default boolean|integer|string|nil Default value, of the same kind as value
+--- @field options string[] Values a String or Buttons setting offers
+--- @field min integer Lower bound of a Slider or Int value
+--- @field max integer Upper bound of a Slider or Int value
 --- @field key_binding string Input action bound to this setting
 --- @field default_key string Default keystroke, e.g. Ctrl+Shift+F
 --- @field key_action function Called with this setting when the bound key goes down; only for a key_binding of this mod's own
 Setting = {}
+
+--- Legacy, use value. Current boolean value
+--- @deprecated
+--- @type boolean
+Setting.bool_value = nil
+
+--- Legacy, use default. Default boolean value
+--- @deprecated
+--- @type boolean
+Setting.bool_default_value = nil
+
+--- Legacy, use value. Current string value
+--- @deprecated
+--- @type string
+Setting.string_value = nil
+
+--- Legacy, use default. Default string value
+--- @deprecated
+--- @type string
+Setting.default_string_value = nil
+
+--- Legacy, use options. Allowed string values
+--- @deprecated
+--- @type string[]
+Setting.string_options = nil
+
+--- Legacy, use value. Current integer value
+--- @deprecated
+--- @type integer
+Setting.int_value = nil
+
+--- Legacy, use default. Default integer value
+--- @deprecated
+--- @type integer
+Setting.int_default_value = nil
+
+--- Legacy, use max. Upper bound of the integer value
+--- @deprecated
+--- @type integer
+Setting.max_value = nil
+
+--- Legacy, use min. Lower bound of the integer value
+--- @deprecated
+--- @type integer
+Setting.min_value = nil
 
 --- Refresh every settings widget from the current values
 function Setting.update_widgets() end
@@ -2606,10 +2830,50 @@ function Setting.find(name) end
 --- @return Setting
 function Setting.get(name) end
 
---- [load] Register a new Setting static object
+--- [load] Register a new Setting static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec Setting.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return Setting
-function Setting.reg(name) end
+function Setting.reg(name, spec) end
+
+--- @class Setting.spec : Prototype.spec
+--- @field restart? boolean Changing this setting requires a restart
+--- @field set_action? function Called with the new value when the setting changes
+--- @field label? string Localization key of the displayed name
+--- @field type? string Widget type used to edit the setting
+--- @field category? string Settings category this entry belongs to
+--- @field value? boolean|integer|string|nil Current value: a boolean for Bool, an integer for Slider and Int, a string for String and Buttons
+--- @field default? boolean|integer|string|nil Default value, of the same kind as value
+--- @field options? string[] Values a String or Buttons setting offers
+--- @field min? integer Lower bound of a Slider or Int value
+--- @field max? integer Upper bound of a Slider or Int value
+--- @field key_binding? string Input action bound to this setting
+--- @field default_key? string Default keystroke, e.g. Ctrl+Shift+F
+--- @field key_action? function Called with this setting when the bound key goes down; only for a key_binding of this mod's own
+
+--- Crafter bound to the only recipe of its dictionary from the moment it is spawned; the recipe cannot be picked, found or reset
+--- 
+--- @class SingleRecipeCrafter : SelectCrafter
+SingleRecipeCrafter = {}
+
+--- Trying to cast Object into SingleRecipeCrafter
+--- @param object Object Value to cast
+--- @return SingleRecipeCrafter
+function SingleRecipeCrafter.cast(object) end
+
+--- Return SingleRecipeCrafter class object
+--- @return Class
+function SingleRecipeCrafter.get_class() end
+
+--- Creates a new SingleRecipeCrafter instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return SingleRecipeCrafter
+function SingleRecipeCrafter.new(parent, name) end
+
+--- Creates a new SingleRecipeCrafter instance
+--- @return SingleRecipeCrafter
+function SingleRecipeCrafter.new_simple() end
 
 --- Inventory with exactly one slot
 --- 
@@ -2803,10 +3067,22 @@ function StaticAchievement.find(name) end
 --- @return StaticAchievement
 function StaticAchievement.get(name) end
 
---- [load] Register a new StaticAchievement static object
+--- [load] Register a new StaticAchievement static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticAchievement.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticAchievement
-function StaticAchievement.reg(name) end
+function StaticAchievement.reg(name, spec) end
+
+--- @class StaticAchievement.spec : Prototype.spec
+--- @field delta? integer Progress added by the last increment
+--- @field total? integer Accumulated progress
+--- @field threshold? integer Progress required to unlock
+--- @field unlocked? boolean Whether the achievement is unlocked
+--- @field unlocked_time? number Game time of the unlock
+--- @field image? Texture2D Achievement icon
+--- @field steam_key? string Steam achievement id
+--- @field label? Loc Localized name
+--- @field description? Loc Localized description
 
 --- Placeable block prototype
 --- 
@@ -2825,13 +3101,26 @@ function StaticAchievement.reg(name) end
 --- @field energy_consumption_item StaticItem Resource item drawn by this block
 --- @field energy_production_item StaticItem Resource item produced by this block
 --- @field break_effect Class Effect actor class spawned when the block is destroyed
---- @field lua table? Lua prototype table with logic_init and actor_init hooks
+--- @field logic_init function? [load] Called with the block logic of every new block of this type; makes its inventories and accessors
+--- @field actor_init function? [load] Called with the block actor when it spawns
+--- @field tooltip function|string|nil [load] Tooltip of the block: a string, or a function of the block logic returning one
 --- @field half_cover StaticCover Cover mesh for the half-height variant
 --- @field center_cover StaticCover Cover mesh for the center part
 --- @field body_cover StaticCover Cover mesh for the block body
 --- @field export_options LogicExportOption[] Logic export signals published by this block type
 --- @field import_options LogicImportOption[] Logic import signals accepted by this block type
 StaticBlock = {}
+
+--- Legacy, use StaticBlock.logic_init, actor_init and tooltip. Lua prototype table holding logic_init, actor_init and tooltip
+--- @deprecated
+--- @type table?
+StaticBlock.lua = nil
+
+--- [load] Register a copy of this block under a new name; its item stays the item of the original until block.item is set
+--- @param name string Name of the new prototype
+--- @param spec StaticBlock.spec? Fields set on the copy, as in reg
+--- @return StaticBlock The copy, nil when the name is taken
+function StaticBlock:copy(name, spec) end
 
 --- Trying to cast Object into StaticBlock
 --- @param object Object Value to cast
@@ -2852,10 +3141,35 @@ function StaticBlock.find(name) end
 --- @return StaticBlock
 function StaticBlock.get(name) end
 
---- [load] Register a new StaticBlock static object
+--- [load] Register a new StaticBlock static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticBlock.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticBlock
-function StaticBlock.reg(name) end
+function StaticBlock.reg(name, spec) end
+
+--- @class StaticBlock.spec : StaticObject.spec
+--- @field logic? Class BlockLogic class driving the simulation
+--- @field actor? Class Presentation actor class spawned for the block
+--- @field selector? Class Selector widget class
+--- @field tesselator? Tesselator Mesh tesselator used to render the block
+--- @field sub_blocks? Vec3i[] Occupied cells relative to the block origin
+--- @field rotation_locks? Vec3i Block local axes that keep their world direction; a turn moving a locked axis is refused
+--- @field replace_tag? string Blocks sharing a tag replace each other on build
+--- @field tier? integer Block tier used for recipe speed scaling
+--- @field level? integer Block level within its tier
+--- @field energy_consumption_per_tick? integer Energy drawn per simulation tick
+--- @field energy_production_per_tick? integer Energy produced per simulation tick
+--- @field energy_consumption_item? StaticItem Resource item drawn by this block
+--- @field energy_production_item? StaticItem Resource item produced by this block
+--- @field break_effect? Class Effect actor class spawned when the block is destroyed
+--- @field logic_init? function Called with the block logic of every new block of this type; makes its inventories and accessors
+--- @field actor_init? function Called with the block actor when it spawns
+--- @field tooltip? function|string|nil Tooltip of the block: a string, or a function of the block logic returning one
+--- @field half_cover? StaticCover Cover mesh for the half-height variant
+--- @field center_cover? StaticCover Cover mesh for the center part
+--- @field body_cover? StaticCover Cover mesh for the block body
+--- @field export_options? LogicExportOption[] Logic export signals published by this block type
+--- @field import_options? LogicImportOption[] Logic import signals accepted by this block type
 
 --- Group of quests unlocked together
 --- 
@@ -2887,10 +3201,19 @@ function StaticChapter.find(name) end
 --- @return StaticChapter
 function StaticChapter.get(name) end
 
---- [load] Register a new StaticChapter static object
+--- [load] Register a new StaticChapter static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticChapter.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticChapter
-function StaticChapter.reg(name) end
+function StaticChapter.reg(name, spec) end
+
+--- @class StaticChapter.spec : Prototype.spec
+--- @field label? Loc Localized chapter title
+--- @field quests? StaticQuest[] Quests belonging to this chapter
+--- @field required_quests? StaticQuest[] Quests that must be completed before the chapter becomes available
+--- @field unlocked? boolean Whether the chapter is available in the current save
+--- @field on_unlock? function Called when the chapter unlocks
+--- @field on_complete? function Called when every quest is completed
 
 --- Instanced mesh design used to skin blocks
 --- 
@@ -2916,10 +3239,13 @@ function StaticCover.find(name) end
 --- @return StaticCover
 function StaticCover.get(name) end
 
---- [load] Register a new StaticCover static object
+--- [load] Register a new StaticCover static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticCover.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticCover
-function StaticCover.reg(name) end
+function StaticCover.reg(name, spec) end
+
+--- @class StaticCover.spec : Prototype.spec
 
 --- List of covers allowed by the design tool and designable blocks
 --- 
@@ -2946,10 +3272,14 @@ function StaticCoverSet.find(name) end
 --- @return StaticCoverSet
 function StaticCoverSet.get(name) end
 
---- [load] Register a new StaticCoverSet static object
+--- [load] Register a new StaticCoverSet static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticCoverSet.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticCoverSet
-function StaticCoverSet.reg(name) end
+function StaticCoverSet.reg(name, spec) end
+
+--- @class StaticCoverSet.spec : Prototype.spec
+--- @field covers? StaticCover[] Allowed cover designs
 
 --- Item prototype
 --- 
@@ -2958,19 +3288,29 @@ function StaticCoverSet.reg(name) end
 --- @field image_path string Icon path relative to the owning mod folder
 --- @field stack_size integer Size of item stack
 --- @field tier integer Item unlock tier
---- @field type string [readonly] What the item is: "solid", "fluid" or "abstract"
+--- @field type string [load] What the item is: "solid", "fluid" or "abstract"
 --- @field unit_mul number multiplier for UI
 --- @field mesh StaticMesh Mesh for item rendering in world
 --- @field block StaticBlock Buildable object pointer for this item
 --- @field custom_data boolean Is item instance contains CustomData
 --- @field logic Class Class for item while in hand
---- @field lua table? Lua prototype table
 --- @field tags string Space separated search tags
 --- @field category string In-game database category
 --- @field equipment_slot string Equipment slot this item fits (Jetpack, Light)
 --- @field label Loc Localized item name
 --- @field description_parts Loc[] Localized description paragraphs
 StaticItem = {}
+
+--- Legacy, use fields of the item itself. Lua prototype table
+--- @deprecated
+--- @type table?
+StaticItem.lua = nil
+
+--- [load] Register a copy of this item under a new name; its block stays the block of the original until item.block is set
+--- @param name string Name of the new prototype
+--- @param spec StaticItem.spec? Fields set on the copy, as in reg
+--- @return StaticItem The copy, nil when the name is taken
+function StaticItem:copy(name, spec) end
 
 --- Trying to cast Object into StaticItem
 --- @param object Object Value to cast
@@ -2991,10 +3331,28 @@ function StaticItem.find(name) end
 --- @return StaticItem
 function StaticItem.get(name) end
 
---- [load] Register a new StaticItem static object
+--- [load] Register a new StaticItem static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticItem.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticItem
-function StaticItem.reg(name) end
+function StaticItem.reg(name, spec) end
+
+--- @class StaticItem.spec : Prototype.spec
+--- @field image? Texture2D Item image in UI
+--- @field image_path? string Icon path relative to the owning mod folder
+--- @field stack_size? integer Size of item stack
+--- @field tier? integer Item unlock tier
+--- @field type? string What the item is: "solid", "fluid" or "abstract"
+--- @field unit_mul? number multiplier for UI
+--- @field mesh? StaticMesh Mesh for item rendering in world
+--- @field block? StaticBlock Buildable object pointer for this item
+--- @field custom_data? boolean Is item instance contains CustomData
+--- @field logic? Class Class for item while in hand
+--- @field tags? string Space separated search tags
+--- @field category? string In-game database category
+--- @field equipment_slot? string Equipment slot this item fits (Jetpack, Light)
+--- @field label? Loc Localized item name
+--- @field description_parts? Loc[] Localized description paragraphs
 
 --- Block the recipe screen shows above the recipes of an item
 --- 
@@ -3056,10 +3414,21 @@ function StaticItemPanel.find(name) end
 --- @return StaticItemPanel
 function StaticItemPanel.get(name) end
 
---- [load] Register a new StaticItemPanel static object
+--- [load] Register a new StaticItemPanel static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticItemPanel.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticItemPanel
-function StaticItemPanel.reg(name) end
+function StaticItemPanel.reg(name, spec) end
+
+--- @class StaticItemPanel.spec : Prototype.spec
+--- @field items? StaticItem[] Items this panel is shown for
+--- @field category? string Item category this panel is shown for
+--- @field order? integer Sort order among the panels of one item
+--- @field widget? string Panel widget class path; empty means build draws the panel
+--- @field build? function Called with the item and the panel each time the panel is shown; returns the ui.Widget it draws, nil hides the panel
+--- @field label? Loc Localized panel title
+--- @field description_parts? Loc[] Localized body paragraphs
+--- @field context? AutosizeInventory Inventory of items shown under the text
 
 --- Engine static mesh
 --- 
@@ -3097,17 +3466,20 @@ function StaticModifier.find(name) end
 --- @return StaticModifier
 function StaticModifier.get(name) end
 
---- [load] Register a new StaticModifier static object
+--- [load] Register a new StaticModifier static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticModifier.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticModifier
-function StaticModifier.reg(name) end
+function StaticModifier.reg(name, spec) end
+
+--- @class StaticModifier.spec : Prototype.spec
 
 --- Base prototype for anything placeable in the world
 --- 
 --- @class StaticObject : Prototype
 --- @field item StaticItem Item this object is built from and mined into
---- @field mined_item StaticItem [readonly] Item mining returns and a decor build pays; nil when the object is not minable
---- @field mined_count integer [readonly] How many of mined_item mining returns and a decor build pays; zero when the object is not minable
+--- @field mined_item StaticItem Item a build pays and mining returns; nil when the object is not minable
+--- @field mined_count integer How many of mined_item a build pays and mining returns; zero when the object is not minable
 StaticObject = {}
 
 --- Trying to cast Object into StaticObject
@@ -3129,6 +3501,11 @@ function StaticObject.find(name) end
 --- @return StaticObject
 function StaticObject.get(name) end
 
+--- @class StaticObject.spec : Prototype.spec
+--- @field item? StaticItem Item this object is built from and mined into
+--- @field mined_item? StaticItem Item a build pays and mining returns; nil when the object is not minable
+--- @field mined_count? integer How many of mined_item a build pays and mining returns; zero when the object is not minable
+
 --- Celestial body with its own day cycle in world ticks
 --- 
 --- @class StaticPlanet : Prototype
@@ -3141,6 +3518,10 @@ function StaticObject.get(name) end
 --- @field day_of_year integer Day of the tropical year fixing solar declination
 --- @field weather_severity_min number [load] Calmest point the weather cycle reaches, from 0 clear sky to 1 full storm
 --- @field weather_severity_max number [load] Stormiest point the weather cycle reaches, from 0 clear sky to 1 full storm
+--- @field radius_meters number [load] Radius of the body seen from space, 0 for a body never seen from orbit
+--- @field orbit_altitude_meters number [load] Height of a platform orbit above the surface
+--- @field generator_name string [load] World generator of the surface, empty for the generator chosen for the save
+--- @field music_playlist string [load] Music playlist key played while the surface is shown
 StaticPlanet = {}
 
 --- Cosmetic hours [0, 24) for a tick in local day-phase space
@@ -3179,10 +3560,26 @@ function StaticPlanet.find(name) end
 --- @return StaticPlanet
 function StaticPlanet.get(name) end
 
---- [load] Register a new StaticPlanet static object
+--- [load] Register a new StaticPlanet static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticPlanet.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticPlanet
-function StaticPlanet.reg(name) end
+function StaticPlanet.reg(name, spec) end
+
+--- @class StaticPlanet.spec : Prototype.spec
+--- @field day_length_ticks? integer Simulation ticks per full local day
+--- @field phase_offset_ticks? integer Added to the phase after day wrap
+--- @field dawn_phase_ticks? integer Day phase of the dawn anchor
+--- @field solar_noon_phase_ticks? integer Day phase of the solar noon anchor
+--- @field sunset_phase_ticks? integer Day phase of the sunset anchor
+--- @field latitude_deg? number Observer latitude used by the solar model
+--- @field day_of_year? integer Day of the tropical year fixing solar declination
+--- @field weather_severity_min? number Calmest point the weather cycle reaches, from 0 clear sky to 1 full storm
+--- @field weather_severity_max? number Stormiest point the weather cycle reaches, from 0 clear sky to 1 full storm
+--- @field radius_meters? number Radius of the body seen from space, 0 for a body never seen from orbit
+--- @field orbit_altitude_meters? number Height of a platform orbit above the surface
+--- @field generator_name? string World generator of the surface, empty for the generator chosen for the save
+--- @field music_playlist? string Music playlist key played while the surface is shown
 
 --- Decoration prototype scattered by the world generator
 --- 
@@ -3227,10 +3624,32 @@ function StaticProp.find(name) end
 --- @return StaticProp
 function StaticProp.get(name) end
 
---- [load] Register a new StaticProp static object
+--- [load] Register a new StaticProp static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticProp.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticProp
-function StaticProp.reg(name) end
+function StaticProp.reg(name, spec) end
+
+--- @class StaticProp.spec : StaticObject.spec
+--- @field project_to_terrain_power? number How strongly the prop follows the terrain slope
+--- @field additive_elevation? number Height offset added after terrain projection
+--- @field range_mul? number Prop view distance as a multiple of the decoration range setting; 0 is never culled
+--- @field surface_height_min? number Lowest surface height in blocks accepting this prop
+--- @field surface_height_max? number Highest surface height in blocks accepting this prop
+--- @field top_height_max? number Highest column top in blocks accepting this prop
+--- @field floating? boolean Prop keeps its height instead of sitting on the surface
+--- @field is_big? boolean Prop spans more than one cell and is placed sparsely
+--- @field streamed? boolean Prop is streamed with the sector instead of being baked
+--- @field mesh? StaticMesh Mesh rendered for this prop
+--- @field no_collision? boolean Prop is walked through
+--- @field is_emitting? boolean Prop emits light
+--- @field high_detail_shadow? boolean Prop may cast high-detail shadows
+--- @field on_spawn? function Called with the block position when the prop is spawned
+--- @field hits_to_break? integer Number of hits to break
+--- @field break_effect? Class Effect actor class spawned when the prop breaks
+--- @field damage_effect? Class Effect actor class spawned on a non-fatal hit
+--- @field vehicle_break_speed? number Closing speed in cm/s at which a vehicle breaks through the prop; 0 makes the prop a solid obstacle
+--- @field actor_class? Class Actor class spawned instead of an instanced mesh
 
 --- Prototype asset that owns several PropListData records
 --- 
@@ -3257,10 +3676,14 @@ function StaticPropList.find(name) end
 --- @return StaticPropList
 function StaticPropList.get(name) end
 
---- [load] Register a new StaticPropList static object
+--- [load] Register a new StaticPropList static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticPropList.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticPropList
-function StaticPropList.reg(name) end
+function StaticPropList.reg(name, spec) end
+
+--- @class StaticPropList.spec : Prototype.spec
+--- @field data? PropListData[] Prop tiers owned by this list
 
 --- Quest definition and its runtime progress
 --- 
@@ -3357,10 +3780,24 @@ function StaticQuest.find(name) end
 --- @return StaticQuest
 function StaticQuest.get(name) end
 
---- [load] Register a new StaticQuest static object
+--- [load] Register a new StaticQuest static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticQuest.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticQuest
-function StaticQuest.reg(name) end
+function StaticQuest.reg(name, spec) end
+
+--- @class StaticQuest.spec : Prototype.spec
+--- @field label? Loc Localized quest title
+--- @field description_parts? Loc[] Localized description paragraphs
+--- @field context? AutosizeInventory Inventory of items shown next to the description
+--- @field chapter? StaticChapter Chapter this quest belongs to
+--- @field required_quests? StaticQuest[] Quests that must be completed first
+--- @field any_objective? boolean Complete on any one objective instead of all of them
+--- @field state? integer Current state: locked, active or completed
+--- @field events? table Table of event handlers keyed by event id
+--- @field on_unlock? function Called when the quest becomes active
+--- @field on_complete? function Called when the quest is completed
+--- @field objectives? QuestObjective[] Objectives of this quest
 
 --- Research base class
 --- 
@@ -3393,6 +3830,14 @@ function StaticResearch.find(name) end
 --- @return StaticResearch
 function StaticResearch.get(name) end
 
+--- @class StaticResearch.spec : Prototype.spec
+--- @field label? Loc Localized research name
+--- @field description_parts? Loc[] Localized description paragraphs
+--- @field complexity? integer Science the research costs to complete
+--- @field level? integer Level reached by an upgrade research, 0 for a node completed once
+--- @field tier? integer Progression tier the research belongs to
+--- @field required_research? StaticResearch[] Researches that must be complete before this one opens
+
 --- Research granting extra player inventory slots
 --- 
 --- @class StaticResearchBonusInventory : StaticResearch
@@ -3417,10 +3862,13 @@ function StaticResearchBonusInventory.find(name) end
 --- @return StaticResearchBonusInventory
 function StaticResearchBonusInventory.get(name) end
 
---- [load] Register a new StaticResearchBonusInventory static object
+--- [load] Register a new StaticResearchBonusInventory static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchBonusInventory.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchBonusInventory
-function StaticResearchBonusInventory.reg(name) end
+function StaticResearchBonusInventory.reg(name, spec) end
+
+--- @class StaticResearchBonusInventory.spec : StaticResearch.spec
 
 --- Research unlocking decorations built from building material
 --- 
@@ -3447,10 +3895,13 @@ function StaticResearchDecorationUnlock.find(name) end
 --- @return StaticResearchDecorationUnlock
 function StaticResearchDecorationUnlock.get(name) end
 
---- [load] Register a new StaticResearchDecorationUnlock static object
+--- [load] Register a new StaticResearchDecorationUnlock static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchDecorationUnlock.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchDecorationUnlock
-function StaticResearchDecorationUnlock.reg(name) end
+function StaticResearchDecorationUnlock.reg(name, spec) end
+
+--- @class StaticResearchDecorationUnlock.spec : StaticResearch.spec
 
 --- Research adding a productivity bonus to a recipe
 --- 
@@ -3476,10 +3927,13 @@ function StaticResearchEfficiency.find(name) end
 --- @return StaticResearchEfficiency
 function StaticResearchEfficiency.get(name) end
 
---- [load] Register a new StaticResearchEfficiency static object
+--- [load] Register a new StaticResearchEfficiency static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchEfficiency.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchEfficiency
-function StaticResearchEfficiency.reg(name) end
+function StaticResearchEfficiency.reg(name, spec) end
+
+--- @class StaticResearchEfficiency.spec : StaticResearch.spec
 
 --- Research raising a global player modifier
 --- 
@@ -3507,10 +3961,15 @@ function StaticResearchModifier.find(name) end
 --- @return StaticResearchModifier
 function StaticResearchModifier.get(name) end
 
---- [load] Register a new StaticResearchModifier static object
+--- [load] Register a new StaticResearchModifier static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchModifier.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchModifier
-function StaticResearchModifier.reg(name) end
+function StaticResearchModifier.reg(name, spec) end
+
+--- @class StaticResearchModifier.spec : StaticResearch.spec
+--- @field modifier? StaticModifier Modifier prototype affected by this research
+--- @field bonus_value? integer Value added to the modifier on completion
 
 --- Research unlocking a set of recipes
 --- 
@@ -3542,10 +4001,13 @@ function StaticResearchRecipe.find(name) end
 --- @return StaticResearchRecipe
 function StaticResearchRecipe.get(name) end
 
---- [load] Register a new StaticResearchRecipe static object
+--- [load] Register a new StaticResearchRecipe static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchRecipe.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchRecipe
-function StaticResearchRecipe.reg(name) end
+function StaticResearchRecipe.reg(name, spec) end
+
+--- @class StaticResearchRecipe.spec : StaticResearch.spec
 
 --- Research unlocking a player tool
 --- 
@@ -3572,10 +4034,13 @@ function StaticResearchToolUnlock.find(name) end
 --- @return StaticResearchToolUnlock
 function StaticResearchToolUnlock.get(name) end
 
---- [load] Register a new StaticResearchToolUnlock static object
+--- [load] Register a new StaticResearchToolUnlock static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticResearchToolUnlock.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticResearchToolUnlock
-function StaticResearchToolUnlock.reg(name) end
+function StaticResearchToolUnlock.reg(name, spec) end
+
+--- @class StaticResearchToolUnlock.spec : StaticResearch.spec
 
 --- Map generation script object with a footprint
 --- 
@@ -3603,10 +4068,15 @@ function StaticStructure.find(name) end
 --- @return StaticStructure
 function StaticStructure.get(name) end
 
---- [load] Register a new StaticStructure static object
+--- [load] Register a new StaticStructure static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticStructure.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticStructure
-function StaticStructure.reg(name) end
+function StaticStructure.reg(name, spec) end
+
+--- @class StaticStructure.spec : Prototype.spec
+--- @field generate? function Callback invoked to emit the structure
+--- @field size? Vec2i Footprint of the structure in blocks
 
 --- Encyclopedia entry shown to the player
 --- 
@@ -3643,10 +4113,17 @@ function StaticTip.find(name) end
 --- @return StaticTip
 function StaticTip.get(name) end
 
---- [load] Register a new StaticTip static object
+--- [load] Register a new StaticTip static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticTip.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticTip
-function StaticTip.reg(name) end
+function StaticTip.reg(name, spec) end
+
+--- @class StaticTip.spec : Prototype.spec
+--- @field label? Loc Localized title
+--- @field description_parts? Loc[] Localized body paragraphs
+--- @field image? string Illustration path relative to the owning mod folder
+--- @field context? AutosizeInventory Inventory of items shown next to the text
 
 --- Weather preset a biome shows for one severity band
 --- 
@@ -3675,10 +4152,16 @@ function StaticWeather.find(name) end
 --- @return StaticWeather
 function StaticWeather.get(name) end
 
---- [load] Register a new StaticWeather static object
+--- [load] Register a new StaticWeather static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec StaticWeather.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return StaticWeather
-function StaticWeather.reg(name) end
+function StaticWeather.reg(name, spec) end
+
+--- @class StaticWeather.spec : Prototype.spec
+--- @field cloud_coverage? number Cloud coverage the sky is set to, 0..10
+--- @field thunder? number Thunder and lightning the sky is set to, 0..10
+--- @field fog? number Fog amount the sky is set to, 0..10
 
 --- Base class for blocks that expose a storage inventory
 --- 
@@ -3772,10 +4255,13 @@ function Tesselator.find(name) end
 --- @return Tesselator
 function Tesselator.get(name) end
 
---- [load] Register a new Tesselator static object
+--- [load] Register a new Tesselator static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec Tesselator.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return Tesselator
-function Tesselator.reg(name) end
+function Tesselator.reg(name, spec) end
+
+--- @class Tesselator.spec : Prototype.spec
 
 --- 
 --- 
@@ -3801,10 +4287,11 @@ function TesselatorCube.find(name) end
 --- @return TesselatorCube
 function TesselatorCube.get(name) end
 
---- [load] Register a new TesselatorCube static object
+--- [load] Register a new TesselatorCube static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec TesselatorCube.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return TesselatorCube
-function TesselatorCube.reg(name) end
+function TesselatorCube.reg(name, spec) end
 
 --- 
 --- 
@@ -3830,10 +4317,11 @@ function TesselatorMarching.find(name) end
 --- @return TesselatorMarching
 function TesselatorMarching.get(name) end
 
---- [load] Register a new TesselatorMarching static object
+--- [load] Register a new TesselatorMarching static object, or take the registered one of that name
 --- @param name string The name of the object
+--- @param spec TesselatorMarching.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return TesselatorMarching
-function TesselatorMarching.reg(name) end
+function TesselatorMarching.reg(name, spec) end
 
 --- Engine texture, anything a picture can be drawn from
 --- 
@@ -3846,14 +4334,100 @@ Texture = {}
 --- @return Texture2D
 function Texture.find(name) end
 
+--- Load a texture asset
+--- @param path string Path to the object
+--- @return Texture2D
+function Texture.load(path) end
+
 --- Texture loaded from an image, such as an item icon
 --- 
 --- @class Texture2D : Texture
 Texture2D = {}
 
+--- Train on the railway of a surface. Schedule edits go out to the other peers the way the train window sends them and land at the host's stamped tick
+--- 
+--- @class Train : Instance
+--- @field id integer [readonly] Number of the train, the same on every peer and across saves
+--- @field name string? [readonly] Name the player gave the train, nil while it has none
+--- @field cars StaticItem[] [readonly] Car items from the front of the train to its back
+--- @field stops TrainScheduleStop[] [readonly] Stops of the schedule in order
+--- @field current_stop TrainScheduleStop? [readonly] Stop the train goes to or stands at, nil while the schedule is empty
+--- @field loop boolean [readonly] Whether the schedule starts over after its last stop
+Train = {}
+
+--- Name the train the way its window does
+--- @param name string New name, empty to take the name away
+--- @return boolean True when the edit was taken; false when the train has that name already
+function Train:set_name(name) end
+
+--- Add a stop to the schedule
+--- @param station string Station name
+--- @param before TrainScheduleStop? Stop the new one goes before, nil to add it at the end
+--- @return boolean True when the edit was taken
+function Train:add_stop(station, before) end
+
+--- Take a stop out of the schedule
+--- @param stop TrainScheduleStop Stop of this train
+--- @return boolean True when the edit was taken
+function Train:remove_stop(stop) end
+
+--- Move a stop within the schedule
+--- @param stop TrainScheduleStop Stop of this train
+--- @param before TrainScheduleStop? Stop it goes before, nil to move it to the end
+--- @return boolean True when the edit was taken; false when the stop is there already
+function Train:move_stop(stop, before) end
+
+--- Send a stop to another station
+--- @param stop TrainScheduleStop Stop of this train
+--- @param station string Station name
+--- @return boolean True when the edit was taken; false when the stop goes there already
+function Train:set_stop_station(stop, station) end
+
+--- Replace when the train leaves a stop
+--- @param stop TrainScheduleStop Stop of this train
+--- @param condition table Whole condition, in the shape TrainScheduleStop.condition reads
+--- @return boolean True when the edit was taken
+function Train:set_condition(stop, condition) end
+
+--- Make the schedule start over after its last stop or end there
+--- @param loop boolean Start over
+--- @return boolean True when the edit was taken; false when the schedule is that way already
+function Train:set_loop(loop) end
+
+--- Send the train to a stop of its schedule
+--- @param stop TrainScheduleStop Stop of this train
+--- @return boolean True when the edit was taken; false when it goes there already
+function Train:set_current_stop(stop) end
+
+--- Make the train waiting at its stop leave without its condition
+--- @return boolean True when the edit was taken; false when the train is not waiting at a stop or has nowhere to go
+function Train:depart() end
+
+--- Trying to cast Object into Train
+--- @param object Object Value to cast
+--- @return Train
+function Train.cast(object) end
+
+--- Return Train class object
+--- @return Class
+function Train.get_class() end
+
+--- Creates a new Train instance
+--- @param parent Object Object of parent
+--- @param name string The name of the instance
+--- @return Train
+function Train.new(parent, name) end
+
+--- Creates a new Train instance
+--- @return Train
+function Train.new_simple() end
+
 --- One entry of a train schedule
 --- 
 --- @class TrainScheduleStop : Instance
+--- @field id integer [readonly] Number of the stop, the same on every peer and across saves
+--- @field station string [readonly] Name of the station the train goes to
+--- @field condition table? [readonly] When the train leaves the station, in the shape Train.set_condition takes
 TrainScheduleStop = {}
 
 --- Trying to cast Object into TrainScheduleStop
@@ -4006,6 +4580,8 @@ function WorldGenerator.find(name) end
 --- @return WorldGenerator
 function WorldGenerator.get(name) end
 
+--- @class WorldGenerator.spec : Prototype.spec
+
 --- Block, sector and world coordinate conversions
 --- 
 --- @class cs
@@ -4129,19 +4705,19 @@ ui = {}
 --- @return RenderTexture?
 function ui.thumbnail(block) end
 
---- Single-slot border with uniform padding
+--- Plate drawn behind one child; padding is kept inside the plate
 --- 
 --- @class ui.Border : ui.Widget
---- @field content ui.Widget child widget
---- @field padding number Padding on all sides in slate units; the table constructor also takes { horizontal, vertical }
+--- @field content ui.Widget? The child, also given as the first list item
 --- @field style string Plate the game draws behind the child: "panel", "window", "frame", "field", "plate" or "none"
 --- @field color string Tint of the plate, same forms as ui.Text color; on "plate" it is the fill itself, a faint light one when empty
 ui.Border = {}
 
---- 
+--- Button around one child; padding is kept inside the button
 --- 
 --- @class ui.Button : ui.Widget
---- @field content ui.Widget child widget
+--- @field content ui.Widget? The child, also given as the first list item
+--- @field on_click function? Called with no arguments when the player clicks the button
 ui.Button = {}
 
 --- Grid of equal cells, filled row by row
@@ -4151,31 +4727,32 @@ ui.Button = {}
 --- @field gap number Space kept between cells in slate units
 ui.Grid = {}
 
---- Put a widget in the next free cell
+--- Put a widget that has no parent yet in the next free cell
 --- @param child ui.Widget Widget to place
 function ui.Grid:add(child) end
 
 --- Drop every child, leaving the grid empty
 function ui.Grid:clear() end
 
---- Horizontal container
+--- Row of children laid out left to right
 --- 
 --- @class ui.HBox : ui.Widget
 --- @field gap number Space kept between children in slate units
 ui.HBox = {}
 
---- Append a child widget (must not already be parented)
+--- Append a child widget that has no parent yet
 --- @param child ui.Widget Widget to append
 function ui.HBox:add(child) end
 
 --- Drop every child, leaving the box empty
 function ui.HBox:clear() end
 
---- Square picture of a texture, such as an item image
+--- Picture of a texture, 64 by 64 unless its width and height say otherwise
 --- 
 --- @class ui.Image : ui.Widget
 --- @field image Texture Texture drawn, an item image or a ui.thumbnail; nil draws nothing and keeps the space
---- @field size number Side of the square in slate units
+--- @field size number Width and height at once, for a square picture; reads the width
+--- @field angle number Clockwise turn of the picture about its centre in degrees; the space it takes stays in place
 --- @field color string Tint multiplied into the texture, same forms as ui.Text color
 ui.Image = {}
 
@@ -4187,23 +4764,13 @@ ui.Image = {}
 --- @field columns integer Slots per row, at least one
 ui.Inventory = {}
 
---- Wrapping body text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run
---- 
---- @class ui.RichText : ui.Widget
---- @field text string Source UTF-8 text, tokens and tags unexpanded
---- @field font_size number Font size in slate units
---- @field align string Where the lines sit: "left", "center" or "right"
---- @field color string Color of the text outside tinted runs, same forms as ui.Text color
---- @field wrap boolean True, the default, breaks long lines at the width the text is given; false keeps one line
-ui.RichText = {}
-
 --- Vertical list that scrolls instead of overflowing
 --- 
 --- @class ui.Scroll : ui.Widget
 --- @field gap number Space kept between children in slate units
 ui.Scroll = {}
 
---- Append a child widget (must not already be parented)
+--- Append a child widget that has no parent yet
 --- @param child ui.Widget Widget to append
 function ui.Scroll:add(child) end
 
@@ -4213,14 +4780,19 @@ function ui.Scroll:clear() end
 --- Scroll back to the first child
 function ui.Scroll:to_start() end
 
---- Text label
+--- Empty space as wide and tall as its width and height
+--- 
+--- @class ui.Spacer : ui.Widget
+ui.Spacer = {}
+
+--- Text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run
 --- 
 --- @class ui.Text : ui.Widget
---- @field text string Displayed UTF-8 text
+--- @field text string Source UTF-8 text, tokens and tags unexpanded
 --- @field font_size number Font size in slate units
---- @field align string Where the text sits in its slot: "left", "center" or "right"
---- @field wrap boolean True breaks a long line instead of letting it run out of the window
---- @field color string Text color: "#rrggbb", "#rrggbbaa" or a game color, "primary", "dim", "accent", "accent_light", "warning", "white"
+--- @field align string Where the lines sit: "left", "center" or "right"
+--- @field color string Color of the text outside tinted runs: "#rrggbb", "#rrggbbaa" or a game color, "primary", "dim", "accent", "accent_light", "warning", "white"
+--- @field wrap boolean True, the default, breaks long lines at the width the text is given; false keeps one line
 ui.Text = {}
 
 --- Single line the player types into
@@ -4228,46 +4800,54 @@ ui.Text = {}
 --- @class ui.TextBox : ui.Widget
 --- @field text string Current UTF-8 text
 --- @field hint string Greyed text shown while the field is empty
+--- @field on_changed function? Called with the text after every edit the player makes
+--- @field on_commit function? Called with the text when the player presses Enter
 ui.TextBox = {}
 
 --- Give the field keyboard focus
 function ui.TextBox:focus() end
 
---- Vertical container
+--- Column of children laid out top to bottom
 --- 
 --- @class ui.VBox : ui.Widget
 --- @field gap number Space kept between children in slate units
 ui.VBox = {}
 
---- Append a child widget (must not already be parented)
+--- Append a child widget that has no parent yet
 --- @param child ui.Widget Widget to append
 function ui.VBox:add(child) end
 
 --- Drop every child, leaving the box empty
 function ui.VBox:clear() end
 
---- 
+--- Base of every widget. A widget is built by calling its class with a table: named fields set its properties, the list part holds its children; ui.Text, ui.Window and ui.Button also take their main field alone, as ui.Text "...", ui.Window "..." and ui.Button(fn)
 --- 
 --- @class ui.Widget : Object
 --- @field visible boolean Hidden widgets keep their place in the tree and take no input
 --- @field fill number Share of the free space this widget takes along an HBox or VBox; zero keeps it at the size of its content
---- @field valign string Where the widget sits in the height of an HBox row: "fill", "top", "center" or "bottom"
+--- @field width number Fixed width in slate units; zero lets the content decide
+--- @field height number Fixed height in slate units; zero lets the content decide
+--- @field padding number|number[] Space between the edge of the widget and its content: one number for every side, { horizontal, vertical } or { left, top, right, bottom }; reads as the four sides
+--- @field halign string Where the widget sits across the width its parent gives it: "fill", "left", "center" or "right"; unset is "fill", or "left" when the width is fixed
+--- @field valign string Where the widget sits across the height its parent gives it: "fill", "top", "center" or "bottom"; unset is "fill", or "top" when the height is fixed
 ui.Widget = {}
 
---- Top level window with a title bar the player can drag it by
+--- Top level window with a title bar the player can drag it by; its width and height size the window, its padding is kept around the content
 --- 
 --- @class ui.Window : ui.Widget
---- @field content ui.Widget Single child (replaces previous when set)
+--- @field content ui.Widget? The child, also given as the first list item
 --- @field title string Text shown in the title bar
---- @field width number Fixed width in slate units; zero lets the content decide and the window resizes with it
---- @field height number Fixed height in slate units; zero lets the content decide and the window resizes with it
+--- @field anchor_x string Screen edge the window keeps to across: "left", "center" or "right"
+--- @field anchor_y string Screen edge the window keeps to down: "top", "center" or "bottom"
+--- @field offset_x number Distance from the anchor across in slate units; dragging the window changes it
+--- @field offset_y number Distance from the anchor down in slate units; dragging the window changes it
 --- @field input boolean True gives the window the cursor and the keyboard while the game keeps running
 ui.Window = {}
 
---- Add to viewport at Z order 0
+--- Put the window on the screen
 function ui.Window:show() end
 
---- Remove from parent (hide)
+--- Take the window off the screen
 function ui.Window:close() end
 
 --- Runtime weather control
