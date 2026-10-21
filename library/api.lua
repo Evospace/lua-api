@@ -350,6 +350,7 @@ function BiomeFamily.reg(name, spec) end
 --- 
 --- @class BiomeWorldGenerator : WorldGenerator
 --- @field global_biome GlobalBiomeFamily Global biome family laying out the surface
+--- @field underworld_block StaticBlock Block filling the ground below the layered surface
 BiomeWorldGenerator = {}
 
 --- Trying to cast Object into BiomeWorldGenerator
@@ -379,6 +380,7 @@ function BiomeWorldGenerator.reg(name, spec) end
 
 --- @class BiomeWorldGenerator.spec : WorldGenerator.spec
 --- @field global_biome? GlobalBiomeFamily Global biome family laying out the surface
+--- @field underworld_block? StaticBlock Block filling the ground below the layered surface
 
 --- World actor representing a placed block
 --- 
@@ -401,6 +403,8 @@ function BlockActor.cast(object) end
 --- @field quat FQuat [readonly] Rotation turning the block's local sides into world sides
 --- @field state integer [readonly] State shown under the crosshair, one of defines.block_state
 --- @field settings table [readonly] Settings of the block as its window and the save hold them, a fresh copy on every read
+--- @field vars table<string, number> [readonly] Numbers of the block named by StaticBlock.vars, a fresh copy on every read
+--- @field inventories table<string, InventoryReader> [readonly] Inventories the block saves, by name, each as its own class
 BlockLogic = {}
 
 --- Register Accessor
@@ -1434,6 +1438,10 @@ Inventory = {}
 --- Drop every empty slot from this inventory
 function Inventory:remove_empty_slots() end
 
+--- Set the number of slots; slots past the new number are dropped with what they hold
+--- @param size integer
+function Inventory:resize(size) end
+
 --- Trying to cast Object into Inventory
 --- @param object Object Value to cast
 --- @return Inventory
@@ -1458,6 +1466,7 @@ function Inventory.new_simple() end
 --- @class InventoryAccess : InventoryReader
 --- @field zero_slots boolean Keeps a slot whose count drops to zero
 --- @field draggable boolean Whether inventory can be dragged in UI (default: true)
+--- @field drop_on_break boolean Whether what it holds goes to the player when the block is broken or replaced (default: true); false for a slot that only shows something
 InventoryAccess = {}
 
 --- Add item with count to InventoryAccess
@@ -1471,6 +1480,20 @@ function InventoryAccess:add(item, count) end
 --- @param count integer
 --- @return integer Remainder
 function InventoryAccess:sub(item, count) end
+
+--- Add item with count into one slot
+--- @param index integer Slot index from 0, as get takes it
+--- @param item StaticItem
+--- @param count integer
+--- @return integer Remainder, all of count when there is no such slot
+function InventoryAccess:add_at(index, item, count) end
+
+--- Remove item with count from one slot
+--- @param index integer Slot index from 0, as get takes it
+--- @param item StaticItem
+--- @param count integer
+--- @return integer Remainder, all of count when there is no such slot or it holds another item
+function InventoryAccess:sub_at(index, item, count) end
 
 --- Trying to cast Object into InventoryAccess
 --- @param object Object Value to cast
@@ -2171,6 +2194,17 @@ function Object:get_class() end
 --- Return Object class object
 --- @return Class
 function Object.get_class() end
+
+--- Rock an ore vein grows through and the ore block it leaves in that rock
+--- 
+--- @class OreVeinTarget
+--- @field replace StaticBlock[] Blocks the vein replaces
+--- @field block StaticBlock Ore block left in their place
+OreVeinTarget = {}
+
+--- Create new instance of OreVeinTarget
+--- @return OreVeinTarget
+function OreVeinTarget.new() end
 
 --- Local player controller
 --- 
@@ -3100,10 +3134,14 @@ function StaticAchievement.reg(name, spec) end
 --- @field energy_production_per_tick integer Energy produced per simulation tick
 --- @field energy_consumption_item StaticItem Resource item drawn by this block
 --- @field energy_production_item StaticItem Resource item produced by this block
+--- @field energy_tooltip string [readonly] Lines on the power the block draws and produces, as its item tooltip shows them; empty for a block without energy
 --- @field break_effect Class Effect actor class spawned when the block is destroyed
 --- @field logic_init function? [load] Called with the block logic of every new block of this type; makes its inventories and accessors
 --- @field actor_init function? [load] Called with the block actor when it spawns
 --- @field tooltip function|string|nil [load] Tooltip of the block: a string, or a function of the block logic returning one
+--- @field vars string[] [load] Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
+--- @field batch_tick function? [load] Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+--- @field window function? [load] Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
 --- @field half_cover StaticCover Cover mesh for the half-height variant
 --- @field center_cover StaticCover Cover mesh for the center part
 --- @field body_cover StaticCover Cover mesh for the block body
@@ -3165,6 +3203,9 @@ function StaticBlock.reg(name, spec) end
 --- @field logic_init? function Called with the block logic of every new block of this type; makes its inventories and accessors
 --- @field actor_init? function Called with the block actor when it spawns
 --- @field tooltip? function|string|nil Tooltip of the block: a string, or a function of the block logic returning one
+--- @field vars? string[] Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
+--- @field batch_tick? function Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+--- @field window? function Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
 --- @field half_cover? StaticCover Cover mesh for the half-height variant
 --- @field center_cover? StaticCover Cover mesh for the center part
 --- @field body_cover? StaticCover Cover mesh for the block body
@@ -3287,6 +3328,7 @@ function StaticCoverSet.reg(name, spec) end
 --- @field image Texture2D Item image in UI
 --- @field image_path string Icon path relative to the owning mod folder
 --- @field stack_size integer Size of item stack
+--- @field sim_id integer [readonly] Number of the item in this session only, from 1 by name after init; another set of mods shifts it. What --!sim code compares; never save it
 --- @field tier integer Item unlock tier
 --- @field type string [load] What the item is: "solid", "fluid" or "abstract"
 --- @field unit_mul number multiplier for UI
@@ -3506,6 +3548,56 @@ function StaticObject.get(name) end
 --- @field mined_item? StaticItem Item a build pays and mining returns; nil when the object is not minable
 --- @field mined_count? integer How many of mined_item a build pays and mining returns; zero when the object is not minable
 
+--- Ore vein every world places in the rock its targets replace, tried Count times per 16x16 column
+--- 
+--- @class StaticOreVein : Prototype
+--- @field targets OreVeinTarget[] [load] Rock the vein replaces and the ore it leaves there
+--- @field size integer [load] Number of blobs strung along the vein
+--- @field count integer [load] Veins tried per column
+--- @field rarity integer [load] A column gets the veins with chance 1 / rarity
+--- @field min_height integer [load] Lowest vein centre, world block height
+--- @field max_height integer [load] Highest vein centre, world block height
+--- @field trapezoid boolean [load] Heights peak in the middle of the range instead of spreading evenly
+--- @field plateau integer [load] Width of the flat top of the trapezoid
+--- @field discard_on_air_exposure number [load] Chance an ore cell next to air stays rock
+StaticOreVein = {}
+
+--- Trying to cast Object into StaticOreVein
+--- @param object Object Value to cast
+--- @return StaticOreVein
+function StaticOreVein.cast(object) end
+
+--- Return StaticOreVein class object
+--- @return Class
+function StaticOreVein.get_class() end
+
+--- Looks StaticOreVein up in db, nil when there is none
+--- @param name string The name of the object
+--- @return StaticOreVein
+function StaticOreVein.find(name) end
+
+--- Takes StaticOreVein from db, reports a miss to the log
+--- @param name string The name of the object
+--- @return StaticOreVein
+function StaticOreVein.get(name) end
+
+--- [load] Register a new StaticOreVein static object, or take the registered one of that name
+--- @param name string The name of the object
+--- @param spec StaticOreVein.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
+--- @return StaticOreVein
+function StaticOreVein.reg(name, spec) end
+
+--- @class StaticOreVein.spec : Prototype.spec
+--- @field targets? OreVeinTarget[] Rock the vein replaces and the ore it leaves there
+--- @field size? integer Number of blobs strung along the vein
+--- @field count? integer Veins tried per column
+--- @field rarity? integer A column gets the veins with chance 1 / rarity
+--- @field min_height? integer Lowest vein centre, world block height
+--- @field max_height? integer Highest vein centre, world block height
+--- @field trapezoid? boolean Heights peak in the middle of the range instead of spreading evenly
+--- @field plateau? integer Width of the flat top of the trapezoid
+--- @field discard_on_air_exposure? number Chance an ore cell next to air stays rock
+
 --- Celestial body with its own day cycle in world ticks
 --- 
 --- @class StaticPlanet : Prototype
@@ -3580,6 +3672,52 @@ function StaticPlanet.reg(name, spec) end
 --- @field orbit_altitude_meters? number Height of a platform orbit above the surface
 --- @field generator_name? string World generator of the surface, empty for the generator chosen for the save
 --- @field music_playlist? string Music playlist key played while the surface is shown
+
+--- What a player starts with and crafts in hand; the game reads the one named Player
+--- 
+--- @class StaticPlayer : Prototype
+--- @field hand_recipes RecipeDictionary [load] Recipes the player crafts in hand
+--- @field hotbar StaticItem[] [load] Items put on the first hotbar row of a new player
+--- @field tools StaticItem[] [load] Tools always in hand; the three tool keys take the first three
+--- @field light StaticItem [load] Item whose logic lights the empty light slot
+--- @field blueprint_item StaticItem [load] Item that carries a captured blueprint
+--- @field start_inventory Inventory [load] Items a new player receives
+--- @field start_researches StaticResearch[] [load] Researches completed when a world starts
+StaticPlayer = {}
+
+--- Trying to cast Object into StaticPlayer
+--- @param object Object Value to cast
+--- @return StaticPlayer
+function StaticPlayer.cast(object) end
+
+--- Return StaticPlayer class object
+--- @return Class
+function StaticPlayer.get_class() end
+
+--- Looks StaticPlayer up in db, nil when there is none
+--- @param name string The name of the object
+--- @return StaticPlayer
+function StaticPlayer.find(name) end
+
+--- Takes StaticPlayer from db, reports a miss to the log
+--- @param name string The name of the object
+--- @return StaticPlayer
+function StaticPlayer.get(name) end
+
+--- [load] Register a new StaticPlayer static object, or take the registered one of that name
+--- @param name string The name of the object
+--- @param spec StaticPlayer.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
+--- @return StaticPlayer
+function StaticPlayer.reg(name, spec) end
+
+--- @class StaticPlayer.spec : Prototype.spec
+--- @field hand_recipes? RecipeDictionary Recipes the player crafts in hand
+--- @field hotbar? StaticItem[] Items put on the first hotbar row of a new player
+--- @field tools? StaticItem[] Tools always in hand; the three tool keys take the first three
+--- @field light? StaticItem Item whose logic lights the empty light slot
+--- @field blueprint_item? StaticItem Item that carries a captured blueprint
+--- @field start_inventory? Inventory Items a new player receives
+--- @field start_researches? StaticResearch[] Researches completed when a world starts
 
 --- Decoration prototype scattered by the world generator
 --- 
@@ -4085,6 +4223,7 @@ function StaticStructure.reg(name, spec) end
 --- @field description_parts Loc[] Localized body paragraphs
 --- @field image string Illustration path relative to the owning mod folder
 --- @field context AutosizeInventory Inventory of items shown next to the text
+--- @field parent StaticTip Tip this entry is nested under in the list
 StaticTip = {}
 
 --- Add an item to the context inventory shown next to the text
@@ -4124,6 +4263,7 @@ function StaticTip.reg(name, spec) end
 --- @field description_parts? Loc[] Localized body paragraphs
 --- @field image? string Illustration path relative to the owning mod folder
 --- @field context? AutosizeInventory Inventory of items shown next to the text
+--- @field parent? StaticTip Tip this entry is nested under in the list
 
 --- Weather preset a biome shows for one severity band
 --- 
@@ -4263,9 +4403,9 @@ function Tesselator.reg(name, spec) end
 
 --- @class Tesselator.spec : Prototype.spec
 
+--- Sector mesh builder of cube blocks
 --- 
---- 
---- @class TesselatorCube
+--- @class TesselatorCube : Tesselator
 TesselatorCube = {}
 
 --- Trying to cast Object into TesselatorCube
@@ -4293,9 +4433,11 @@ function TesselatorCube.get(name) end
 --- @return TesselatorCube
 function TesselatorCube.reg(name, spec) end
 
+--- @class TesselatorCube.spec : Tesselator.spec
+
+--- Sector mesh builder of smooth terrain
 --- 
---- 
---- @class TesselatorMarching
+--- @class TesselatorMarching : Tesselator
 TesselatorMarching = {}
 
 --- Trying to cast Object into TesselatorMarching
@@ -4322,6 +4464,8 @@ function TesselatorMarching.get(name) end
 --- @param spec TesselatorMarching.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
 --- @return TesselatorMarching
 function TesselatorMarching.reg(name, spec) end
+
+--- @class TesselatorMarching.spec : Tesselator.spec
 
 --- Engine texture, anything a picture can be drawn from
 --- 
@@ -4489,6 +4633,10 @@ function Transform:get_scale() end
 --- @field one Vec2i [readonly] (1, 1)
 --- @field x integer
 --- @field y integer
+--- @operator add(Vec2i): Vec2i
+--- @operator sub(Vec2i): Vec2i
+--- @operator mul(Vec2i): Vec2i
+--- @operator div(Vec2i): Vec2i
 Vec2i = {}
 
 --- Create a vector from components
@@ -4511,6 +4659,10 @@ function Vec2i.new(x, y) end
 --- @field x number
 --- @field y number
 --- @field z number
+--- @operator add(Vec3): Vec3
+--- @operator sub(Vec3): Vec3
+--- @operator mul(Vec3): Vec3
+--- @operator div(Vec3): Vec3
 Vec3 = {}
 
 --- Create a vector from components
@@ -4543,6 +4695,10 @@ function Vec3:normalize() end
 --- @field x integer
 --- @field y integer
 --- @field z integer
+--- @operator add(Vec3i): Vec3i
+--- @operator sub(Vec3i): Vec3i
+--- @operator mul(Vec3i): Vec3i
+--- @operator div(Vec3i): Vec3i
 Vec3i = {}
 
 --- Create a vector from components
@@ -4559,6 +4715,9 @@ function Vec3i:xy() end
 --- Terrain generator bound to a dimension
 --- 
 --- @class WorldGenerator : Prototype
+--- @field ore_list StaticPropList Ore deposits this world places; its nearest tier is seeded around the spawn
+--- @field stone_source StaticItem Item a drill takes anywhere away from a deposit
+--- @field water_source StaticItem Fluid a pump takes anywhere away from a deposit
 WorldGenerator = {}
 
 --- Trying to cast Object into WorldGenerator
@@ -4581,6 +4740,9 @@ function WorldGenerator.find(name) end
 function WorldGenerator.get(name) end
 
 --- @class WorldGenerator.spec : Prototype.spec
+--- @field ore_list? StaticPropList Ore deposits this world places; its nearest tier is seeded around the spawn
+--- @field stone_source? StaticItem Item a drill takes anywhere away from a deposit
+--- @field water_source? StaticItem Fluid a pump takes anywhere away from a deposit
 
 --- Block, sector and world coordinate conversions
 --- 
@@ -4700,6 +4862,11 @@ function sim.cancel(handle) end
 --- @class ui
 ui = {}
 
+--- Picture from a png file in the calling mod's folder for ui.Image, loaded once; a picture under 64 pixels is drawn without smoothing
+--- @param path string Path inside the mod folder, as "gui/flame.png"
+--- @return Texture2D?
+function ui.texture(path) end
+
 --- Rendered picture of a block for ui.Image, made once and kept; nil where nothing can be rendered
 --- @param block StaticBlock Block to picture
 --- @return RenderTexture?
@@ -4750,10 +4917,11 @@ function ui.HBox:clear() end
 --- Picture of a texture, 64 by 64 unless its width and height say otherwise
 --- 
 --- @class ui.Image : ui.Widget
---- @field image Texture Texture drawn, an item image or a ui.thumbnail; nil draws nothing and keeps the space
+--- @field image Texture Texture drawn, an item image, a ui.texture or a ui.thumbnail; nil draws nothing and keeps the space
 --- @field size number Width and height at once, for a square picture; reads the width
 --- @field angle number Clockwise turn of the picture about its centre in degrees; the space it takes stays in place
 --- @field color string Tint multiplied into the texture, same forms as ui.Text color
+--- @field uv number[] Part of the texture drawn, { u0, v0, u1, v1 } from 0 to 1 across and down; the part fills the picture's width and height. Reads { 0, 0, 1, 1 } for the whole texture
 ui.Image = {}
 
 --- Grid of item slots showing an inventory with the game's own slot widget

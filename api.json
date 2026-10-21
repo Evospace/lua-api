@@ -1,5 +1,5 @@
 {
-	"version": "0.22.1",
+	"version": "0.22.2",
 	"prelude": "--- @type boolean|nil\nLuaLogFlag = false\n\n--- Prints info to log\n--- @param message string\nfunction print_info(message) end\n\n--- Prints error to log but do not breaks execution\n--- @param message string\nfunction print_err(message) end\n\n--- Prints warning to log\n--- @param message string\nfunction print_warn(message) end\n\n--- Dimension of the running session\n--- @type Dimension\ndim = {}\n\n--- This mod's table of the local player, kept in the save under the player's profile: booleans, numbers, strings, Vec3i and tables of them. nil outside a game session\n--- @type table|nil\nstorage = {}\n",
 	"classes": [
 		{
@@ -16,7 +16,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "load_independent",
@@ -25,7 +26,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "stable_supply",
@@ -34,7 +36,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "input_gathered",
@@ -43,7 +46,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "bonus_delivered",
@@ -52,7 +56,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "switch_on",
@@ -61,7 +66,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "ticks_passed",
@@ -70,7 +76,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "real_ticks_passed",
@@ -79,7 +86,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "total_production",
@@ -88,7 +96,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "speed",
@@ -97,7 +106,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "productivity",
@@ -106,7 +116,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_input_inventory",
@@ -115,7 +126,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_output_inventory",
@@ -124,7 +136,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "crafter_input_container",
@@ -133,7 +146,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "crafter_output_container",
@@ -142,7 +156,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -239,7 +254,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Accessor",
@@ -255,7 +271,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "pos",
@@ -264,7 +281,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "owner",
@@ -273,7 +291,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cover",
@@ -282,7 +301,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -359,7 +379,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Actor",
@@ -419,7 +440,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ActorComponent",
@@ -434,10 +456,12 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "AdminElectricGeneratorBlockLogic",
@@ -520,7 +544,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "AnimSequence",
@@ -536,7 +561,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -560,7 +586,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "AnimatedBlockActor",
@@ -569,7 +596,8 @@
 			"internal": false,
 			"summary": "Block actor driven by the animation manager",
 			"fields": [],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "AutoCrafter",
@@ -652,7 +680,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "AutosizeInventory",
@@ -735,7 +764,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BaseInventory",
@@ -779,7 +809,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BaseInventoryAccessor",
@@ -795,7 +826,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "input",
@@ -804,7 +836,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "output",
@@ -813,7 +846,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -876,7 +910,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BedBlockLogic",
@@ -959,7 +994,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Biome",
@@ -1068,7 +1104,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BiomeFamily",
@@ -1084,7 +1121,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "sub_frequency",
@@ -1093,7 +1131,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "perturb_amp",
@@ -1102,7 +1141,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "perturb_frequency",
@@ -1111,7 +1151,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "perturb_octaves",
@@ -1120,7 +1161,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "perturb_fine_amp",
@@ -1129,7 +1171,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "perturb_fine_frequency",
@@ -1138,7 +1181,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1241,7 +1285,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BiomeWorldGenerator",
@@ -1257,7 +1302,18 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "underworld_block",
+					"type": "StaticBlock",
+					"summary": "Block filling the ground below the layered surface",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1360,7 +1416,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BlockActor",
@@ -1376,7 +1433,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "hull_material",
@@ -1385,7 +1443,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1409,7 +1468,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "BlockLogic",
@@ -1425,7 +1485,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "static_block",
@@ -1434,7 +1495,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "pos",
@@ -1443,7 +1505,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "quat",
@@ -1452,7 +1515,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "state",
@@ -1461,7 +1525,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "settings",
@@ -1470,7 +1535,28 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "vars",
+					"type": "table<string, number>",
+					"summary": "Numbers of the block named by StaticBlock.vars, a fresh copy on every read",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "inventories",
+					"type": "table<string, InventoryReader>",
+					"summary": "Inventories the block saves, by name, each as its own class",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1611,7 +1697,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ChestBlockLogic",
@@ -1627,7 +1714,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1704,7 +1792,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Class",
@@ -1720,7 +1809,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -1804,7 +1894,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Color",
@@ -1819,7 +1910,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "g",
@@ -1828,7 +1920,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "b",
@@ -1837,7 +1930,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "a",
@@ -1846,7 +1940,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "red",
@@ -1855,7 +1950,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "green",
@@ -1864,7 +1960,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "blue",
@@ -1873,7 +1970,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "yellow",
@@ -1882,7 +1980,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "cyan",
@@ -1891,7 +1990,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "magenta",
@@ -1900,7 +2000,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "white",
@@ -1909,7 +2010,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "black",
@@ -1918,7 +2020,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "gray",
@@ -1927,7 +2030,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "orange",
@@ -1936,7 +2040,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "purple",
@@ -1945,7 +2050,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "transparent",
@@ -1954,7 +2060,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				}
 			],
 			"functions": [
@@ -1993,7 +2100,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ComputerBlockLogic",
@@ -2009,7 +2117,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_input",
@@ -2018,7 +2127,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -2095,7 +2205,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ConductorBlockLogic",
@@ -2111,7 +2222,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "center_cover",
@@ -2120,7 +2232,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "straight_cover",
@@ -2129,7 +2242,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "straight_plain_cover",
@@ -2138,7 +2252,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "elbow_cover",
@@ -2147,7 +2262,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "dead_end_cover",
@@ -2156,7 +2272,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "isolated_cover",
@@ -2165,7 +2282,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "channel",
@@ -2174,7 +2292,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "conductor_channel",
@@ -2183,7 +2302,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "capacity",
@@ -2192,7 +2312,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "drain",
@@ -2201,7 +2322,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -2293,7 +2415,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Console",
@@ -2451,7 +2574,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ConveyorBlockLogic",
@@ -2467,7 +2591,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -2544,7 +2669,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DB",
@@ -2707,7 +2833,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DeepStorageBlockLogic",
@@ -2723,7 +2850,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -2800,7 +2928,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DesignableCoverBlockLogic",
@@ -2816,7 +2945,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -2893,7 +3023,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DesignableFenceBlockLogic",
@@ -2909,7 +3040,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "center_cover",
@@ -2918,7 +3050,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cover_set",
@@ -2927,7 +3060,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -3004,7 +3138,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Dimension",
@@ -3212,7 +3347,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DoorBlockLogic",
@@ -3295,7 +3431,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DrillingMachineBase",
@@ -3311,7 +3448,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "remaining_energy",
@@ -3320,7 +3458,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "productivity",
@@ -3329,7 +3468,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "total_production",
@@ -3338,7 +3478,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "inventory",
@@ -3347,7 +3488,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy",
@@ -3356,7 +3498,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "production",
@@ -3365,7 +3508,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "storage_size",
@@ -3374,7 +3518,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "last_speed",
@@ -3383,7 +3528,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "current_recipe_time",
@@ -3392,7 +3538,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -3472,7 +3619,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "DrillingRig",
@@ -3488,7 +3636,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -3565,7 +3714,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ElectricityContainerBlockLogic",
@@ -3648,7 +3798,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Engine",
@@ -3664,7 +3815,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "dpi",
@@ -3673,7 +3825,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mouse_sensitivity_x",
@@ -3682,7 +3835,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mouse_sensitivity_y",
@@ -3691,7 +3845,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mouse_inversion_x",
@@ -3700,7 +3855,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mouse_inversion_y",
@@ -3709,7 +3865,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "props_quality",
@@ -3718,7 +3875,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "reflection_preset",
@@ -3727,7 +3885,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "transparency_preset",
@@ -3736,7 +3895,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "gi_preset",
@@ -3745,7 +3905,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "limit_texture_pool_to_vram",
@@ -3754,7 +3915,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "texture_pool_size_mb",
@@ -3763,7 +3925,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "texture_max_temp_memory_mb",
@@ -3772,7 +3935,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "texture_mip_bias",
@@ -3781,7 +3945,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "render_target_pool_min_mb",
@@ -3790,7 +3955,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "detail_shadows",
@@ -3799,7 +3965,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "spotlight_shadows",
@@ -3808,7 +3975,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "fps",
@@ -3817,7 +3985,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "res_x",
@@ -3826,7 +3995,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "res_y",
@@ -3835,7 +4005,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "loading_range",
@@ -3844,7 +4015,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "performance",
@@ -3853,7 +4025,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "performance_graph",
@@ -3862,7 +4035,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "compass",
@@ -3871,7 +4045,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "compass_show_nearest_ore",
@@ -3880,7 +4055,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "compass_show_spawn_point",
@@ -3889,7 +4065,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "quest_tracker",
@@ -3898,7 +4075,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tool_hints",
@@ -3907,7 +4085,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "ctrl_hotbar",
@@ -3916,7 +4095,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "alt_hotbar",
@@ -3925,7 +4105,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "shift_hotbar",
@@ -3934,7 +4115,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "fov",
@@ -3943,7 +4125,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "fog",
@@ -3952,7 +4135,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "window_mode",
@@ -3961,7 +4145,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "autosave_period",
@@ -3970,7 +4155,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "undo_confirm_minutes",
@@ -3979,7 +4165,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "memory_stats",
@@ -3988,7 +4175,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "weather_particles",
@@ -3997,7 +4185,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "wind_animation",
@@ -4006,7 +4195,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cloud_preset",
@@ -4015,7 +4205,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "sector_lod_count",
@@ -4024,7 +4215,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mute_on_focus_loss",
@@ -4033,7 +4225,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4055,7 +4248,8 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "EnvironmentCrafter",
@@ -4071,7 +4265,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "wind_powered",
@@ -4080,7 +4275,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cut_in_wind_speed",
@@ -4089,7 +4285,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "rated_wind_speed",
@@ -4098,7 +4295,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "follows_sun",
@@ -4107,7 +4305,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "exclusion_radius",
@@ -4116,7 +4315,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4193,7 +4393,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "EquipmentSlotFilter",
@@ -4276,7 +4477,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "EventSystem",
@@ -4364,7 +4566,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ExtractionData",
@@ -4379,7 +4582,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "speed",
@@ -4388,7 +4592,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4406,7 +4611,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "FQuat",
@@ -4421,7 +4627,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "x",
@@ -4430,7 +4637,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "y",
@@ -4439,7 +4647,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "z",
@@ -4448,7 +4657,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "w",
@@ -4457,7 +4667,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4538,7 +4749,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "FenceBlockLogic",
@@ -4621,7 +4833,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "FluidContainerBlockLogic",
@@ -4704,7 +4917,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Game",
@@ -4720,7 +4934,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "build_string",
@@ -4729,7 +4944,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tick_rate",
@@ -4738,7 +4954,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4784,7 +5001,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GameSessionData",
@@ -4800,7 +5018,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "all_research_completed",
@@ -4809,7 +5028,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "creative_mode",
@@ -4818,7 +5038,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "creative_allowed",
@@ -4827,7 +5048,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "total_game_time",
@@ -4836,7 +5058,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "total_game_ticks",
@@ -4845,7 +5068,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "seed",
@@ -4854,7 +5078,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "version",
@@ -4863,7 +5088,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "generator",
@@ -4872,7 +5098,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "save_name",
@@ -4881,7 +5108,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cloud",
@@ -4890,7 +5118,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "world_time",
@@ -4899,7 +5128,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "world_time_freeze",
@@ -4908,7 +5138,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tick_rate",
@@ -4917,7 +5148,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -4994,7 +5226,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GenContext",
@@ -5009,7 +5242,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -5078,7 +5312,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GhostBlockLogic",
@@ -5094,7 +5329,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -5171,7 +5407,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GhostStaticBlock",
@@ -5280,7 +5517,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GlobalBiomeFamily",
@@ -5389,7 +5627,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "GraphicsSettings",
@@ -5487,7 +5726,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "HeatContainerBlockLogic",
@@ -5570,7 +5810,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "HeightGenerator",
@@ -5694,7 +5935,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Instance",
@@ -5718,7 +5960,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Inventory",
@@ -5736,6 +5979,21 @@
 					"internal": false,
 					"load_only": false,
 					"params": []
+				},
+				{
+					"name": "resize",
+					"kind": "method",
+					"summary": "Set the number of slots; slots past the new number are dropped with what they hold",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"params": [
+						{
+							"name": "size",
+							"type": "integer",
+							"desc": ""
+						}
+					]
 				},
 				{
 					"name": "cast",
@@ -5810,7 +6068,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryAccess",
@@ -5826,7 +6085,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "draggable",
@@ -5835,7 +6095,18 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "drop_on_break",
+					"type": "boolean",
+					"summary": "Whether what it holds goes to the player when the block is broken or replaced (default: true); false for a slot that only shows something",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -5890,6 +6161,66 @@
 					]
 				},
 				{
+					"name": "add_at",
+					"kind": "method",
+					"summary": "Add item with count into one slot",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "integer",
+						"desc": "Remainder, all of count when there is no such slot"
+					},
+					"params": [
+						{
+							"name": "index",
+							"type": "integer",
+							"desc": "Slot index from 0, as get takes it"
+						},
+						{
+							"name": "item",
+							"type": "StaticItem",
+							"desc": ""
+						},
+						{
+							"name": "count",
+							"type": "integer",
+							"desc": ""
+						}
+					]
+				},
+				{
+					"name": "sub_at",
+					"kind": "method",
+					"summary": "Remove item with count from one slot",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "integer",
+						"desc": "Remainder, all of count when there is no such slot or it holds another item"
+					},
+					"params": [
+						{
+							"name": "index",
+							"type": "integer",
+							"desc": "Slot index from 0, as get takes it"
+						},
+						{
+							"name": "item",
+							"type": "StaticItem",
+							"desc": ""
+						},
+						{
+							"name": "count",
+							"type": "integer",
+							"desc": ""
+						}
+					]
+				},
+				{
 					"name": "cast",
 					"kind": "static",
 					"summary": "Trying to cast Object into InventoryAccess",
@@ -5923,7 +6254,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryBlackFilter",
@@ -6006,7 +6338,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryContainer",
@@ -6124,7 +6457,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryFilter",
@@ -6168,7 +6502,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryInventoryFilter",
@@ -6184,7 +6519,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_filtering",
@@ -6193,7 +6529,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_white",
@@ -6202,7 +6539,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -6279,7 +6617,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryReader",
@@ -6295,7 +6634,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -6373,7 +6713,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "InventoryWhiteFilter",
@@ -6456,7 +6797,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ItemData",
@@ -6471,7 +6813,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "item",
@@ -6480,7 +6823,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -6543,7 +6887,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ItemGroup",
@@ -6559,7 +6904,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -6682,7 +7028,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ItemRackBlockLogic",
@@ -6698,7 +7045,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -6775,7 +7123,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Kto",
@@ -6823,7 +7172,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LandingPadBlockLogic",
@@ -6906,7 +7256,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LedBlockLogic",
@@ -6989,7 +7340,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LoaderBaseBlockLogic",
@@ -7005,7 +7357,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7082,7 +7435,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Loc",
@@ -7249,7 +7603,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LocData",
@@ -7278,7 +7633,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LogicDecider",
@@ -7361,7 +7717,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LogicExportOption",
@@ -7377,7 +7734,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "use_signal",
@@ -7386,7 +7744,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "enabled",
@@ -7395,7 +7754,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -7404,7 +7764,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tooltip",
@@ -7413,7 +7774,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7516,7 +7878,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LogicImportOption",
@@ -7532,7 +7895,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "use_signal",
@@ -7541,7 +7905,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "enabled",
@@ -7550,7 +7915,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -7559,7 +7925,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tooltip",
@@ -7568,7 +7935,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7671,7 +8039,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LogicSettings",
@@ -7754,7 +8123,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "LuaWorldGenerator",
@@ -7770,7 +8140,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "height",
@@ -7779,7 +8150,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7882,7 +8254,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "MapStructure",
@@ -7897,7 +8270,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "structure",
@@ -7906,7 +8280,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7924,7 +8299,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Material",
@@ -7940,7 +8316,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -7964,7 +8341,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Music",
@@ -7980,7 +8358,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "track_count",
@@ -7989,7 +8368,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8081,7 +8461,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "NoiseGenerator",
@@ -8097,7 +8478,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "max",
@@ -8106,7 +8488,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8344,7 +8727,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Object",
@@ -8359,7 +8743,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8431,7 +8816,53 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
+		},
+		{
+			"name": "OreVeinTarget",
+			"kind": "class",
+			"internal": false,
+			"summary": "Rock an ore vein grows through and the ore block it leaves in that rock",
+			"fields": [
+				{
+					"name": "replace",
+					"type": "StaticBlock[]",
+					"summary": "Blocks the vein replaces",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "block",
+					"type": "StaticBlock",
+					"summary": "Ore block left in their place",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
+				}
+			],
+			"functions": [
+				{
+					"name": "new",
+					"kind": "static",
+					"summary": "Create new instance of OreVeinTarget",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "OreVeinTarget",
+						"desc": ""
+					},
+					"params": []
+				}
+			],
+			"operators": []
 		},
 		{
 			"name": "Player",
@@ -8489,7 +8920,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "PlayerController",
@@ -8497,7 +8929,8 @@
 			"internal": false,
 			"summary": "Player input and view owner",
 			"fields": [],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "PropListData",
@@ -8512,7 +8945,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "min_dist",
@@ -8521,7 +8955,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "far_weight",
@@ -8530,7 +8965,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "props",
@@ -8539,7 +8975,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8557,7 +8994,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Prototype",
@@ -8573,7 +9011,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8591,7 +9030,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Pumpjack",
@@ -8607,7 +9047,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8684,7 +9125,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "QuestObjective",
@@ -8700,7 +9142,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -8709,7 +9152,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "completed",
@@ -8718,7 +9162,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "show_progress",
@@ -8727,7 +9172,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "current",
@@ -8736,7 +9182,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "required",
@@ -8745,7 +9192,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -8862,7 +9310,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "QuestSubsystem",
@@ -9013,7 +9462,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Railway",
@@ -9267,7 +9717,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Recipe",
@@ -9283,7 +9734,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "default_locked",
@@ -9292,7 +9744,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "locked",
@@ -9301,7 +9754,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "productivity",
@@ -9310,7 +9764,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "input",
@@ -9319,7 +9774,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "output",
@@ -9328,7 +9784,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tier",
@@ -9337,7 +9794,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "start_tier",
@@ -9346,7 +9804,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "dictionary",
@@ -9355,7 +9814,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -9458,7 +9918,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "RecipeDictionary",
@@ -9474,7 +9935,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "machines",
@@ -9483,7 +9945,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -9680,7 +10143,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "RecipeInventory",
@@ -9696,7 +10160,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -9861,7 +10326,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "RecipeItemData",
@@ -9876,7 +10342,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "probability",
@@ -9885,7 +10352,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "bonus",
@@ -9894,7 +10362,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -9912,7 +10381,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Region",
@@ -9928,7 +10398,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -10035,7 +10506,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "RegionMap",
@@ -10207,7 +10679,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "RenderTexture",
@@ -10216,7 +10689,8 @@
 			"internal": false,
 			"summary": "Texture the game renders into, such as a block thumbnail",
 			"fields": [],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ResourceAccessor",
@@ -10232,7 +10706,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_input",
@@ -10241,7 +10716,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_output",
@@ -10250,7 +10726,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "channel",
@@ -10259,7 +10736,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -10362,7 +10840,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ResourceInventory",
@@ -10378,7 +10857,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "drain",
@@ -10387,7 +10867,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "capacity",
@@ -10396,7 +10877,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -10488,7 +10970,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Rotator",
@@ -10503,7 +10986,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "pitch",
@@ -10512,7 +10996,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "yaw",
@@ -10521,7 +11006,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "roll",
@@ -10530,7 +11016,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -10564,7 +11051,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SelectCrafter",
@@ -10647,7 +11135,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Setting",
@@ -10663,7 +11152,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "set_action",
@@ -10672,7 +11162,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -10681,7 +11172,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "type",
@@ -10690,7 +11182,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "category",
@@ -10699,7 +11192,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "value",
@@ -10708,7 +11202,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "default",
@@ -10717,7 +11212,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "options",
@@ -10726,7 +11222,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "min",
@@ -10735,7 +11232,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "max",
@@ -10744,7 +11242,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "bool_value",
@@ -10754,6 +11253,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "value"
 				},
 				{
@@ -10764,6 +11264,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "default"
 				},
 				{
@@ -10774,6 +11275,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "value"
 				},
 				{
@@ -10784,6 +11286,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "default"
 				},
 				{
@@ -10794,6 +11297,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "options"
 				},
 				{
@@ -10804,6 +11308,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "value"
 				},
 				{
@@ -10814,6 +11319,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "default"
 				},
 				{
@@ -10824,6 +11330,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "max"
 				},
 				{
@@ -10834,6 +11341,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "min"
 				},
 				{
@@ -10843,7 +11351,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "default_key",
@@ -10852,7 +11361,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "key_action",
@@ -10861,7 +11371,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -10973,7 +11484,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SingleRecipeCrafter",
@@ -11056,7 +11568,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SingleSlotInventory",
@@ -11072,7 +11585,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11164,7 +11678,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SoundClass",
@@ -11180,7 +11695,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "volume",
@@ -11189,7 +11705,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11213,7 +11730,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SourceData",
@@ -11229,7 +11747,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "item",
@@ -11238,7 +11757,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "active_miners",
@@ -11247,7 +11767,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "infinite_ore",
@@ -11256,7 +11777,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11375,7 +11897,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SplitterBlockLogic",
@@ -11391,7 +11914,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11468,7 +11992,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SpotlightBlockLogic",
@@ -11551,7 +12076,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StackedContainerBlockLogic",
@@ -11567,7 +12093,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "bottom_cover",
@@ -11576,7 +12103,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "middle_cover",
@@ -11585,7 +12113,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "top_cover",
@@ -11594,7 +12123,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "connector_cover",
@@ -11603,7 +12133,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11680,7 +12211,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticAchievement",
@@ -11696,7 +12228,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "total",
@@ -11705,7 +12238,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "threshold",
@@ -11714,7 +12248,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "unlocked",
@@ -11723,7 +12258,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "unlocked_time",
@@ -11732,7 +12268,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "image",
@@ -11741,7 +12278,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "steam_key",
@@ -11750,7 +12288,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -11759,7 +12298,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description",
@@ -11768,7 +12308,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -11871,7 +12412,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticBlock",
@@ -11887,7 +12429,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "actor",
@@ -11896,7 +12439,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "selector",
@@ -11905,7 +12449,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tesselator",
@@ -11914,7 +12459,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "sub_blocks",
@@ -11923,7 +12469,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "rotation_locks",
@@ -11932,7 +12479,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "replace_tag",
@@ -11941,7 +12489,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tier",
@@ -11950,7 +12499,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "level",
@@ -11959,7 +12509,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_consumption_per_tick",
@@ -11968,7 +12519,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_production_per_tick",
@@ -11977,7 +12529,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_consumption_item",
@@ -11986,7 +12539,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "energy_production_item",
@@ -11995,7 +12549,18 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "energy_tooltip",
+					"type": "string",
+					"summary": "Lines on the power the block draws and produces, as its item tooltip shows them; empty for a block without energy",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "break_effect",
@@ -12004,7 +12569,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "lua",
@@ -12014,6 +12580,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "StaticBlock.logic_init, actor_init and tooltip"
 				},
 				{
@@ -12023,7 +12590,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "actor_init",
@@ -12032,7 +12600,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "tooltip",
@@ -12041,7 +12610,38 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "vars",
+					"type": "string[]",
+					"summary": "Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "batch_tick",
+					"type": "function?",
+					"summary": "Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "window",
+					"type": "function?",
+					"summary": "Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "half_cover",
@@ -12050,7 +12650,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "center_cover",
@@ -12059,7 +12660,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "body_cover",
@@ -12068,7 +12670,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "export_options",
@@ -12077,7 +12680,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "import_options",
@@ -12086,7 +12690,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -12214,7 +12819,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticChapter",
@@ -12230,7 +12836,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "quests",
@@ -12239,7 +12846,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "required_quests",
@@ -12248,7 +12856,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "unlocked",
@@ -12257,7 +12866,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_unlock",
@@ -12266,7 +12876,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_complete",
@@ -12275,7 +12886,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -12378,7 +12990,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticCover",
@@ -12487,7 +13100,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticCoverSet",
@@ -12503,7 +13117,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -12606,7 +13221,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticItem",
@@ -12622,7 +13238,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "image_path",
@@ -12631,7 +13248,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "stack_size",
@@ -12640,7 +13258,18 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "sim_id",
+					"type": "integer",
+					"summary": "Number of the item in this session only, from 1 by name after init; another set of mods shifts it. What --!sim code compares; never save it",
+					"boilerplate": false,
+					"internal": false,
+					"writable": false,
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tier",
@@ -12649,7 +13278,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "type",
@@ -12658,7 +13288,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "unit_mul",
@@ -12667,7 +13298,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mesh",
@@ -12676,7 +13308,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "block",
@@ -12685,7 +13318,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "custom_data",
@@ -12694,7 +13328,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "logic",
@@ -12703,7 +13338,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "lua",
@@ -12713,6 +13349,7 @@
 					"internal": false,
 					"writable": true,
 					"load_only": false,
+					"static": false,
 					"legacy": "fields of the item itself"
 				},
 				{
@@ -12722,7 +13359,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "category",
@@ -12731,7 +13369,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "equipment_slot",
@@ -12740,7 +13379,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -12749,7 +13389,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description_parts",
@@ -12758,7 +13399,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -12886,7 +13528,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticItemPanel",
@@ -12902,7 +13545,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "category",
@@ -12911,7 +13555,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "order",
@@ -12920,7 +13565,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "widget",
@@ -12929,7 +13575,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "build",
@@ -12938,7 +13585,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "label",
@@ -12947,7 +13595,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description_parts",
@@ -12956,7 +13605,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "context",
@@ -12965,7 +13615,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -13177,7 +13828,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticMesh",
@@ -13193,7 +13845,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -13217,7 +13870,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticModifier",
@@ -13233,7 +13887,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -13336,7 +13991,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticObject",
@@ -13352,7 +14008,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mined_item",
@@ -13361,7 +14018,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mined_count",
@@ -13370,7 +14028,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -13448,7 +14107,209 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
+		},
+		{
+			"name": "StaticOreVein",
+			"kind": "class",
+			"parent": "Prototype",
+			"internal": false,
+			"summary": "Ore vein every world places in the rock its targets replace, tried Count times per 16x16 column",
+			"fields": [
+				{
+					"name": "targets",
+					"type": "OreVeinTarget[]",
+					"summary": "Rock the vein replaces and the ore it leaves there",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "size",
+					"type": "integer",
+					"summary": "Number of blobs strung along the vein",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "count",
+					"type": "integer",
+					"summary": "Veins tried per column",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "rarity",
+					"type": "integer",
+					"summary": "A column gets the veins with chance 1 / rarity",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "min_height",
+					"type": "integer",
+					"summary": "Lowest vein centre, world block height",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "max_height",
+					"type": "integer",
+					"summary": "Highest vein centre, world block height",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "trapezoid",
+					"type": "boolean",
+					"summary": "Heights peak in the middle of the range instead of spreading evenly",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "plateau",
+					"type": "integer",
+					"summary": "Width of the flat top of the trapezoid",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "discard_on_air_exposure",
+					"type": "number",
+					"summary": "Chance an ore cell next to air stays rock",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into StaticOreVein",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticOreVein",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return StaticOreVein class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "find",
+					"kind": "static",
+					"summary": "Looks StaticOreVein up in db, nil when there is none",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticOreVein",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "get",
+					"kind": "static",
+					"summary": "Takes StaticOreVein from db, reports a miss to the log",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticOreVein",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "reg",
+					"kind": "static",
+					"summary": "Register a new StaticOreVein static object, or take the registered one of that name",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "StaticOreVein",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticOreVein.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
+						}
+					]
+				}
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticPlanet",
@@ -13464,7 +14325,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "phase_offset_ticks",
@@ -13473,7 +14335,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "dawn_phase_ticks",
@@ -13482,7 +14345,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "solar_noon_phase_ticks",
@@ -13491,7 +14355,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "sunset_phase_ticks",
@@ -13500,7 +14365,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "latitude_deg",
@@ -13509,7 +14375,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "day_of_year",
@@ -13518,7 +14385,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "weather_severity_min",
@@ -13527,7 +14395,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "weather_severity_max",
@@ -13536,7 +14405,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "radius_meters",
@@ -13545,7 +14415,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "orbit_altitude_meters",
@@ -13554,7 +14425,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "generator_name",
@@ -13563,7 +14435,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				},
 				{
 					"name": "music_playlist",
@@ -13572,7 +14445,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": true
+					"load_only": true,
+					"static": false
 				}
 			],
 			"functions": [
@@ -13745,7 +14619,189 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
+		},
+		{
+			"name": "StaticPlayer",
+			"kind": "class",
+			"parent": "Prototype",
+			"internal": false,
+			"summary": "What a player starts with and crafts in hand; the game reads the one named Player",
+			"fields": [
+				{
+					"name": "hand_recipes",
+					"type": "RecipeDictionary",
+					"summary": "Recipes the player crafts in hand",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "hotbar",
+					"type": "StaticItem[]",
+					"summary": "Items put on the first hotbar row of a new player",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "tools",
+					"type": "StaticItem[]",
+					"summary": "Tools always in hand; the three tool keys take the first three",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "light",
+					"type": "StaticItem",
+					"summary": "Item whose logic lights the empty light slot",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "blueprint_item",
+					"type": "StaticItem",
+					"summary": "Item that carries a captured blueprint",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "start_inventory",
+					"type": "Inventory",
+					"summary": "Items a new player receives",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "start_researches",
+					"type": "StaticResearch[]",
+					"summary": "Researches completed when a world starts",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into StaticPlayer",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticPlayer",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return StaticPlayer class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "find",
+					"kind": "static",
+					"summary": "Looks StaticPlayer up in db, nil when there is none",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticPlayer",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "get",
+					"kind": "static",
+					"summary": "Takes StaticPlayer from db, reports a miss to the log",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "StaticPlayer",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "reg",
+					"kind": "static",
+					"summary": "Register a new StaticPlayer static object, or take the registered one of that name",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "StaticPlayer",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "StaticPlayer.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
+						}
+					]
+				}
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticProp",
@@ -13761,7 +14817,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "additive_elevation",
@@ -13770,7 +14827,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "range_mul",
@@ -13779,7 +14837,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "surface_height_min",
@@ -13788,7 +14847,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "surface_height_max",
@@ -13797,7 +14857,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "top_height_max",
@@ -13806,7 +14867,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "floating",
@@ -13815,7 +14877,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_big",
@@ -13824,7 +14887,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "streamed",
@@ -13833,7 +14897,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "mesh",
@@ -13842,7 +14907,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "no_collision",
@@ -13851,7 +14917,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "is_emitting",
@@ -13860,7 +14927,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "high_detail_shadow",
@@ -13869,7 +14937,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_spawn",
@@ -13878,7 +14947,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "hits_to_break",
@@ -13887,7 +14957,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "break_effect",
@@ -13896,7 +14967,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "damage_effect",
@@ -13905,7 +14977,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "vehicle_break_speed",
@@ -13914,7 +14987,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "actor_class",
@@ -13923,7 +14997,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -14026,7 +15101,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticPropList",
@@ -14042,7 +15118,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -14145,7 +15222,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticQuest",
@@ -14161,7 +15239,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description_parts",
@@ -14170,7 +15249,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "context",
@@ -14179,7 +15259,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "chapter",
@@ -14188,7 +15269,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "required_quests",
@@ -14197,7 +15279,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "any_objective",
@@ -14206,7 +15289,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "state",
@@ -14215,7 +15299,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "events",
@@ -14224,7 +15309,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_unlock",
@@ -14233,7 +15319,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_complete",
@@ -14242,7 +15329,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "objectives",
@@ -14251,7 +15339,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -14585,7 +15674,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearch",
@@ -14601,7 +15691,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description_parts",
@@ -14610,7 +15701,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "complexity",
@@ -14619,7 +15711,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "level",
@@ -14628,7 +15721,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "tier",
@@ -14637,7 +15731,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "required_research",
@@ -14646,7 +15741,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "completed",
@@ -14655,7 +15751,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -14733,7 +15830,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchBonusInventory",
@@ -14842,7 +15940,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchDecorationUnlock",
@@ -14858,7 +15957,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -14961,7 +16061,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchEfficiency",
@@ -15070,7 +16171,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchModifier",
@@ -15086,7 +16188,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "bonus_value",
@@ -15095,7 +16198,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15198,7 +16302,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchRecipe",
@@ -15214,7 +16319,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15337,7 +16443,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticResearchToolUnlock",
@@ -15353,7 +16460,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15456,7 +16564,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticStructure",
@@ -15472,7 +16581,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "size",
@@ -15481,7 +16591,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15584,7 +16695,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticTip",
@@ -15600,7 +16712,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "description_parts",
@@ -15609,7 +16722,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "image",
@@ -15618,7 +16732,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "context",
@@ -15627,7 +16742,18 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "parent",
+					"type": "StaticTip",
+					"summary": "Tip this entry is nested under in the list",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15754,7 +16880,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StaticWeather",
@@ -15770,7 +16897,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "thunder",
@@ -15779,7 +16907,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "fog",
@@ -15788,7 +16917,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15891,7 +17021,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "StorageBlockLogic",
@@ -15907,7 +17038,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -15984,7 +17116,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "SurfaceDefinition",
@@ -16000,7 +17133,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "generator_name",
@@ -16009,7 +17143,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -16086,7 +17221,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "TallSectorData",
@@ -16101,7 +17237,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "height",
@@ -16110,7 +17247,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -16154,7 +17292,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Tesselator",
@@ -16263,13 +17402,15 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "TesselatorCube",
 			"kind": "class",
+			"parent": "Tesselator",
 			"internal": false,
-			"summary": "",
+			"summary": "Sector mesh builder of cube blocks",
 			"fields": [],
 			"functions": [
 				{
@@ -16371,13 +17512,15 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "TesselatorMarching",
 			"kind": "class",
+			"parent": "Tesselator",
 			"internal": false,
-			"summary": "",
+			"summary": "Sector mesh builder of smooth terrain",
 			"fields": [],
 			"functions": [
 				{
@@ -16479,7 +17622,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Texture",
@@ -16495,7 +17639,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -16539,7 +17684,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Texture2D",
@@ -16548,7 +17694,8 @@
 			"internal": false,
 			"summary": "Texture loaded from an image, such as an item icon",
 			"fields": [],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "Train",
@@ -16564,7 +17711,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "name",
@@ -16573,7 +17721,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "cars",
@@ -16582,7 +17731,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "stops",
@@ -16591,7 +17741,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "current_stop",
@@ -16600,7 +17751,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "loop",
@@ -16609,7 +17761,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -16880,7 +18033,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "TrainScheduleStop",
@@ -16896,7 +18050,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "station",
@@ -16905,7 +18060,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "condition",
@@ -16914,7 +18070,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -16991,7 +18148,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Transform",
@@ -17101,7 +18259,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "Vec2i",
@@ -17116,7 +18275,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "one",
@@ -17125,7 +18285,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "x",
@@ -17134,7 +18295,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "y",
@@ -17143,7 +18305,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -17172,6 +18335,28 @@
 						}
 					]
 				}
+			],
+			"operators": [
+				{
+					"name": "add",
+					"operand": "Vec2i",
+					"returns": "Vec2i"
+				},
+				{
+					"name": "sub",
+					"operand": "Vec2i",
+					"returns": "Vec2i"
+				},
+				{
+					"name": "mul",
+					"operand": "Vec2i",
+					"returns": "Vec2i"
+				},
+				{
+					"name": "div",
+					"operand": "Vec2i",
+					"returns": "Vec2i"
+				}
 			]
 		},
 		{
@@ -17187,7 +18372,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "zero",
@@ -17196,7 +18382,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "up",
@@ -17205,7 +18392,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "down",
@@ -17214,7 +18402,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "left",
@@ -17223,7 +18412,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "right",
@@ -17232,7 +18422,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "back",
@@ -17241,7 +18432,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "front",
@@ -17250,7 +18442,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "x",
@@ -17259,7 +18452,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "y",
@@ -17268,7 +18462,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "z",
@@ -17277,7 +18472,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -17345,6 +18541,28 @@
 					},
 					"params": []
 				}
+			],
+			"operators": [
+				{
+					"name": "add",
+					"operand": "Vec3",
+					"returns": "Vec3"
+				},
+				{
+					"name": "sub",
+					"operand": "Vec3",
+					"returns": "Vec3"
+				},
+				{
+					"name": "mul",
+					"operand": "Vec3",
+					"returns": "Vec3"
+				},
+				{
+					"name": "div",
+					"operand": "Vec3",
+					"returns": "Vec3"
+				}
 			]
 		},
 		{
@@ -17360,7 +18578,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "zero",
@@ -17369,7 +18588,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "up",
@@ -17378,7 +18598,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "down",
@@ -17387,7 +18608,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "left",
@@ -17396,7 +18618,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "right",
@@ -17405,7 +18628,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "back",
@@ -17414,7 +18638,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "front",
@@ -17423,7 +18648,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": false,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "x",
@@ -17432,7 +18658,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "y",
@@ -17441,7 +18668,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "z",
@@ -17450,7 +18678,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -17498,6 +18727,28 @@
 					},
 					"params": []
 				}
+			],
+			"operators": [
+				{
+					"name": "add",
+					"operand": "Vec3i",
+					"returns": "Vec3i"
+				},
+				{
+					"name": "sub",
+					"operand": "Vec3i",
+					"returns": "Vec3i"
+				},
+				{
+					"name": "mul",
+					"operand": "Vec3i",
+					"returns": "Vec3i"
+				},
+				{
+					"name": "div",
+					"operand": "Vec3i",
+					"returns": "Vec3i"
+				}
 			]
 		},
 		{
@@ -17506,7 +18757,38 @@
 			"parent": "Prototype",
 			"internal": false,
 			"summary": "Terrain generator bound to a dimension",
-			"fields": [],
+			"fields": [
+				{
+					"name": "ore_list",
+					"type": "StaticPropList",
+					"summary": "Ore deposits this world places; its nearest tier is seeded around the spawn",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "stone_source",
+					"type": "StaticItem",
+					"summary": "Item a drill takes anywhere away from a deposit",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "water_source",
+					"type": "StaticItem",
+					"summary": "Fluid a pump takes anywhere away from a deposit",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
+				}
+			],
 			"functions": [
 				{
 					"name": "cast",
@@ -17582,7 +18864,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "cs",
@@ -17597,7 +18880,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				}
 			],
 			"functions": [
@@ -17681,7 +18965,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "defines.block_state",
@@ -17696,7 +18981,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "working",
@@ -17705,7 +18991,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "no_room_in_output",
@@ -17714,7 +19001,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "resource_saturated",
@@ -17723,7 +19011,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "resource_required",
@@ -17732,7 +19021,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "not_initialized",
@@ -17741,7 +19031,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "switch_off",
@@ -17750,7 +19041,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "idle",
@@ -17759,10 +19051,12 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "defines.events",
@@ -17777,7 +19071,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_built_block",
@@ -17786,7 +19081,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_player_spawn",
@@ -17795,7 +19091,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_region_spawn",
@@ -17804,7 +19101,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_player_at_sector",
@@ -17813,7 +19111,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_entity_died",
@@ -17822,7 +19121,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_entity_damaged",
@@ -17831,7 +19131,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_entity_spawn",
@@ -17840,7 +19141,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_surface_day_phase",
@@ -17849,7 +19151,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_research_finished",
@@ -17858,7 +19161,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_quest_activated",
@@ -17867,7 +19171,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_player_crafted",
@@ -17876,7 +19181,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_gui_opened",
@@ -17885,7 +19191,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_gui_closed",
@@ -17894,7 +19201,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_item_searched",
@@ -17903,7 +19211,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "on_recipes_shown",
@@ -17912,10 +19221,12 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "defines.quest_state",
@@ -17930,7 +19241,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "active",
@@ -17939,7 +19251,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				},
 				{
 					"name": "completed",
@@ -17948,10 +19261,12 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": true
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "hud",
@@ -17980,7 +19295,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "sim",
@@ -18098,7 +19414,8 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui",
@@ -18107,6 +19424,26 @@
 			"summary": "",
 			"fields": [],
 			"functions": [
+				{
+					"name": "texture",
+					"kind": "static",
+					"summary": "Picture from a png file in the calling mod's folder for ui.Image, loaded once; a picture under 64 pixels is drawn without smoothing",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Texture2D?",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "path",
+							"type": "string",
+							"desc": "Path inside the mod folder, as \"gui/flame.png\""
+						}
+					]
+				},
 				{
 					"name": "thumbnail",
 					"kind": "static",
@@ -18127,12 +19464,17 @@
 						}
 					]
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.Border",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Plate drawn behind one child; padding is kept inside the plate",
 			"fields": [
@@ -18143,7 +19485,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "style",
@@ -18152,7 +19495,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "color",
@@ -18161,15 +19505,21 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Button",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": "on_click"
+			},
 			"internal": false,
 			"summary": "Button around one child; padding is kept inside the button",
 			"fields": [
@@ -18180,7 +19530,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_click",
@@ -18189,15 +19540,21 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Grid",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Grid of equal cells, filled row by row",
 			"fields": [
@@ -18208,7 +19565,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "gap",
@@ -18217,7 +19575,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18245,12 +19604,17 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.HBox",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Row of children laid out left to right",
 			"fields": [
@@ -18261,7 +19625,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18289,23 +19654,29 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.Image",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Picture of a texture, 64 by 64 unless its width and height say otherwise",
 			"fields": [
 				{
 					"name": "image",
 					"type": "Texture",
-					"summary": "Texture drawn, an item image or a ui.thumbnail; nil draws nothing and keeps the space",
+					"summary": "Texture drawn, an item image, a ui.texture or a ui.thumbnail; nil draws nothing and keeps the space",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "size",
@@ -18314,7 +19685,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "angle",
@@ -18323,7 +19695,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "color",
@@ -18332,15 +19705,31 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
+				},
+				{
+					"name": "uv",
+					"type": "number[]",
+					"summary": "Part of the texture drawn, { u0, v0, u1, v1 } from 0 to 1 across and down; the part fills the picture's width and height. Reads { 0, 0, 1, 1 } for the whole texture",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Inventory",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Grid of item slots showing an inventory with the game's own slot widget",
 			"fields": [
@@ -18351,7 +19740,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "numbers",
@@ -18360,7 +19750,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "columns",
@@ -18369,15 +19760,21 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Scroll",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Vertical list that scrolls instead of overflowing",
 			"fields": [
@@ -18388,7 +19785,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18425,21 +19823,31 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.Spacer",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Empty space as wide and tall as its width and height",
 			"fields": [],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Text",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": "text"
+			},
 			"internal": false,
 			"summary": "Text the way the game's descriptions read: tokens such as {item:Name} become links with icons, <blue>, <yellow>, <red> and <green> tint a run",
 			"fields": [
@@ -18450,7 +19858,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "font_size",
@@ -18459,7 +19868,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "align",
@@ -18468,7 +19878,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "color",
@@ -18477,7 +19888,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "wrap",
@@ -18486,15 +19898,21 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.TextBox",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Single line the player types into",
 			"fields": [
@@ -18505,7 +19923,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "hint",
@@ -18514,7 +19933,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_changed",
@@ -18523,7 +19943,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "on_commit",
@@ -18532,7 +19953,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18545,12 +19967,17 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.VBox",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": ""
+			},
 			"internal": false,
 			"summary": "Column of children laid out top to bottom",
 			"fields": [
@@ -18561,7 +19988,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18589,7 +20017,8 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "ui.Widget",
@@ -18605,7 +20034,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "fill",
@@ -18614,7 +20044,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "width",
@@ -18623,7 +20054,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "height",
@@ -18632,7 +20064,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "padding",
@@ -18641,7 +20074,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "halign",
@@ -18650,7 +20084,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "valign",
@@ -18659,15 +20094,21 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
-			"functions": []
+			"functions": [],
+			"operators": []
 		},
 		{
 			"name": "ui.Window",
 			"kind": "class",
 			"parent": "ui.Widget",
+			"constructor":
+			{
+				"primary": "title"
+			},
 			"internal": false,
 			"summary": "Top level window with a title bar the player can drag it by; its width and height size the window, its padding is kept around the content",
 			"fields": [
@@ -18678,7 +20119,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "title",
@@ -18687,7 +20129,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "anchor_x",
@@ -18696,7 +20139,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "anchor_y",
@@ -18705,7 +20149,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "offset_x",
@@ -18714,7 +20159,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "offset_y",
@@ -18723,7 +20169,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				},
 				{
 					"name": "input",
@@ -18732,7 +20179,8 @@
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
-					"load_only": false
+					"load_only": false,
+					"static": false
 				}
 			],
 			"functions": [
@@ -18754,7 +20202,8 @@
 					"load_only": false,
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		},
 		{
 			"name": "weather",
@@ -18851,7 +20300,8 @@
 					},
 					"params": []
 				}
-			]
+			],
+			"operators": []
 		}
 	],
 	"globals": [

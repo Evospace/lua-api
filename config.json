@@ -7,7 +7,7 @@
         "StaticItem%s*%."
     ],
     "settings": {
-        "Lua.runtime.version": "LuaJIT",
+        "Lua.runtime.version": "Lua 5.1",
         "Lua.diagnostics.disable": [
             "inject-field"
         ]
