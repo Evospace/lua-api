@@ -1,6 +1,6 @@
 # Evospace Lua API
 
-Type definitions for the Evospace modding API, version **0.22.2** — 168 classes.
+Type definitions for the Evospace modding API, version **0.22.2** — 169 classes.
 
 The game runs mods on Luau. Generated: `library/api.lua` is dumped from the game's live Lua
 registry by an editor run, `evospace.d.luau` is the same API as Luau definitions, and `api.json`

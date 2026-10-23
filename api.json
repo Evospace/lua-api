@@ -1539,16 +1539,6 @@
 					"static": false
 				},
 				{
-					"name": "vars",
-					"type": "table<string, number>",
-					"summary": "Numbers of the block named by StaticBlock.vars, a fresh copy on every read",
-					"boilerplate": false,
-					"internal": false,
-					"writable": false,
-					"load_only": false,
-					"static": false
-				},
-				{
 					"name": "inventories",
 					"type": "table<string, InventoryReader>",
 					"summary": "Inventories the block saves, by name, each as its own class",
@@ -1608,6 +1598,91 @@
 						"desc": "Registered accessors"
 					},
 					"params": []
+				},
+				{
+					"name": "component",
+					"kind": "method",
+					"summary": "Fields of one of the block's components, a fresh copy on every read",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "table",
+						"desc": "Field name to value; an item field holds the item or nil"
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Component name, as StaticBlock.components lists it"
+						}
+					]
+				},
+				{
+					"name": "set_component",
+					"kind": "method",
+					"summary": "Change fields of one of the block's components: the fields given change, the rest keep their values; an item field takes the item, its name or nil",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Component name"
+						},
+						{
+							"name": "fields",
+							"type": "table",
+							"desc": "Field name to new value"
+						}
+					]
+				},
+				{
+					"name": "get_field",
+					"kind": "method",
+					"summary": "One field of one of the block's components",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Component name"
+						},
+						{
+							"name": "field",
+							"type": "string",
+							"desc": "Field name"
+						}
+					]
+				},
+				{
+					"name": "set_field",
+					"kind": "method",
+					"summary": "Change one field of one of the block's components",
+					"boilerplate": false,
+					"internal": false,
+					"load_only": false,
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "Component name"
+						},
+						{
+							"name": "field",
+							"type": "string",
+							"desc": "Field name"
+						},
+						{
+							"name": "value",
+							"type": "any",
+							"desc": "New value; an item field takes the item, its name or nil"
+						}
+					]
 				},
 				{
 					"name": "edit_settings",
@@ -2097,6 +2172,147 @@
 							"name": "a",
 							"type": "integer",
 							"desc": "Alpha channel"
+						}
+					]
+				}
+			],
+			"operators": []
+		},
+		{
+			"name": "Component",
+			"kind": "class",
+			"parent": "Prototype",
+			"internal": false,
+			"summary": "Typed data every block of a type keeps from its placement, listed by StaticBlock.components; saved by field name and part of the sim state",
+			"fields": [
+				{
+					"name": "fields",
+					"type": "table<string, string>",
+					"summary": "Field name to its type: \"integer\", \"boolean\", \"item\" or \"string\". Fields go in name order; --!sim sees integer, boolean and item fields as columns, an item as its sim_id",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "version",
+					"type": "integer",
+					"summary": "Version of the fields, 1 by default; a save written by a lower version goes through migrate",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
+					"name": "migrate",
+					"type": "function?",
+					"summary": "migrate(fields, version) gets the fields a save holds, by name with items as their names, and the version that wrote them; it returns the fields for the current version",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				}
+			],
+			"functions": [
+				{
+					"name": "cast",
+					"kind": "static",
+					"summary": "Trying to cast Object into Component",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Component",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "object",
+							"type": "Object",
+							"desc": "Value to cast"
+						}
+					]
+				},
+				{
+					"name": "get_class",
+					"kind": "static",
+					"summary": "Return Component class object",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Class",
+						"desc": ""
+					},
+					"params": []
+				},
+				{
+					"name": "find",
+					"kind": "static",
+					"summary": "Looks Component up in db, nil when there is none",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Component",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "get",
+					"kind": "static",
+					"summary": "Takes Component from db, reports a miss to the log",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": false,
+					"returns":
+					{
+						"type": "Component",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						}
+					]
+				},
+				{
+					"name": "reg",
+					"kind": "static",
+					"summary": "Register a new Component static object, or take the registered one of that name",
+					"boilerplate": true,
+					"internal": false,
+					"load_only": true,
+					"returns":
+					{
+						"type": "Component",
+						"desc": ""
+					},
+					"params": [
+						{
+							"name": "name",
+							"type": "string",
+							"desc": "The name of the object"
+						},
+						{
+							"name": "spec",
+							"type": "Component.spec?",
+							"desc": "Fields to set, each one a writable property; validated and finished like a prototype loaded from json"
 						}
 					]
 				}
@@ -9768,6 +9984,16 @@
 					"static": false
 				},
 				{
+					"name": "icon",
+					"type": "StaticItem",
+					"summary": "Item whose image and name stand for this recipe in the crafting UI; when the mods finish loading, a recipe without one takes its first output, else its first input",
+					"boilerplate": false,
+					"internal": false,
+					"writable": true,
+					"load_only": true,
+					"static": false
+				},
+				{
 					"name": "input",
 					"type": "RecipeInventory",
 					"summary": "Read-only container of required items",
@@ -12614,9 +12840,9 @@
 					"static": false
 				},
 				{
-					"name": "vars",
-					"type": "string[]",
-					"summary": "Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them",
+					"name": "components",
+					"type": "table<string, table>",
+					"summary": "Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or \"\". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,
@@ -12626,7 +12852,7 @@
 				{
 					"name": "batch_tick",
 					"type": "function?",
-					"summary": "Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes",
+					"summary": "Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes",
 					"boilerplate": false,
 					"internal": false,
 					"writable": true,

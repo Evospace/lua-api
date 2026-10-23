@@ -33,6 +33,15 @@ export type BiomeWorldGenerator_spec = {
     water_source: StaticItem?,
 }
 
+export type Component_spec = {
+    --- Field name to its type: "integer", "boolean", "item" or "string". Fields go in name order; --!sim sees integer, boolean and item fields as columns, an item as its sim_id
+    fields: { [string]: string }?,
+    --- Version of the fields, 1 by default; a save written by a lower version goes through migrate
+    version: number?,
+    --- migrate(fields, version) gets the fields a save holds, by name with items as their names, and the version that wrote them; it returns the fields for the current version
+    migrate: ((...any) -> ...any)??,
+}
+
 export type GhostStaticBlock_spec = {
     --- BlockLogic class driving the simulation
     logic: Class?,
@@ -68,9 +77,9 @@ export type GhostStaticBlock_spec = {
     actor_init: ((...any) -> ...any)??,
     --- Tooltip of the block: a string, or a function of the block logic returning one
     tooltip: (((...any) -> ...any) | string | nil)?,
-    --- Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
-    vars: { string }?,
-    --- Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+    --- Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or "". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them
+    components: { [string]: { [any]: any } }?,
+    --- Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
     batch_tick: ((...any) -> ...any)??,
     --- Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
     window: ((...any) -> ...any)??,
@@ -203,6 +212,8 @@ export type Recipe_spec = {
     locked: boolean?,
     --- Percentage bonus (e.g. `20` = +20 %)
     productivity: number?,
+    --- Item whose image and name stand for this recipe in the crafting UI; when the mods finish loading, a recipe without one takes its first output, else its first input
+    icon: StaticItem?,
     --- Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
     tier: number?,
     --- The dictionary's `start_tier`, copied to every recipe in it when the mods finish loading.
@@ -299,9 +310,9 @@ export type StaticBlock_spec = {
     actor_init: ((...any) -> ...any)??,
     --- Tooltip of the block: a string, or a function of the block logic returning one
     tooltip: (((...any) -> ...any) | string | nil)?,
-    --- Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
-    vars: { string }?,
-    --- Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+    --- Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or "". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them
+    components: { [string]: { [any]: any } }?,
+    --- Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
     batch_tick: ((...any) -> ...any)??,
     --- Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
     window: ((...any) -> ...any)??,
@@ -1022,8 +1033,6 @@ declare extern type BlockLogic extends Instance with
     state: number
     --- Settings of the block as its window and the save hold them, a fresh copy on every read
     settings: { [any]: any }
-    --- Numbers of the block named by StaticBlock.vars, a fresh copy on every read
-    vars: { [string]: number }
     --- Inventories the block saves, by name, each as its own class
     inventories: { [string]: InventoryReader }
     --- Register Accessor
@@ -1032,6 +1041,14 @@ declare extern type BlockLogic extends Instance with
     function find_accessor(self, name: string): Accessor
     --- Every accessor registered on this block
     function accessors(self): { Accessor }
+    --- Fields of one of the block's components, a fresh copy on every read
+    function component(self, name: string): { [any]: any }
+    --- Change fields of one of the block's components: the fields given change, the rest keep their values; an item field takes the item, its name or nil
+    function set_component(self, name: string, fields: { [any]: any }): ()
+    --- One field of one of the block's components
+    function get_field(self, name: string, field: string): ()
+    --- Change one field of one of the block's components
+    function set_field(self, name: string, field: string, value: any): ()
     --- Change settings the way the block's window does: only the fields given change, a prototype stands for its name. The edit goes out to the other peers and lands at the host's stamped tick, so read settings back a tick later
     function edit_settings(self, fields: { [any]: any }): ()
 end
@@ -1251,6 +1268,16 @@ declare extern type Color with
     b: number
     --- Alpha channel 0-255
     a: number
+end
+
+--- Typed data every block of a type keeps from its placement, listed by StaticBlock.components; saved by field name and part of the sim state
+declare extern type Component extends Prototype with
+    --- Field name to its type: "integer", "boolean", "item" or "string". Fields go in name order; --!sim sees integer, boolean and item fields as columns, an item as its sim_id Load-only: pre_init, init or post_init.
+    fields: { [string]: string }
+    --- Version of the fields, 1 by default; a save written by a lower version goes through migrate Load-only: pre_init, init or post_init.
+    version: number
+    --- migrate(fields, version) gets the fields a save holds, by name with items as their names, and the version that wrote them; it returns the fields for the current version Load-only: pre_init, init or post_init.
+    migrate: ((...any) -> ...any)?
 end
 
 --- Block that speeds up nearby machines
@@ -1649,9 +1676,9 @@ declare extern type StaticBlock extends StaticObject with
     actor_init: ((...any) -> ...any)?
     --- Tooltip of the block: a string, or a function of the block logic returning one Load-only: pre_init, init or post_init.
     tooltip: ((...any) -> ...any) | string | nil
-    --- Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them Load-only: pre_init, init or post_init.
-    vars: { string }
-    --- Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes Load-only: pre_init, init or post_init.
+    --- Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or "". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them Load-only: pre_init, init or post_init.
+    components: { [string]: { [any]: any } }
+    --- Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes Load-only: pre_init, init or post_init.
     batch_tick: ((...any) -> ...any)?
     --- Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open Load-only: pre_init, init or post_init.
     window: ((...any) -> ...any)?
@@ -2019,6 +2046,8 @@ declare extern type Recipe extends Prototype with
     locked: boolean
     --- Percentage bonus (e.g. `20` = +20 %) Load-only: pre_init, init or post_init.
     productivity: number
+    --- Item whose image and name stand for this recipe in the crafting UI; when the mods finish loading, a recipe without one takes its first output, else its first input Load-only: pre_init, init or post_init.
+    icon: StaticItem
     --- Read-only container of required items
     input: RecipeInventory
     --- Read-only container of produced items
@@ -3056,6 +3085,19 @@ declare Color: {
     transparent: Color,
     --- Create a color from channel values 0-255
     new: (r: number, g: number, b: number, a: number) -> Color,
+}
+
+declare Component: {
+    --- Trying to cast Object into Component
+    cast: (object: Object) -> Component,
+    --- Return Component class object
+    get_class: () -> Class,
+    --- Looks Component up in db, nil when there is none
+    find: (name: string) -> Component,
+    --- Takes Component from db, reports a miss to the log
+    get: (name: string) -> Component,
+    --- Register a new Component static object, or take the registered one of that name Load-only: pre_init, init or post_init.
+    reg: (name: string, spec: Component_spec?) -> Component,
 }
 
 declare ComputerBlockLogic: {

@@ -403,7 +403,6 @@ function BlockActor.cast(object) end
 --- @field quat FQuat [readonly] Rotation turning the block's local sides into world sides
 --- @field state integer [readonly] State shown under the crosshair, one of defines.block_state
 --- @field settings table [readonly] Settings of the block as its window and the save hold them, a fresh copy on every read
---- @field vars table<string, number> [readonly] Numbers of the block named by StaticBlock.vars, a fresh copy on every read
 --- @field inventories table<string, InventoryReader> [readonly] Inventories the block saves, by name, each as its own class
 BlockLogic = {}
 
@@ -419,6 +418,27 @@ function BlockLogic:find_accessor(name) end
 --- Every accessor registered on this block
 --- @return Accessor[] Registered accessors
 function BlockLogic:accessors() end
+
+--- Fields of one of the block's components, a fresh copy on every read
+--- @param name string Component name, as StaticBlock.components lists it
+--- @return table Field name to value; an item field holds the item or nil
+function BlockLogic:component(name) end
+
+--- Change fields of one of the block's components: the fields given change, the rest keep their values; an item field takes the item, its name or nil
+--- @param name string Component name
+--- @param fields table Field name to new value
+function BlockLogic:set_component(name, fields) end
+
+--- One field of one of the block's components
+--- @param name string Component name
+--- @param field string Field name
+function BlockLogic:get_field(name, field) end
+
+--- Change one field of one of the block's components
+--- @param name string Component name
+--- @param field string Field name
+--- @param value any New value; an item field takes the item, its name or nil
+function BlockLogic:set_field(name, field, value) end
 
 --- Change settings the way the block's window does: only the fields given change, a prototype stands for its name. The edit goes out to the other peers and lands at the host's stamped tick, so read settings back a tick later
 --- @param fields table Fields to change, in the shape settings reads; a table keyed 1..n goes as a list, so key a map by strings
@@ -522,6 +542,44 @@ Color = {}
 --- @param a integer Alpha channel
 --- @return Color
 function Color.new(r, g, b, a) end
+
+--- Typed data every block of a type keeps from its placement, listed by StaticBlock.components; saved by field name and part of the sim state
+--- 
+--- @class Component : Prototype
+--- @field fields table<string, string> [load] Field name to its type: "integer", "boolean", "item" or "string". Fields go in name order; --!sim sees integer, boolean and item fields as columns, an item as its sim_id
+--- @field version integer [load] Version of the fields, 1 by default; a save written by a lower version goes through migrate
+--- @field migrate function? [load] migrate(fields, version) gets the fields a save holds, by name with items as their names, and the version that wrote them; it returns the fields for the current version
+Component = {}
+
+--- Trying to cast Object into Component
+--- @param object Object Value to cast
+--- @return Component
+function Component.cast(object) end
+
+--- Return Component class object
+--- @return Class
+function Component.get_class() end
+
+--- Looks Component up in db, nil when there is none
+--- @param name string The name of the object
+--- @return Component
+function Component.find(name) end
+
+--- Takes Component from db, reports a miss to the log
+--- @param name string The name of the object
+--- @return Component
+function Component.get(name) end
+
+--- [load] Register a new Component static object, or take the registered one of that name
+--- @param name string The name of the object
+--- @param spec Component.spec? Fields to set, each one a writable property; validated and finished like a prototype loaded from json
+--- @return Component
+function Component.reg(name, spec) end
+
+--- @class Component.spec : Prototype.spec
+--- @field fields? table<string, string> Field name to its type: "integer", "boolean", "item" or "string". Fields go in name order; --!sim sees integer, boolean and item fields as columns, an item as its sim_id
+--- @field version? integer Version of the fields, 1 by default; a save written by a lower version goes through migrate
+--- @field migrate? function migrate(fields, version) gets the fields a save holds, by name with items as their names, and the version that wrote them; it returns the fields for the current version
 
 --- Block that speeds up nearby machines
 --- 
@@ -2432,6 +2490,7 @@ function Railway:get_train_at(cell) end
 --- @field default_locked boolean [readonly] **True** when a research gates this recipe. Derived from the research graph, not authored: writing to it is overwritten when the research tree initializes.
 --- @field locked boolean Currently locked if **true**
 --- @field productivity integer [load] Percentage bonus (e.g. `20` = +20 %)
+--- @field icon StaticItem [load] Item whose image and name stand for this recipe in the crafting UI; when the mods finish loading, a recipe without one takes its first output, else its first input
 --- @field input RecipeInventory [readonly] Read-only container of required items
 --- @field output RecipeInventory [readonly] Read-only container of produced items
 --- @field tier integer [load] Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
@@ -2468,6 +2527,7 @@ function Recipe.reg(name, spec) end
 --- @field ticks? integer *Craft time* in engine ticks
 --- @field locked? boolean Currently locked if **true**
 --- @field productivity? integer Percentage bonus (e.g. `20` = +20 %)
+--- @field icon? StaticItem Item whose image and name stand for this recipe in the crafting UI; when the mods finish loading, a recipe without one takes its first output, else its first input
 --- @field tier? integer Recipe tier used for speed scaling: every tier **above** its dictionary's `start_tier` doubles craft time; below it the recipe is clamped to `start_tier`.
 --- @field start_tier? integer The dictionary's `start_tier`, copied to every recipe in it when the mods finish loading.
 
@@ -3139,8 +3199,8 @@ function StaticAchievement.reg(name, spec) end
 --- @field logic_init function? [load] Called with the block logic of every new block of this type; makes its inventories and accessors
 --- @field actor_init function? [load] Called with the block actor when it spawns
 --- @field tooltip function|string|nil [load] Tooltip of the block: a string, or a function of the block logic returning one
---- @field vars string[] [load] Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
---- @field batch_tick function? [load] Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+--- @field components table<string, table> [load] Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or "". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them
+--- @field batch_tick function? [load] Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
 --- @field window function? [load] Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
 --- @field half_cover StaticCover Cover mesh for the half-height variant
 --- @field center_cover StaticCover Cover mesh for the center part
@@ -3203,8 +3263,8 @@ function StaticBlock.reg(name, spec) end
 --- @field logic_init? function Called with the block logic of every new block of this type; makes its inventories and accessors
 --- @field actor_init? function Called with the block actor when it spawns
 --- @field tooltip? function|string|nil Tooltip of the block: a string, or a function of the block logic returning one
---- @field vars? string[] Names of the numbers every block of this type keeps for its lua logic, zero on a new block; they are saved with the block and are part of the sim state. batch_tick gets them as arrays, BlockLogic.vars reads them
---- @field batch_tick? function Called once every sim tick with all placed blocks of this type: batch_tick(blocks, vars, inventories). blocks lists their logics in position order; vars maps every name of vars to the array of that number of every block, read back after the call; inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
+--- @field components? table<string, table> Components every block of this type keeps: component name to the values a new block starts with; a field left out starts at 0, false, nil or "". Saved with the block and part of the sim state; batch_tick gets them as arrays, BlockLogic.component and get_field read them
+--- @field batch_tick? function Called once every sim tick with all placed blocks of this type, in position order: batch_tick(blocks, components, inventories), or batch_tick(n, components, slots, inventories) from a --!sim chunk. components.<Component>.<field> is the array of that field of every block, read back after the call; --!sim gets integer, boolean and item fields as int64 columns, an item as its sim_id, and no string fields. slots.<inventory> holds item and count columns indexed (i-1)*slots+s, taken before the call. inventories maps an inventory name to the array of that inventory of every block. The tables are kept between ticks and change only when a block of the type comes or goes
 --- @field window? function Builds the window of a block of this type: window(logic) returns the content widget, and may return a function the window calls every frame while it is open
 --- @field half_cover? StaticCover Cover mesh for the half-height variant
 --- @field center_cover? StaticCover Cover mesh for the center part
